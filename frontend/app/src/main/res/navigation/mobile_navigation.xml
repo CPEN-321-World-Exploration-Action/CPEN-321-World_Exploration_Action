@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_friends"
-        android:name="com.worldexplorationaction.android.ui.leaderboard.LeaderboardFragment"
+        android:name="com.worldexplorationaction.android.ui.friends.FriendsFragment"
         android:label="@string/title_friends"
         tools:layout="@layout/fragment_leaderboard" />
 </navigation>
