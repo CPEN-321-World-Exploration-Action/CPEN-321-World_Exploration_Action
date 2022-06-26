@@ -1,4 +1,4 @@
-package com.worldexplorationaction.android.ui.dashboard;
+package com.worldexplorationaction.android.ui.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.worldexplorationaction.android.databinding.FragmentDashboardBinding;
+import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
 
-public class DashboardFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        ProfileViewModel profileViewModel =
+                new ViewModelProvider(this).get(ProfileViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textProfile;
+        profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
