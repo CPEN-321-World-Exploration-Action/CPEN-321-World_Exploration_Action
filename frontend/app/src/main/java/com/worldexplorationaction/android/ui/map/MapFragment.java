@@ -18,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
+import com.worldexplorationaction.android.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
         GoogleMap.OnMapClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveCanceledListener, GoogleMap.OnCameraIdleListener {
     private static final String TAG = MapFragment.class.getSimpleName();
     private MapViewModel mapViewModel;
+    private TrophyBitmaps trophyBitmaps;
     private UserLocation userLocation;
     private FragmentMapBinding binding;
     private GoogleMap googleMap;
@@ -67,8 +69,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
     public void onMapReady(@NonNull GoogleMap map) {
         this.googleMap = map;
 
-        int statusBarHeight = Utility.getStatusBarHeight(requireActivity());
-        googleMap.setPadding(0, statusBarHeight, 0, 0);
+        /* Must be called after the map is initialized */
+        trophyBitmaps = new TrophyBitmaps(getResources());
 
         googleMap.setOnMapClickListener(this);
         googleMap.setOnCameraMoveStartedListener(this);
