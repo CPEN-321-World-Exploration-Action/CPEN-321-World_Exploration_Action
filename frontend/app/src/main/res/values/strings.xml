@@ -4,4 +4,9 @@
     <string name="title_map">Map</string>
     <string name="title_leaderboard">Leaderboard</string>
     <string name="title_friends">Friends</string>
+    <string name="permission_no">No</string>
+    <string name="permission_ok">OK</string>
+    <string name="location_request_rationale_title">Need Location Permissions</string>
+    <string name="location_request_rationale_message">We need your precise location to show trophies around you and check whether you can collect a trophy</string>
+    <string name="location_permissions_denied">Location permissions denied</string>
 </resources>
