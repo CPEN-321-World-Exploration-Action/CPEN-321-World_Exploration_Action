@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,8 +31,9 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback,
-        UserLocation.OnPermissionsUpdateListener, GoogleMap.OnCameraIdleListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, UserLocation.OnPermissionsUpdateListener,
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener {
+
     private static final String TAG = MapFragment.class.getSimpleName();
 
     private MapViewModel mapViewModel;
@@ -90,6 +92,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         map.setPadding(0, statusBarHeight, 0, 0);
 
         map.setOnCameraIdleListener(this);
+        map.setOnMarkerClickListener(this);
 
 //        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 //        map.setTrafficEnabled(true);
@@ -110,6 +113,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onCameraIdle() {
         Log.d(TAG, "onCameraIdle");
         mapViewModel.onCameraPositionUpdate(googleMap.getCameraPosition());
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+        Trophy trophy = (Trophy) Objects.requireNonNull(marker.getTag());
+        // TODO: Show trophy details view here
+        Toast.makeText(getContext(), "Clicked trophy " + trophy.title, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     /**
