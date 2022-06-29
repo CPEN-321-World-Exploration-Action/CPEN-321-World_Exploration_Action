@@ -1,9 +1,12 @@
 package com.worldexplorationaction.android.ui.map;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,30 +17,136 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.tasks.Task;
 import com.worldexplorationaction.android.R;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 /**
- * The {@link UserLocation} is a helper for {@link Fragment} that manages location permissions.
+ * The {@link UserLocation} is a helper for {@link Fragment} that manages user's location.
  */
-public class UserLocation {
+public class UserLocation implements LocationSource {
     private static final String TAG = UserLocation.class.getSimpleName();
+    private static final long LOCATION_UPDATE_INTERVAL = 5L;
+    private final FusedLocationProviderClient fusedLocationClient;
     private final Activity activity;
-    private final OnPermissionsUpdateListener permissionsUpdateListener;
     private final ActivityResultLauncher<String[]> permissionsRequestLauncher;
+    private final LocationCallback locationCallback;
+    private Consumer<Boolean> permissionsUpdateListener;
+    private OnLocationChangedListener locationChangedListener;
 
     /**
      * Create an instance of {@link UserLocation}.
      *
      * @param fragment the fragment using the user's location.
-     * @param permissionsUpdateListener the callback to be called when the location permission status is updated
+     *                 //     * @param permissionsUpdateListener the callback to be called when the location permission status is updated
      */
-    public UserLocation(@NonNull Fragment fragment, @NonNull OnPermissionsUpdateListener permissionsUpdateListener) {
+    public UserLocation(@NonNull Fragment fragment) {
         this.activity = fragment.requireActivity();
-        this.permissionsUpdateListener = permissionsUpdateListener;
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
         this.permissionsRequestLauncher = fragment.registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
-                result -> permissionsRequestCallback()
+                this::permissionsRequestActivityCallback
         );
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                Location last = locationResult.getLastLocation();
+                if (locationChangedListener != null && last != null) {
+                    last.removeBearing();
+                    locationChangedListener.onLocationChanged(last);
+                }
+            }
+        };
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void activate(@NonNull OnLocationChangedListener onLocationChangedListener) {
+        Log.i(TAG, "activate OnLocationChangedListener");
+        doWithPermissions(aBoolean -> {
+            UserLocation.this.locationChangedListener = onLocationChangedListener;
+            LocationRequest request = LocationRequest.create()
+                    .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                    .setWaitForAccurateLocation(true)
+                    .setInterval(LOCATION_UPDATE_INTERVAL)
+                    .setMaxWaitTime(LOCATION_UPDATE_INTERVAL);
+            fusedLocationClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
+        });
+    }
+
+    @Override
+    public void deactivate() {
+        Log.i(TAG, "deactivate OnLocationChangedListener");
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+        this.locationChangedListener = null;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getCurrentLocation(Consumer<Location> callback) {
+        doWithPermissions(hasPermissions -> {
+            if (hasPermissions) {
+                Log.i(TAG, "getCurrentLocation: calling fusedLocationClient.getCurrentLocation");
+                Task<Location> task = fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null);
+                task.addOnCompleteListener(t -> {
+                    if (t.isSuccessful()) {
+                        Log.i(TAG, "getCurrentLocation: success, location=" + t.getResult());
+                        callback.accept(t.getResult());
+                    } else {
+                        Log.w(TAG, "getCurrentLocation: fusedLocationClient.getCurrentLocation failed, reason: " + t.getException());
+                        callback.accept(null);
+                    }
+                });
+            } else {
+                Log.i(TAG, "getCurrentLocation: unable to obtain permissions");
+                callback.accept(null);
+            }
+        });
+    }
+
+    private void doWithPermissions(Consumer<Boolean> task) {
+        Log.i(TAG, "Do with permissions");
+        if (isPermissionGranted()) {
+            task.accept(true);
+        } else {
+            requestPermissions(task);
+        }
+    }
+
+    /**
+     * Request location permissions.
+     *
+     * @param callback callback when the result of the request is available.
+     */
+    private void requestPermissions(Consumer<Boolean> callback) {
+        Log.i(TAG, "Request permissions with callback");
+        permissionsUpdateListener = callback; /* will be called once */
+        if (shouldShowPermissionRationale()) {
+            showPermissionRequestDialog();
+        } else {
+            launchPermissionsRequestActivity();
+        }
+    }
+
+    private void showPermissionRequestDialog() {
+        Log.i(TAG, "Showing the permission rationale dialog");
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.location_request_rationale_title)
+                .setMessage(R.string.location_request_rationale_message)
+                .setNegativeButton(R.string.permission_no,
+                        (dialog, which) -> notifyPermissionsUpdateListener(false))
+                .setPositiveButton(R.string.permission_ok,
+                        (dialog, which) -> launchPermissionsRequestActivity())
+                .create()
+                .show();
     }
 
     /**
@@ -45,38 +154,12 @@ public class UserLocation {
      *
      * @return true if the app has been granted the permissions, false if not.
      */
-    public boolean isPermissionGranted() {
+    private boolean isPermissionGranted() {
         boolean coarse = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         Log.i(TAG, coarse ? "Coarse location permissions granted" : "Coarse location permissions not granted");
         boolean fine = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         Log.i(TAG, coarse ? "Fine location permissions granted" : "Fine location permissions not granted");
         return coarse && fine;
-    }
-
-    /**
-     * Request location permissions if the user has not granted them.
-     * The {@link OnPermissionsUpdateListener} will be called at least once.
-     */
-    public void requestPermissionsIfNeeded() {
-        if (isPermissionGranted()) {
-            Log.i(TAG, "The user has already granted the permissions.");
-            permissionsUpdateListener.onPermissionsUpdate(true);
-        } else {
-            if (shouldShowPermissionRationale()) {
-                Log.i(TAG, "Showing the permission rationale");
-                new AlertDialog.Builder(activity)
-                        .setTitle(R.string.location_request_rationale_title)
-                        .setMessage(R.string.location_request_rationale_message)
-                        .setNegativeButton(R.string.permission_no,
-                                (dialog, which) -> permissionsUpdateListener.onPermissionsUpdate(false))
-                        .setPositiveButton(R.string.permission_ok,
-                                (dialog, which) -> doRequestPermissions())
-                        .create()
-                        .show();
-            } else {
-                doRequestPermissions();
-            }
-        }
     }
 
     /**
@@ -91,35 +174,38 @@ public class UserLocation {
     }
 
     /**
-     * Request the permissions. {@link #permissionsRequestCallback()} will be called when the request is completed.
+     * Request the permissions.
+     * {@link #permissionsRequestActivityCallback(Map)} will be called when the request activity is completed.
      */
-    private void doRequestPermissions() {
+    private void launchPermissionsRequestActivity() {
         Log.i(TAG, "Requesting permissions");
         permissionsRequestLauncher.launch(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION});
     }
 
-    private void permissionsRequestCallback() {
+    /**
+     * Called by the {@link #permissionsRequestLauncher}
+     */
+    private void permissionsRequestActivityCallback(Map<String, Boolean> result) {
         if (isPermissionGranted()) {
-            Log.i(TAG, "Permissions granted");
-            permissionsUpdateListener.onPermissionsUpdate(true);
+            Log.i(TAG, "Permissions granted by user");
+            notifyPermissionsUpdateListener(true);
         } else {
-            Log.i(TAG, "Permissions denied");
+            Log.i(TAG, "Permissions denied by user");
             Toast.makeText(activity, R.string.location_permissions_denied, Toast.LENGTH_SHORT).show();
             if (shouldShowPermissionRationale()) {
-                requestPermissionsIfNeeded();
+                /* Ask the user again */
+                showPermissionRequestDialog();
             } else {
-                permissionsUpdateListener.onPermissionsUpdate(false);
+                notifyPermissionsUpdateListener(false);
             }
         }
     }
 
-    public interface OnPermissionsUpdateListener {
-
-        /**
-         * Called when the location permission status is updated
-         *
-         * @param granted whether the location permissions has been granted
-         */
-        void onPermissionsUpdate(boolean granted);
+    private void notifyPermissionsUpdateListener(boolean granted) {
+        Log.i(TAG, "notifyPermissionsUpdateListener");
+        if (permissionsUpdateListener != null) {
+            permissionsUpdateListener.accept(granted);
+            permissionsUpdateListener = null;
+        }
     }
 }

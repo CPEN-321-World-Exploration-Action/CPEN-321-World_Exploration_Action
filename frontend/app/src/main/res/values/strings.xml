@@ -9,4 +9,6 @@
     <string name="location_request_rationale_title">Need Location Permissions</string>
     <string name="location_request_rationale_message">We need your precise location to show trophies around you and check whether you can collect a trophy</string>
     <string name="location_permissions_denied">Location permissions denied</string>
+    <string name="location_retrieval_error">Could not retrieve current location</string>
+    <string name="location_retrieval_retry">Retry</string>
 </resources>

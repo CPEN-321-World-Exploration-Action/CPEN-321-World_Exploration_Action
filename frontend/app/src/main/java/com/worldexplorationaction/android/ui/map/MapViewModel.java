@@ -17,6 +17,7 @@ import java.util.List;
 
 public class MapViewModel extends ViewModel {
     private static final String TAG = MapViewModel.class.getSimpleName();
+    private static final float MIN_ZOOM_TROPHY = 9.0f;
     private final MutableLiveData<Collection<Trophy>> displayTrophies;
 
     public MapViewModel() {
@@ -28,13 +29,17 @@ public class MapViewModel extends ViewModel {
         return new CameraPosition(vancouver, 4.0f, 0.0f, 0.0f);
     }
 
+    public float minZoomLevelForTrophies() {
+        return MIN_ZOOM_TROPHY;
+    }
+
     public LiveData<Collection<Trophy>> getDisplayTrophies() {
         return displayTrophies;
     }
 
     public void onCameraPositionUpdate(CameraPosition newCameraPosition) {
         Log.d(TAG, "onCameraPositionUpdate");
-        if (newCameraPosition.zoom < 9.0f) {
+        if (newCameraPosition.zoom < MIN_ZOOM_TROPHY) {
             Log.d(TAG, "display no trophy since the map is zoomed out");
             displayTrophies.setValue(Collections.emptyList());
         } else {

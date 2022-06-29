@@ -1,6 +1,7 @@
 package com.worldexplorationaction.android.ui.map;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -31,10 +33,11 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, UserLocation.OnPermissionsUpdateListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener {
 
     private static final String TAG = MapFragment.class.getSimpleName();
+    private static CameraPosition lastCameraPosition;
 
     private MapViewModel mapViewModel;
     private TrophyBitmaps trophyBitmaps;
@@ -49,7 +52,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        userLocation = new UserLocation(this, this);
+        userLocation = new UserLocation(this);
         markers = new LinkedList<>();
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel.getDisplayTrophies().observe(getViewLifecycleOwner(), this::onDisplayTrophiesUpdate);
@@ -65,6 +68,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        lastCameraPosition = googleMap.getCameraPosition();
         markers = null;
         googleMapsFragment = null;
         binding = null;
@@ -73,13 +77,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
     }
 
     @SuppressLint("MissingPermission")
-    @Override
-    public void onPermissionsUpdate(boolean granted) {
-        /* The map must be ready */
-        Log.d(TAG, "onPermissionsUpdate: " + granted);
-        googleMap.setMyLocationEnabled(granted);
-    }
-
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         Log.d(TAG, "Map is ready");
@@ -91,8 +88,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
         int statusBarHeight = Utility.getStatusBarHeight(requireActivity());
         map.setPadding(0, statusBarHeight, 0, 0);
 
+        map.setLocationSource(userLocation);
+        map.setMyLocationEnabled(true);
         map.setOnCameraIdleListener(this);
         map.setOnMarkerClickListener(this);
+        map.setOnMyLocationButtonClickListener(this);
 
 //        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 //        map.setTrafficEnabled(true);
@@ -104,9 +104,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
         // TODO: Set map style: https://developers.google.com/maps/documentation/cloud-customization/overview
 
         map.clear();
-        map.moveCamera(CameraUpdateFactory.newCameraPosition(mapViewModel.getDefaultCameraPosition()));
 
-        userLocation.requestPermissionsIfNeeded();
+        if (lastCameraPosition != null) {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(lastCameraPosition));
+        } else {
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(mapViewModel.getDefaultCameraPosition()));
+            animateCameraToMyLocation();
+        }
     }
 
     @Override
@@ -121,6 +125,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, UserLoc
         // TODO: Show trophy details view here
         Toast.makeText(getContext(), "Clicked trophy " + trophy.title, Toast.LENGTH_SHORT).show();
         return false;
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        animateCameraToMyLocation();
+        return true;
+    }
+
+    private void animateCameraToMyLocation() {
+        Log.i(TAG, "animateCameraToMyLocation: start");
+        userLocation.getCurrentLocation(location -> {
+            if (location == null) {
+                Log.i(TAG, "animateCameraToMyLocation: no location");
+                new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.location_retrieval_error)
+                        .setNeutralButton(R.string.location_retrieval_retry,
+                                (dialog, which) -> animateCameraToMyLocation())
+                        .setPositiveButton(R.string.permission_ok, (dialog, which) -> {
+                        })
+                        .create()
+                        .show();
+            } else {
+                Log.i(TAG, "animateCameraToMyLocation: to location " + location);
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if (googleMap.getCameraPosition().zoom < mapViewModel.minZoomLevelForTrophies()) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                } else {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                }
+            }
+        });
     }
 
     /**
