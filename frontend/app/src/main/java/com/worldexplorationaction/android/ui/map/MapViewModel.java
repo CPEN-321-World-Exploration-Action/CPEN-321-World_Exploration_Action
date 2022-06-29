@@ -29,6 +29,11 @@ public class MapViewModel extends ViewModel {
         return new CameraPosition(vancouver, 4.0f, 0.0f, 0.0f);
     }
 
+    /**
+     * The minimum zoom level required to show trophies
+     *
+     * @return the minimum zoom level required to show trophies
+     */
     public float minZoomLevelForTrophies() {
         return MIN_ZOOM_TROPHY;
     }
@@ -37,6 +42,11 @@ public class MapViewModel extends ViewModel {
         return displayTrophies;
     }
 
+    /**
+     * Notify that the camera position is updated
+     *
+     * @param newCameraPosition new camera position
+     */
     public void onCameraPositionUpdate(CameraPosition newCameraPosition) {
         Log.d(TAG, "onCameraPositionUpdate");
         if (newCameraPosition.zoom < MIN_ZOOM_TROPHY) {

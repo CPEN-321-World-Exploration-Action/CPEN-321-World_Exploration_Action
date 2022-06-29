@@ -32,14 +32,15 @@ import java.util.function.Consumer;
 
 /**
  * The {@link UserLocation} is a helper for {@link Fragment} that manages user's location.
+ * It will automatically request location permissions when necessary.
  */
 public class UserLocation implements LocationSource {
     private static final String TAG = UserLocation.class.getSimpleName();
-    private static final long LOCATION_UPDATE_INTERVAL = 5L;
+    private static final long LOCATION_UPDATE_INTERVAL = 1000L;
     private final FusedLocationProviderClient fusedLocationClient;
+    private final LocationCallback flpCallback;
     private final Activity activity;
     private final ActivityResultLauncher<String[]> permissionsRequestLauncher;
-    private final LocationCallback locationCallback;
     private Consumer<Boolean> permissionsUpdateListener;
     private OnLocationChangedListener locationChangedListener;
 
@@ -47,7 +48,6 @@ public class UserLocation implements LocationSource {
      * Create an instance of {@link UserLocation}.
      *
      * @param fragment the fragment using the user's location.
-     *                 //     * @param permissionsUpdateListener the callback to be called when the location permission status is updated
      */
     public UserLocation(@NonNull Fragment fragment) {
         this.activity = fragment.requireActivity();
@@ -56,7 +56,7 @@ public class UserLocation implements LocationSource {
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 this::permissionsRequestActivityCallback
         );
-        locationCallback = new LocationCallback() {
+        this.flpCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 Location last = locationResult.getLastLocation();
@@ -79,17 +79,23 @@ public class UserLocation implements LocationSource {
                     .setWaitForAccurateLocation(true)
                     .setInterval(LOCATION_UPDATE_INTERVAL)
                     .setMaxWaitTime(LOCATION_UPDATE_INTERVAL);
-            fusedLocationClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
+            fusedLocationClient.requestLocationUpdates(request, flpCallback, Looper.getMainLooper());
         });
     }
 
     @Override
     public void deactivate() {
         Log.i(TAG, "deactivate OnLocationChangedListener");
-        fusedLocationClient.removeLocationUpdates(locationCallback);
+        fusedLocationClient.removeLocationUpdates(flpCallback);
         this.locationChangedListener = null;
     }
 
+    /**
+     * Get the user's current location. Request location permissions if necessary.
+     *
+     * @param callback callback to call when the current location is available. If the location
+     *                 cannot be obtained, the callback will get a null value.
+     */
     @SuppressLint("MissingPermission")
     public void getCurrentLocation(Consumer<Location> callback) {
         doWithPermissions(hasPermissions -> {
@@ -112,6 +118,12 @@ public class UserLocation implements LocationSource {
         });
     }
 
+    /**
+     * Perform a task which might require location permissions. Automatically request location
+     * permissions if the user has not granted them.
+     *
+     * @param task the task which might require location permissions to perform
+     */
     private void doWithPermissions(Consumer<Boolean> task) {
         Log.i(TAG, "Do with permissions");
         if (isPermissionGranted()) {
@@ -136,6 +148,9 @@ public class UserLocation implements LocationSource {
         }
     }
 
+    /**
+     * Show a dialog to ask whether the user wants to grant location permissions
+     */
     private void showPermissionRequestDialog() {
         Log.i(TAG, "Showing the permission rationale dialog");
         new AlertDialog.Builder(activity)
@@ -201,6 +216,11 @@ public class UserLocation implements LocationSource {
         }
     }
 
+    /**
+     * Notify {@link #permissionsUpdateListener} if it is not null.
+     *
+     * @param granted new permissions status
+     */
     private void notifyPermissionsUpdateListener(boolean granted) {
         Log.i(TAG, "notifyPermissionsUpdateListener");
         if (permissionsUpdateListener != null) {
