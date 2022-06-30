@@ -85,7 +85,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         /* Must be called after the map is initialized */
         trophyBitmaps = new TrophyBitmaps(getResources());
 
-        int statusBarHeight = Utility.getStatusBarHeight(requireActivity());
+        int statusBarHeight = Utility.getStatusBarHeight(getResources());
         map.setPadding(0, statusBarHeight, 0, 0);
 
         map.setLocationSource(userLocation);
@@ -133,6 +133,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
+    @SuppressLint("MissingPermission")
     private void animateCameraToMyLocation() {
         Log.i(TAG, "animateCameraToMyLocation: start");
         userLocation.getCurrentLocation(location -> {
@@ -148,6 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         .show();
             } else {
                 Log.i(TAG, "animateCameraToMyLocation: to location " + location);
+                googleMap.setMyLocationEnabled(true); /* Make sure it is enabled */
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 if (googleMap.getCameraPosition().zoom < mapViewModel.minZoomLevelForTrophies()) {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));

@@ -32,7 +32,6 @@ import java.util.function.Consumer;
 
 /**
  * The {@link UserLocation} is a helper for {@link Fragment} that manages user's location.
- * It will automatically request location permissions when necessary.
  */
 public class UserLocation implements LocationSource {
     private static final String TAG = UserLocation.class.getSimpleName();
@@ -72,21 +71,13 @@ public class UserLocation implements LocationSource {
     @Override
     public void activate(@NonNull OnLocationChangedListener onLocationChangedListener) {
         Log.i(TAG, "activate OnLocationChangedListener");
-        doWithPermissions(aBoolean -> {
-            UserLocation.this.locationChangedListener = onLocationChangedListener;
-            LocationRequest request = LocationRequest.create()
-                    .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                    .setWaitForAccurateLocation(true)
-                    .setInterval(LOCATION_UPDATE_INTERVAL)
-                    .setMaxWaitTime(LOCATION_UPDATE_INTERVAL);
-            fusedLocationClient.requestLocationUpdates(request, flpCallback, Looper.getMainLooper());
-        });
+        UserLocation.this.locationChangedListener = onLocationChangedListener;
+        tryRequestingLocationUpdates();
     }
 
     @Override
     public void deactivate() {
         Log.i(TAG, "deactivate OnLocationChangedListener");
-        fusedLocationClient.removeLocationUpdates(flpCallback);
         this.locationChangedListener = null;
     }
 
@@ -203,6 +194,7 @@ public class UserLocation implements LocationSource {
     private void permissionsRequestActivityCallback(Map<String, Boolean> result) {
         if (isPermissionGranted()) {
             Log.i(TAG, "Permissions granted by user");
+            tryRequestingLocationUpdates();
             notifyPermissionsUpdateListener(true);
         } else {
             Log.i(TAG, "Permissions denied by user");
@@ -213,6 +205,21 @@ public class UserLocation implements LocationSource {
             } else {
                 notifyPermissionsUpdateListener(false);
             }
+        }
+    }
+
+    /**
+     * Try requesting location updates. Do nothing if permissions are not granted.
+     */
+    @SuppressLint("MissingPermission")
+    private void tryRequestingLocationUpdates() {
+        if (isPermissionGranted()) {
+            LocationRequest request = LocationRequest.create()
+                    .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                    .setWaitForAccurateLocation(true)
+                    .setInterval(LOCATION_UPDATE_INTERVAL)
+                    .setMaxWaitTime(LOCATION_UPDATE_INTERVAL);
+            fusedLocationClient.requestLocationUpdates(request, flpCallback, Looper.getMainLooper());
         }
     }
 
