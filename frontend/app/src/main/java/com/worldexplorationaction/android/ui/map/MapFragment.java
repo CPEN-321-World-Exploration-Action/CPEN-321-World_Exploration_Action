@@ -85,7 +85,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         /* Must be called after the map is initialized */
         trophyBitmaps = new TrophyBitmaps(getResources());
 
-        int statusBarHeight = Utility.getStatusBarHeight(requireActivity());
+        int statusBarHeight = Utility.getStatusBarHeight(getResources());
         map.setPadding(0, statusBarHeight, 0, 0);
 
         map.setLocationSource(userLocation);
