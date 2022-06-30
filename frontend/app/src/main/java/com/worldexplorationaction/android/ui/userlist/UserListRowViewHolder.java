@@ -73,13 +73,13 @@ public class UserListRowViewHolder extends RecyclerView.ViewHolder {
             int color;
             switch (rank) {
                 case 1:
-                    color = R.color.leaderboard_rank_gold_color;
+                    color = R.color.leaderboard_rank_gold;
                     break;
                 case 2:
-                    color = R.color.leaderboard_rank_silver_color;
+                    color = R.color.leaderboard_rank_silver;
                     break;
                 case 3:
-                    color = R.color.leaderboard_rank_bronze_color;
+                    color = R.color.leaderboard_rank_bronze;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + rank);

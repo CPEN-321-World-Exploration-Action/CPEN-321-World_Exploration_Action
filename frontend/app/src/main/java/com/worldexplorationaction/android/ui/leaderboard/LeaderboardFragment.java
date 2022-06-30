@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.worldexplorationaction.android.databinding.FragmentLeaderboardBinding;
+import com.worldexplorationaction.android.ui.userlist.UserListMode;
+import com.worldexplorationaction.android.ui.userlist.UserListView;
 
 public class LeaderboardFragment extends Fragment {
 
@@ -24,8 +25,9 @@ public class LeaderboardFragment extends Fragment {
         binding = FragmentLeaderboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textLeaderboard;
-        leaderboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final UserListView userListView = binding.leaderboardContent;
+        userListView.init(UserListMode.LEADERBOARD, getContext(), getViewLifecycleOwner(), leaderboardViewModel);
+
         return root;
     }
 

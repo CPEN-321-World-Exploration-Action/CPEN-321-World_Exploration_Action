@@ -4,16 +4,25 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LeaderboardViewModel extends ViewModel {
+import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
+import com.worldexplorationaction.android.user.UserProfile;
 
-    private final MutableLiveData<String> mText;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LeaderboardViewModel extends ViewModel implements UserListViewModel {
+
+    private final MutableLiveData<List<UserProfile>> users;
 
     public LeaderboardViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is leaderboard fragment");
+        users = new MutableLiveData<>();
+
+        List<UserProfile> dummy = new ArrayList<>();
+        users.setValue(dummy);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    @Override
+    public LiveData<List<UserProfile>> getUsers() {
+        return users;
     }
 }

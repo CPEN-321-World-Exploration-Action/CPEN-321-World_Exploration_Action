@@ -39,7 +39,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_leaderboard_rank_top_background"
-                        app:tint="@color/leaderboard_rank_gold_color"
+                        app:tint="@color/leaderboard_rank_gold"
                         tools:ignore="ContentDescription,ImageContrastCheck" />
 
                     <TextView
