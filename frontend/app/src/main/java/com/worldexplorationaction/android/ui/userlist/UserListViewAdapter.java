@@ -14,14 +14,17 @@ import com.worldexplorationaction.android.user.UserProfile;
 
 import java.util.List;
 
-public class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
+class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
     private final UserListMode mode;
     private final Context context;
+    private final UserListView.OnItemClickListener onItemClickListener;
     private List<UserProfile> displayingUsers;
 
-    public UserListViewAdapter(UserListMode mode, Context context, UserListViewModel viewModel) {
+    public UserListViewAdapter(UserListMode mode, Context context,
+                               UserListView.OnItemClickListener onItemClickListener) {
         this.mode = mode;
         this.context = context;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -29,7 +32,7 @@ public class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHol
     public UserListRowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View row = inflater.inflate(R.layout.view_user_list_row, parent, false);
-        UserListRowViewHolder viewHolder = new UserListRowViewHolder(row);
+        UserListRowViewHolder viewHolder = new UserListRowViewHolder(row, onItemClickListener);
         viewHolder.setMode(mode);
         return viewHolder;
     }

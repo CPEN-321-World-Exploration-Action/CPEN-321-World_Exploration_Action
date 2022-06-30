@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -17,6 +18,8 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentLeaderboardBinding;
 import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListView;
+
+import java.util.Objects;
 
 public class LeaderboardFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = LeaderboardFragment.class.getSimpleName();
@@ -46,6 +49,14 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         friendsButton.setOnClickListener(this);
 
         leaderboardViewModel.notifySwitchLeaderboardType(DEFAULT_TYPE);
+
+        userListView.setOnItemClickListener(itemPosition ->
+                Toast.makeText(getContext(),
+                        Objects.requireNonNull(leaderboardViewModel.getUsers().getValue())
+                                .get(itemPosition).toString(),
+                        Toast.LENGTH_SHORT
+                ).show()
+        );
 
         return root;
     }

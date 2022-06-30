@@ -14,6 +14,7 @@ import com.worldexplorationaction.android.user.UserProfile;
 import java.util.List;
 
 public class UserListView extends RecyclerView {
+    UserListView.OnItemClickListener onItemClickListener;
     UserListViewAdapter adapter;
 
     public UserListView(@NonNull Context context) {
@@ -29,14 +30,28 @@ public class UserListView extends RecyclerView {
     }
 
     public void init(UserListMode mode, Context context, LifecycleOwner lifecycleOwner, UserListViewModel viewModel) {
-        this.adapter = new UserListViewAdapter(mode, context, viewModel);
+        this.adapter = new UserListViewAdapter(mode, context, this::onItemClick);
         setAdapter(adapter);
         setLayoutManager(new LinearLayoutManager(context));
 
         viewModel.getUsers().observe(lifecycleOwner, this::displayingUsersUpdated);
     }
 
+    public void setOnItemClickListener(@Nullable OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     private void displayingUsersUpdated(List<UserProfile> newDisplayingUsers) {
         adapter.updateDisplayingUsers(newDisplayingUsers);
+    }
+
+    private void onItemClick(int itemPosition) {
+        if (onItemClickListener != null) {
+            onItemClickListener.onItemClick(itemPosition);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int itemPosition);
     }
 }

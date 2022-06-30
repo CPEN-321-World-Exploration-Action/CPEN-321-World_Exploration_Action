@@ -14,7 +14,7 @@ import com.worldexplorationaction.android.user.UserProfile;
 
 import java.util.Locale;
 
-public class UserListRowViewHolder extends RecyclerView.ViewHolder {
+class UserListRowViewHolder extends RecyclerView.ViewHolder {
     FrameLayout rankView;
     FrameLayout rankViewTopView;
     ImageView rankViewTopImageView;
@@ -28,7 +28,7 @@ public class UserListRowViewHolder extends RecyclerView.ViewHolder {
     FrameLayout scoreView;
     TextView scoreTextView;
 
-    public UserListRowViewHolder(@NonNull View itemView) {
+    public UserListRowViewHolder(@NonNull View itemView, UserListView.OnItemClickListener onClickListener) {
         super(itemView);
         rankView = itemView.findViewById(R.id.user_list_row_rank_view);
         rankViewTopView = itemView.findViewById(R.id.user_list_row_rank_top);
@@ -42,6 +42,8 @@ public class UserListRowViewHolder extends RecyclerView.ViewHolder {
 
         scoreView = itemView.findViewById(R.id.user_list_row_score_view);
         scoreTextView = itemView.findViewById(R.id.user_list_row_score_text);
+
+        itemView.setOnClickListener(v -> onClickListener.onItemClick(getLayoutPosition()));
     }
 
     public void setMode(UserListMode mode) {
