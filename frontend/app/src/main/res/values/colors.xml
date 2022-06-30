@@ -8,4 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+
+    <color name="leaderboard_rank_gold_color">#FFFFC75C</color>
+    <color name="leaderboard_rank_silver_color">#FFC0C0C0</color>
+    <color name="leaderboard_rank_bronze_color">#FFFFA05C</color>
 </resources>
