@@ -2,6 +2,7 @@ package com.worldexplorationaction.android.ui.userlist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -104,7 +105,7 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
                 default:
                     throw new IllegalStateException("Unexpected value: " + rank);
             }
-            rankViewTopImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), color), android.graphics.PorterDuff.Mode.SRC_IN);
+            rankViewTopImageView.setColorFilter(ContextCompat.getColor(itemView.getContext(), color), PorterDuff.Mode.SRC_IN);
         } else {
             rankViewTopView.setVisibility(View.GONE);
             rankViewNormalVew.setVisibility(View.VISIBLE);

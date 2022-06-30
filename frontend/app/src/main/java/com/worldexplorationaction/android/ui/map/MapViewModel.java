@@ -55,7 +55,7 @@ public class MapViewModel extends ViewModel {
         } else {
             Log.d(TAG, "display some trophies");
             List<Trophy> n = new ArrayList<>();
-            n.add(new Trophy("SW", "Science w", 49.273375652799665, -123.10383404409907));
+            n.add(new Trophy("SW", "Science w", Trophy.Quality.SILVER, 49.273375652799665, -123.10383404409907));
             displayTrophies.setValue(n);
         }
     }
