@@ -102,7 +102,7 @@
                     android:layout_marginStart="7dp"
                     android:scaleType="centerCrop"
                     app:shapeAppearanceOverlay="@style/circle_image_view"
-                    app:srcCompat="@drawable/ic_avatar_placeholder_35dp"
+                    app:srcCompat="@drawable/ic_default_avatar_35dp"
                     tools:ignore="ContentDescription,ImageContrastCheck" />
 
                 <TextView

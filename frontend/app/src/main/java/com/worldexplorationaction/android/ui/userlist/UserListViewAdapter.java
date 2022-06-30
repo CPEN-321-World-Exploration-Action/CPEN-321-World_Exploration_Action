@@ -32,7 +32,7 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
     public UserListRowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View row = inflater.inflate(R.layout.view_user_list_row, parent, false);
-        UserListRowViewHolder viewHolder = new UserListRowViewHolder(row, onItemClickListener);
+        UserListRowViewHolder viewHolder = new UserListRowViewHolder(row, context, onItemClickListener);
         viewHolder.setMode(mode);
         return viewHolder;
     }

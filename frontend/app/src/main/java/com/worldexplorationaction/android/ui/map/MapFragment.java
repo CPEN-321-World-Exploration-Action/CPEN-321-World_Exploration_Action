@@ -69,11 +69,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onDestroyView() {
         super.onDestroyView();
         lastCameraPosition = googleMap.getCameraPosition();
-        markers = null;
         googleMapsFragment = null;
         binding = null;
-        userLocation = null;
-        mapViewModel = null;
     }
 
     @SuppressLint("MissingPermission")

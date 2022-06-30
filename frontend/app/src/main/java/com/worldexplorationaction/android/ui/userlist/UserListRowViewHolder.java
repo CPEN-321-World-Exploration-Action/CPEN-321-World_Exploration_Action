@@ -1,5 +1,8 @@
 package com.worldexplorationaction.android.ui.userlist;
 
+import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -8,40 +11,51 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.ui.utility.Utility;
 import com.worldexplorationaction.android.user.UserProfile;
 
 import java.util.Locale;
 
 class UserListRowViewHolder extends RecyclerView.ViewHolder {
-    FrameLayout rankView;
-    FrameLayout rankViewTopView;
-    ImageView rankViewTopImageView;
-    TextView rankViewTopNumberTextView;
-    FrameLayout rankViewNormalVew;
-    TextView rankViewNormalTextView;
+    private final Context context;
+    private final FrameLayout rankView;
+    private final FrameLayout rankViewTopView;
+    private final ImageView rankViewTopImageView;
+    private final TextView rankViewTopNumberTextView;
+    private final FrameLayout rankViewNormalVew;
+    private final TextView rankViewNormalTextView;
+    private final ImageView profileImageView;
+    private final TextView nameTextView;
+    private final FrameLayout scoreView;
+    private final TextView scoreTextView;
 
-    ImageView profileImageView;
-    TextView nameTextView;
+    private final RequestOptions imageLoadOptions;
 
-    FrameLayout scoreView;
-    TextView scoreTextView;
-
-    public UserListRowViewHolder(@NonNull View itemView, UserListView.OnItemClickListener onClickListener) {
+    UserListRowViewHolder(@NonNull View itemView, Context context, UserListView.OnItemClickListener onClickListener) {
         super(itemView);
-        rankView = itemView.findViewById(R.id.user_list_row_rank_view);
-        rankViewTopView = itemView.findViewById(R.id.user_list_row_rank_top);
-        rankViewTopImageView = itemView.findViewById(R.id.user_list_row_rank_top_icon);
-        rankViewTopNumberTextView = itemView.findViewById(R.id.user_list_row_rank_number_top);
-        rankViewNormalVew = itemView.findViewById(R.id.user_list_row_rank_normal);
-        rankViewNormalTextView = itemView.findViewById(R.id.user_list_row_rank_number_normal);
 
-        profileImageView = itemView.findViewById(R.id.user_list_row_profile_picture);
-        nameTextView = itemView.findViewById(R.id.user_list_row_name);
+        this.context = context;
 
-        scoreView = itemView.findViewById(R.id.user_list_row_score_view);
-        scoreTextView = itemView.findViewById(R.id.user_list_row_score_text);
+        this.rankView = itemView.findViewById(R.id.user_list_row_rank_view);
+        this.rankViewTopView = itemView.findViewById(R.id.user_list_row_rank_top);
+        this.rankViewTopImageView = itemView.findViewById(R.id.user_list_row_rank_top_icon);
+        this.rankViewTopNumberTextView = itemView.findViewById(R.id.user_list_row_rank_number_top);
+        this.rankViewNormalVew = itemView.findViewById(R.id.user_list_row_rank_normal);
+        this.rankViewNormalTextView = itemView.findViewById(R.id.user_list_row_rank_number_normal);
+        this.profileImageView = itemView.findViewById(R.id.user_list_row_profile_picture);
+        this.nameTextView = itemView.findViewById(R.id.user_list_row_name);
+        this.scoreView = itemView.findViewById(R.id.user_list_row_score_view);
+        this.scoreTextView = itemView.findViewById(R.id.user_list_row_score_text);
+
+        this.imageLoadOptions = new RequestOptions()
+                .placeholder(getProfileImagePlaceholder())
+                .fallback(R.drawable.ic_default_avatar_35dp)
+                .error(R.drawable.ic_default_avatar_35dp);
 
         itemView.setOnClickListener(v -> onClickListener.onItemClick(getLayoutPosition()));
     }
@@ -63,6 +77,10 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
     public void setUser(UserProfile userProfile) {
         nameTextView.setText(userProfile.name);
         scoreTextView.setText(String.format(Locale.getDefault(), "%d", userProfile.score));
+        Glide.with(context)
+                .load(userProfile.image)
+                .apply(imageLoadOptions)
+                .into(profileImageView);
     }
 
     public void setRank(int rank) {
@@ -92,5 +110,15 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
             rankViewNormalVew.setVisibility(View.VISIBLE);
             rankViewNormalTextView.setText(String.format(Locale.getDefault(), "%d", rank));
         }
+    }
+
+    private Drawable getProfileImagePlaceholder() {
+        CircularProgressDrawable drawable = new CircularProgressDrawable(context);
+        drawable.setColorSchemeColors(context.getColor(R.color.purple_700));
+        drawable.setCenterRadius(Utility.dpToPx(context.getResources(), 9.0f));
+        drawable.setStrokeWidth(Utility.dpToPx(context.getResources(), 1.5f));
+        drawable.setStrokeCap(Paint.Cap.ROUND);
+        drawable.start();
+        return drawable;
     }
 }
