@@ -102,9 +102,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         map.clear();
 
         if (lastCameraPosition != null) {
+            Log.i(TAG, "Found lastCameraPosition");
             map.moveCamera(CameraUpdateFactory.newCameraPosition(lastCameraPosition));
         } else {
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(mapViewModel.getDefaultCameraPosition()));
+            Log.i(TAG, "No lastCameraPosition");
             animateCameraToMyLocation();
         }
     }

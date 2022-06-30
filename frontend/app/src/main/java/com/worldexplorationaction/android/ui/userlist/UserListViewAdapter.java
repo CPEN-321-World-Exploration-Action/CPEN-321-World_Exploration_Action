@@ -48,6 +48,11 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
         return displayingUsers.size();
     }
 
+    /**
+     * Display a new list of users
+     *
+     * @param newDisplayingUsers users to display
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void updateDisplayingUsers(List<UserProfile> newDisplayingUsers) {
         // TODO: animate this
