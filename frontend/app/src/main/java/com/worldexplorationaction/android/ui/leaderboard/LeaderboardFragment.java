@@ -18,6 +18,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentLeaderboardBinding;
 import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListView;
+import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Objects;
 
@@ -35,21 +36,17 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         this.context = getContext();
         this.leaderboardViewModel = new ViewModelProvider(this).get(LeaderboardViewModel.class);
         this.binding = FragmentLeaderboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final UserListView userListView = binding.leaderboardContent;
-        userListView.init(UserListMode.LEADERBOARD, context, getViewLifecycleOwner(), leaderboardViewModel);
-
-        leaderboardViewModel.getLeaderboardType().observe(getViewLifecycleOwner(), this::onLeaderboardTypeUpdate);
-
-        globalButton = binding.leaderboardGlobalButton;
-        friendsButton = binding.leaderboardFriendsButton;
+        this.globalButton = binding.leaderboardGlobalButton;
+        this.friendsButton = binding.leaderboardFriendsButton;
 
         globalButton.setOnClickListener(this);
         friendsButton.setOnClickListener(this);
 
+        leaderboardViewModel.getLeaderboardType().observe(getViewLifecycleOwner(), this::onLeaderboardTypeUpdate);
         leaderboardViewModel.notifySwitchLeaderboardType(DEFAULT_TYPE);
 
+        final UserListView userListView = binding.leaderboardContent;
+        userListView.init(UserListMode.LEADERBOARD, context, getViewLifecycleOwner(), leaderboardViewModel);
         userListView.setOnItemClickListener(itemPosition ->
                 Toast.makeText(getContext(),
                         Objects.requireNonNull(leaderboardViewModel.getUsers().getValue())
@@ -58,6 +55,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                 ).show()
         );
 
+        View root = binding.getRoot();
+        root.setPadding(0, Utility.getStatusBarHeight(getResources()), 0, 0);
         return root;
     }
 
@@ -66,6 +65,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         super.onDestroyView();
         binding = null;
         leaderboardViewModel = null;
+        context = null;
     }
 
     @Override

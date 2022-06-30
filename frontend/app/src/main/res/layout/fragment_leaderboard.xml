@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_leaderboard_background"
+    android:background="@mipmap/ic_leaderboard_background"
     tools:context=".ui.leaderboard.LeaderboardFragment">
 
     <TextView
