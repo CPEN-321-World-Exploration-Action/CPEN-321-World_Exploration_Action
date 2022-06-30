@@ -1,6 +1,7 @@
 package com.worldexplorationaction.android.ui.utility;
 
 import android.content.res.Resources;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 
@@ -21,5 +22,16 @@ public class Utility {
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Convert Density-independent Pixels to Pixels
+     */
+    public static float dpToPx(Resources resources, float dp) {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                resources.getDisplayMetrics()
+        );
     }
 }
