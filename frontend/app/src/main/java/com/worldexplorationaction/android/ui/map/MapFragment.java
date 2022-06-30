@@ -35,7 +35,6 @@ import java.util.Set;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener {
-
     private static final String TAG = MapFragment.class.getSimpleName();
     private static CameraPosition lastCameraPosition;
 
@@ -149,6 +148,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 googleMap.setMyLocationEnabled(true); /* Make sure it is enabled */
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 if (googleMap.getCameraPosition().zoom < mapViewModel.minZoomLevelForTrophies()) {
+                    /* Automatically zoom in if necessary */
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
                 } else {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -167,19 +167,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
 
-        long startTime = System.nanoTime();
+        long startTime = System.nanoTime(); /* Time this operation */
 
+        /* Skip trophies that are already on the map, */
+        /* and remove markers that are not included in the new list */
         Set<Trophy> newTrophiesSet = new HashSet<>(newTrophies);
         Iterator<Marker> markersIterator = markers.iterator();
         while (markersIterator.hasNext()) {
             Marker oldMarker = markersIterator.next();
             Trophy markerTrophy = (Trophy) oldMarker.getTag();
             if (!newTrophiesSet.remove(markerTrophy)) {
-                /* This marker should be removed */
                 oldMarker.remove();
                 markersIterator.remove();
             }
         }
+
+        /* Add the rest of new trophies to the map */
         for (Trophy trophy : newTrophiesSet) {
             Marker newMarker = googleMap.addMarker(
                     new MarkerOptions()

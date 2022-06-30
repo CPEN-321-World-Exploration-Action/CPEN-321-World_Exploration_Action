@@ -16,6 +16,9 @@ import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Objects;
 
+/**
+ * Manager of {@link BitmapDescriptor}s for images of different types of trophies.
+ */
 public class TrophyBitmaps {
     public final BitmapDescriptor goldBitmapDescriptor;
     public final BitmapDescriptor silverBitmapDescriptor;
