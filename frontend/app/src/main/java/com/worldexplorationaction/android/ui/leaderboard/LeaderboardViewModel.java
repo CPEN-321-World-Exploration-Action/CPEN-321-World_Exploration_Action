@@ -34,6 +34,7 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
             return;
         }
         leaderboardType.setValue(type);
+        users.setValue(Collections.emptyList()); /* Clear content first */
         if (type == LeaderboardType.GLOBAL) {
             List<UserProfile> dummy = new ArrayList<>();
             dummy.add(new UserProfile("id0", "", "Borivoj Philomele", 2001));
