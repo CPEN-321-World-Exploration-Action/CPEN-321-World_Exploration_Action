@@ -51,7 +51,15 @@ public class UserListView extends RecyclerView {
         }
     }
 
+    /**
+     * Listener of click events on items in the user list
+     */
     public interface OnItemClickListener {
+        /**
+         * Notify a click event on a row in the user list
+         *
+         * @param itemPosition index of the row clicked
+         */
         void onItemClick(int itemPosition);
     }
 }

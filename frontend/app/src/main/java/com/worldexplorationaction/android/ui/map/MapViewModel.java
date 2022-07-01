@@ -55,7 +55,11 @@ public class MapViewModel extends ViewModel {
         } else {
             Log.d(TAG, "display some trophies");
             List<Trophy> n = new ArrayList<>();
-            n.add(new Trophy("SW", "Science w", 49.273375652799665, -123.10383404409907));
+            n.add(new Trophy("ubcbg", "UBC Botanical Garden", Trophy.Quality.SILVER, 49.25423261518663, -123.25060270580698));
+            n.add(new Trophy("ubcwb", "Wreck Beach", Trophy.Quality.SILVER, 49.262173379130644, -123.26152320148114));
+            n.add(new Trophy("ubcbs", "UBC Bookstore", Trophy.Quality.BRONZE, 49.26518650521084, -123.25043270796431));
+            n.add(new Trophy("ubcbbm", "Beaty Biodiversity Museum", Trophy.Quality.SILVER, 49.263267669324605, -123.25096787350371));
+            n.add(new Trophy("ubcma", "Museum of Anthropology at UBC", Trophy.Quality.GOLD, 49.26958931834766, -123.25948194617801));
             displayTrophies.setValue(n);
         }
     }

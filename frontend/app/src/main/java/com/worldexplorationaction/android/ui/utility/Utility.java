@@ -1,9 +1,15 @@
 package com.worldexplorationaction.android.ui.utility;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Utility {
     private static final String TAG = Utility.class.getSimpleName();
@@ -33,5 +39,23 @@ public class Utility {
                 dp,
                 resources.getDisplayMetrics()
         );
+    }
+
+    /**
+     * Convert a vector drawable to a bitmap
+     *
+     * @param drawable    source drawable
+     * @param colorFilter color filter to apply, may be null.
+     * @return the bitmap containing the image as defined in the drawable
+     */
+    public static Bitmap getBitmapFromVectorDrawable(VectorDrawable drawable, @Nullable ColorFilter colorFilter) {
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (colorFilter != null) {
+            drawable.setColorFilter(colorFilter);
+        }
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

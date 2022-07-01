@@ -6,13 +6,15 @@ import androidx.annotation.Nullable;
 public class Trophy {
     public final String id;
     public final String title;
+    public final Quality quality;
     public final double latitude;
     public final double longitude;
     private final int hashCode;
 
-    public Trophy(String id, String title, double latitude, double longitude) {
+    public Trophy(String id, String title, Quality quality, double latitude, double longitude) {
         this.id = id;
         this.title = title;
+        this.quality = quality;
         this.latitude = latitude;
         this.longitude = longitude;
         this.hashCode = id.hashCode();
@@ -47,5 +49,9 @@ public class Trophy {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
+    }
+
+    public enum Quality {
+        GOLD, SILVER, BRONZE
     }
 }
