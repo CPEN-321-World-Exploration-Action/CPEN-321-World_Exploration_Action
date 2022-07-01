@@ -1,0 +1,17 @@
+{
+  "name": "world-exploration-action-backend",
+  "version": "0.1.0",
+  "description": "World Exploration Action Backend",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.18.0"
+  }
+}
