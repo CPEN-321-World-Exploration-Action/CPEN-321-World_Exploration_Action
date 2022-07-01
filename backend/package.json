@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "World Exploration Action Backend",
   "main": "src/app.js",
+  "type": "module",
   "scripts": {
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
