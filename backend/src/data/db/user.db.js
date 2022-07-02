@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    _id: Schema.Types.ObjectId,
+    user_id: { type: String, index: true },
     google_id: { type: String, index: true },
     name: { type: String, index: true },
     email: {
@@ -12,13 +12,17 @@ const userSchema = new Schema(
       lowercase: true,
       index: true,
     },
-    friends: [Schema.Types.ObjectId],
+    friends: [String],
   },
   {
-    statics: {},
+    statics: {
+      findUser(userId) {
+        return this.findOne({ user_id: userId });
+      },
+    },
     methods: {
       getFriends() {
-        return this.find().where("_id").in(this.friends);
+        return User.find().where("user_id").in(this.friends);
       },
     },
   }

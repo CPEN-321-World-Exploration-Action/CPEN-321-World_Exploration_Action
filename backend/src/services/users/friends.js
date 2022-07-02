@@ -1,5 +1,6 @@
-import { User } from "../../data/user.db";
+import { User } from "../../data/db/user.db.js";
 
 export async function retrieveFriends(userId) {
-  return await User.findById(userId).exec().getFriends().exec();
+  const user = await User.findUser(userId).exec();
+  return await user.getFriends().exec();
 }

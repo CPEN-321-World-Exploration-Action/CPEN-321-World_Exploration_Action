@@ -6,7 +6,7 @@ import * as userControllers from "../controllers/users.controllers.js";
 
 const usersRouter = express.Router();
 
-usersRouter.get("/:userId/profile", nocache, userControllers.getProfile);
-usersRouter.get("/:userId/friends", [nocache, auth], userControllers.getFriends);
+usersRouter.get("/:userId/profile", nocache(), userControllers.getProfile);
+usersRouter.get("/:userId/friends", [nocache(), auth], userControllers.getFriends);
 
 export default usersRouter;

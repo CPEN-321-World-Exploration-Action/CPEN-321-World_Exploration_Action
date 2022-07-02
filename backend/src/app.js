@@ -47,6 +47,7 @@ async function run() {
     console.log("Failed to connect to the database", err);
     return;
   }
+
   try {
     var server = app.listen(8081, (req, res) => {
       var host = server.address().address;
