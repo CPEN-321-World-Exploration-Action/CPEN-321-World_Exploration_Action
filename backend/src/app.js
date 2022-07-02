@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import morgan from "morgan";
+import "express-async-errors";
 
 import usersRouter from "./routes/users.routes.js";
 import trophiesRouter from "./routes/trophies.routes.js";
@@ -11,22 +13,28 @@ const defaultDbUri = "mongodb://localhost:27017";
 const app = express();
 
 app.use(express.json());
+app.use(
+  morgan(
+    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] - :response-time ms'
+  )
+);
 
 app.use("/users", usersRouter);
 app.use("/trophies", trophiesRouter);
 app.use("/photos", photosRouter);
 
-/* catch 404 and forward to error handler */
+/* catch 404 */
 app.use((req, res, next) => {
   res.status(404).json({
-    message: "No such route exists",
+    message: "Cannot " + req.method + " " + req.url,
   });
 });
 
 /* error handler */
 app.use((err, req, res, next) => {
+  console.log(err);
   res.status(err.status || 500).json({
-    message: "Error Message",
+    message: "Internal Server Error",
   });
 });
 
