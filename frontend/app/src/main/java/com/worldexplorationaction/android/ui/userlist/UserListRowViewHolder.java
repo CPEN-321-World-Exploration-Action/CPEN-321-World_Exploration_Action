@@ -79,7 +79,7 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
         nameTextView.setText(userProfile.getName());
         scoreTextView.setText(String.format(Locale.getDefault(), "%d", userProfile.getScore()));
         Glide.with(context)
-                .load(userProfile.getImage())
+                .load(userProfile.getImageUrl())
                 .apply(imageLoadOptions)
                 .into(profileImageView);
     }
