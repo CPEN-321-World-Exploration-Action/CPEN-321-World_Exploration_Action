@@ -1,4 +1,4 @@
-package com.worldexplorationaction.android.trophy;
+package com.worldexplorationaction.android.data.trophy;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

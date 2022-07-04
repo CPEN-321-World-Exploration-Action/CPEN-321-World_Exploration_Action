@@ -21,9 +21,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.trophy.Trophy;
+import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
-import com.worldexplorationaction.android.trophy.Trophy;
-import com.worldexplorationaction.android.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Collection;

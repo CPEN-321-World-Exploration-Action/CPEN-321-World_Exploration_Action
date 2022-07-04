@@ -4,12 +4,14 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Utility {
     private static final String TAG = Utility.class.getSimpleName();
@@ -57,5 +59,12 @@ public class Utility {
         }
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public static Retrofit getRetrofit(String path) {
+        return new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8081/" + path)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }
