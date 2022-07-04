@@ -13,6 +13,8 @@ const messaging = firebase.messaging();
  * @param {[String]} the target devices' FCM registration tokens
  */
 export async function sendLeaderboardUpdateMessage(tokens) {
+  console.log("Sending LeaderboardUpdateMessage to:", tokens);
+  if (tokens.length == 0) return;
   await messaging.sendMulticast({
     data: {
       type: "update",
