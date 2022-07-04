@@ -2,6 +2,7 @@ import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
 
 let subscribers = new Map();
+const validDuration = 1000 * 60 * 60; /* 1 hour */
 
 /* Clean up expired subscribers every 1 minute */
 setInterval(() => {
@@ -11,7 +12,7 @@ setInterval(() => {
       subscribers.delete(userId);
     }
   }
-}, 1000 * 60 /* 1 minute */);
+}, validDuration / 4);
 
 export async function onReceiveUserScoreUpdatedMessage(collectedTrophyId) {
   await notifyAllSubscribingUsers();
@@ -31,7 +32,7 @@ export async function getFriendLeaderboard(userId) {
 }
 
 export async function subscribeUpdate(userId, fcmToken) {
-  const expireTime = new Date().getTime() + 1000 * 60 * 60; /* 1 hour */
+  const expireTime = new Date().getTime() + validDuration;
   subscribers.set(userId, { fcmToken, expireTime });
   return expireTime;
 }
@@ -51,7 +52,7 @@ async function notifyAllSubscribingUsers() {
 async function notifyIfSubscribing(userIds) {
   const tokens = [];
   for (const userId of userIds) {
-    const [userId, { fcmToken, expireTime }] = subscribers.get(0);
+    const [_, { fcmToken, expireTime }] = subscribers.get(userId);
     if (fcmToken) tokens.push(fcmToken);
   }
   await fcm.sendLeaderboardUpdateMessage(tokens);
