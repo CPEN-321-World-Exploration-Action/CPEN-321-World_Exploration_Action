@@ -9,14 +9,14 @@ import java.util.Objects;
 public class UserProfile {
     @SerializedName(value = "id", alternate = {"user_id"})
     private final String id;
-    private final String image;
+    private final String imageUrl;
     private final String name;
-    private String email;
     private final int score;
+    private String email;
 
-    public UserProfile(String id, String image, String name, int score) {
+    public UserProfile(String id, String imageUrl, String name, int score) {
         this.id = id;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.name = name;
         this.score = score;
     }
@@ -26,7 +26,7 @@ public class UserProfile {
         if (this == o) return true;
         if (!(o instanceof UserProfile)) return false;
         UserProfile that = (UserProfile) o;
-        return score == that.score && id.equals(that.id) && Objects.equals(image, that.image) && name.equals(that.name);
+        return score == that.score && id.equals(that.id) && Objects.equals(imageUrl, that.imageUrl) && name.equals(that.name);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UserProfile {
     public String toString() {
         return "UserProfile{" +
                 "id='" + id + '\'' +
-                ", image='" + image + '\'' +
+                ", image='" + imageUrl + '\'' +
                 ", name='" + name + '\'' +
                 ", score=" + score +
                 '}';
@@ -49,8 +49,8 @@ public class UserProfile {
         return id;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getName() {
