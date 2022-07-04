@@ -32,3 +32,17 @@ export async function getFriendLeaderboard(req, res) {
   const users = await leaderboard.getFriendLeaderboard(req.userId);
   res.status(200).json(users);
 }
+
+export async function subscribeLeaderboardUpdate(req, res) {
+  const fcmToken = req.query.fcmToken;
+  if (fcmToken) {
+    const expireTime = await leaderboard.subscribeUpdate(req.userId, fcmToken);
+    res.status(200).json({
+      expireTime,
+    });
+  } else {
+    res.status(400).json({
+      message: "Missing parameter: fcmToken",
+    });
+  }
+}
