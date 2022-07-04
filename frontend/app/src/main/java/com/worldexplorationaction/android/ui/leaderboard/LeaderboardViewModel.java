@@ -1,15 +1,25 @@
 package com.worldexplorationaction.android.ui.leaderboard;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.worldexplorationaction.android.data.user.UserProfile;
+import com.worldexplorationaction.android.data.user.UserService;
+import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
-import com.worldexplorationaction.android.user.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LeaderboardViewModel extends ViewModel implements UserListViewModel {
     private final MutableLiveData<List<UserProfile>> users;

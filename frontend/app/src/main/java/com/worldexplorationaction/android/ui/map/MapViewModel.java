@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.worldexplorationaction.android.trophy.Trophy;
+import com.worldexplorationaction.android.data.trophy.Trophy;
 
 import java.util.ArrayList;
 import java.util.Collection;

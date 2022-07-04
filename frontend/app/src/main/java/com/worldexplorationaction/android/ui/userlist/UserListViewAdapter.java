@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.worldexplorationaction.android.R;
-import com.worldexplorationaction.android.user.UserProfile;
+import com.worldexplorationaction.android.data.user.UserProfile;
 
 import java.util.List;
 

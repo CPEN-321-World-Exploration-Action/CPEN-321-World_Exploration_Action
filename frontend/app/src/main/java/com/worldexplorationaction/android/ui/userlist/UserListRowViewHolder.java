@@ -17,8 +17,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.ui.utility.Utility;
-import com.worldexplorationaction.android.user.UserProfile;
 
 import java.util.Locale;
 
@@ -76,10 +76,10 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setUser(UserProfile userProfile) {
-        nameTextView.setText(userProfile.name);
-        scoreTextView.setText(String.format(Locale.getDefault(), "%d", userProfile.score));
+        nameTextView.setText(userProfile.getName());
+        scoreTextView.setText(String.format(Locale.getDefault(), "%d", userProfile.getScore()));
         Glide.with(context)
-                .load(userProfile.image)
+                .load(userProfile.getImage())
                 .apply(imageLoadOptions)
                 .into(profileImageView);
     }

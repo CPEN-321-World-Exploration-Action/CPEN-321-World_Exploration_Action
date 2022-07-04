@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.worldexplorationaction.android.user.UserProfile;
+import com.worldexplorationaction.android.data.user.UserProfile;
 
 import java.util.List;
 
