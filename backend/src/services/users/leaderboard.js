@@ -42,9 +42,9 @@ function sortByTrophyScore(users) {
 
 async function notifyAllSubscribingUsers() {
   const tokens = [];
-  subscribers.forEach((userId, { fcmToken, expireTime }) => {
+  for (const [userId, { fcmToken, expireTime }] of subscribers) {
     tokens.push(fcmToken);
-  });
+  }
   await fcm.sendLeaderboardUpdateMessage(tokens);
 }
 
