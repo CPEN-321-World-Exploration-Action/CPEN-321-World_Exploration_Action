@@ -6,3 +6,18 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+
+/**
+ * Send a multicast message to devices to notify an leaderboard update
+ * @export
+ * @param {[String]} the target devices' FCM registration tokens
+ */
+export async function sendLeaderboardUpdateMessage(tokens) {
+  await messaging.sendMulticast({
+    data: {
+      type: "update",
+      update: "leaderboard",
+    },
+    tokens,
+  });
+}
