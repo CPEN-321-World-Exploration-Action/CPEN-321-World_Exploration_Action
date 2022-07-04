@@ -7,7 +7,7 @@ export default (req, res, next) => {
 
   try {
     // const userId = verifyUser(token);
-    // req.userId = userId;
+    req.userId = "id7";
   } catch (err) {
     res.status(401).send({ error: "Authorization failed" });
   }

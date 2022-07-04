@@ -17,7 +17,7 @@ export async function getProfile(req, res) {
 }
 
 export async function getFriends(req, res) {
-  const friends = await friends.retrieveFriends("id7");
+  const friends = await friends.retrieveFriends(req.userId);
   res.status(200).json({
     friends,
   });
@@ -29,6 +29,6 @@ export async function getGlobalLeaderboard(req, res) {
 }
 
 export async function getFriendLeaderboard(req, res) {
-  const users = await leaderboard.getFriendLeaderboard("id7");
+  const users = await leaderboard.getFriendLeaderboard(req.userId);
   res.status(200).json(users);
 }
