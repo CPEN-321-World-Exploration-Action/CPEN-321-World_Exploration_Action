@@ -29,13 +29,16 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
     private final UserService userService;
     private final MediatorLiveData<List<UserProfile>> users;
     private final MutableLiveData<LeaderboardType> leaderboardType;
+    private final MutableLiveData<String> leaderboardFetchError;
     private boolean subscribing;
+    private Call<List<UserProfile>> fetchLeaderboardCall;
 
     public LeaderboardViewModel() {
         this.handler = new Handler(Looper.getMainLooper());
         this.userService = UserService.getService();
         this.users = new MediatorLiveData<>();
         this.leaderboardType = new MutableLiveData<>();
+        this.leaderboardFetchError = new MutableLiveData<>();
         this.subscribing = false;
 
         users.setValue(Collections.emptyList());
@@ -61,6 +64,15 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         return leaderboardType;
     }
 
+    public LiveData<String> getLeaderboardFetchError() {
+        return leaderboardFetchError;
+    }
+
+    /**
+     * Notify the view model that the user wants to change the leaderboard type
+     *
+     * @param type new leaderboard type
+     */
     public void notifySwitchLeaderboardType(LeaderboardType type) {
         if (type == getLeaderboardType().getValue()) {
             return;
@@ -69,6 +81,9 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         fetchLeaderboard();
     }
 
+    /**
+     * Indicate the leaderboard should update in real-time
+     */
     public void subscribeLeaderboardUpdate() {
         if (subscribing) {
             return;
@@ -78,6 +93,9 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         doSubscribeLeaderboardUpdate();
     }
 
+    /**
+     * Indicate it is no longer needed to update the leaderboard
+     */
     public void unsubscribeLeaderboardUpdate() {
         if (!subscribing) {
             return;
@@ -86,6 +104,49 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         subscribing = false;
     }
 
+    /**
+     * Get the leaderboard from the server
+     */
+    public void fetchLeaderboard() {
+        // TODO: add a loading animation
+        Log.i(TAG, "Fetching leaderboard");
+        if (fetchLeaderboardCall != null) {
+            fetchLeaderboardCall.cancel();
+        }
+        if (leaderboardType.getValue() == LeaderboardType.GLOBAL) {
+            fetchLeaderboardCall = userService.getGlobalLeaderboard();
+        } else if (leaderboardType.getValue() == LeaderboardType.FRIENDS) {
+            fetchLeaderboardCall = userService.getFriendLeaderboard();
+        } else {
+            throw new IllegalStateException("Unknown LeaderboardType");
+        }
+        fetchLeaderboardCall.enqueue(new Callback<List<UserProfile>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                if (response.isSuccessful()) {
+                    users.setValue(response.body());
+                } else {
+                    Log.e(TAG, "userService.getGlobalLeaderboard failed with code " + response.code() + " body: " + response.errorBody());
+                    handleLeaderboardFailure("Error code " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    Log.i(TAG, "userService.getGlobalLeaderboard canceled");
+                    return;
+                }
+                Log.e(TAG, "userService.getGlobalLeaderboard failed: " + t);
+                handleLeaderboardFailure(t.getLocalizedMessage());
+            }
+        });
+    }
+
+    /**
+     * Send requests to the server to indicate that the app wants to
+     * get a message when the leaderboard is update.
+     */
     private void doSubscribeLeaderboardUpdate() {
         if (!subscribing) {
             return;
@@ -122,38 +183,9 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         });
     }
 
-    private void fetchLeaderboard() {
-        // TODO: add a loading animation
-        Log.i(TAG, "Fetching leaderboard");
-        Call<List<UserProfile>> call;
-        if (leaderboardType.getValue() == LeaderboardType.GLOBAL) {
-            call = userService.getGlobalLeaderboard();
-        } else if (leaderboardType.getValue() == LeaderboardType.FRIENDS) {
-            call = userService.getFriendLeaderboard();
-        } else {
-            throw new IllegalStateException("Unknown LeaderboardType");
-        }
-        call.enqueue(new Callback<List<UserProfile>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
-                if (response.isSuccessful()) {
-                    users.setValue(response.body());
-                } else {
-                    Log.e(TAG, "userService.getGlobalLeaderboard failed with code " + response.code() + " body: " + response.errorBody());
-                    handleLeaderboardFailure();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
-                Log.e(TAG, "userService.getGlobalLeaderboard failed: " + t);
-                handleLeaderboardFailure();
-            }
-        });
-    }
-
-    private void handleLeaderboardFailure() {
+    private void handleLeaderboardFailure(String errorMessage) {
         users.setValue(Collections.emptyList());
-        // TODO: add dialog
+        leaderboardFetchError.setValue(errorMessage);
+        leaderboardFetchError.setValue(null);
     }
 }
