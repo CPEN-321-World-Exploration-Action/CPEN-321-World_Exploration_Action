@@ -61,6 +61,18 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        leaderboardViewModel.subscribeLeaderboardUpdate();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        leaderboardViewModel.unsubscribeLeaderboardUpdate();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
