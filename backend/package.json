@@ -6,18 +6,22 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ."
   },
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
+    "express-session": "^1.17.3",
     "google-auth-library": "^8.1.0",
     "mongoose": "^6.4.2",
     "morgan": "^1.10.0",
     "nocache": "^3.0.4"
   },
   "devDependencies": {
-    "eslint": "^8.18.0"
+    "eslint": "^8.18.0",
+    "nodemon": "^2.0.19"
   }
 }
