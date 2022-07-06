@@ -1,14 +1,18 @@
-package com.worldexplorationaction.android.user;
+package com.worldexplorationaction.android.data.user;
 
 import androidx.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
 public class UserProfile {
-    public final String id;
-    public final String image;
-    public final String name;
-    public final int score;
+    @SerializedName(value = "id", alternate = {"user_id"})
+    private final String id;
+    private final String image;
+    private final String name;
+    private String email;
+    private final int score;
 
     public UserProfile(String id, String image, String name, int score) {
         this.id = id;
@@ -39,5 +43,25 @@ public class UserProfile {
                 ", name='" + name + '\'' +
                 ", score=" + score +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

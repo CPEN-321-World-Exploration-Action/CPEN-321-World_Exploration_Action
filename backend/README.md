@@ -2,9 +2,10 @@
 
 ## How to Run
 
-1. Make sure `npm` is installed
-2. `npm install [--production]`
-3. `npm start`
+1. Put `firebase-service-account.json` in this folder
+2. Make sure `npm` is installed
+3. `npm install [--production]`
+4. `npm start`
 
 ## Project Structure
 
@@ -21,6 +22,8 @@
     - `external` - modules for interacting with external services
   - `utils` - utility functions
 
-## Denpendencies
+## Acknowledgements
+
+### Dependencies
 
 > TODO

@@ -31,9 +31,32 @@ export async function createProfile(req, res){
 }
 
 export async function getFriends(req, res) {
-  const userId = req.params["userId"];
-  const frineds = await friends.retrieveFriends(userId);
+  const friends = await friends.retrieveFriends(req.userId);
   res.status(200).json({
-    frineds,
+    friends,
   });
+}
+
+export async function getGlobalLeaderboard(req, res) {
+  const users = await leaderboard.getGlobalLeaderboard();
+  res.status(200).json(users);
+}
+
+export async function getFriendLeaderboard(req, res) {
+  const users = await leaderboard.getFriendLeaderboard(req.userId);
+  res.status(200).json(users);
+}
+
+export async function subscribeLeaderboardUpdate(req, res) {
+  const fcmToken = req.query.fcmToken;
+  if (fcmToken) {
+    const expireTime = await leaderboard.subscribeUpdate(req.userId, fcmToken);
+    res.status(200).json({
+      expireTime,
+    });
+  } else {
+    res.status(400).json({
+      message: "Missing parameter: fcmToken",
+    });
+  }
 }

@@ -7,7 +7,11 @@ import * as userControllers from "../controllers/users.controllers.js";
 const usersRouter = express.Router();
 
 usersRouter.put('/create', [nocache(), auth], userControllers.createProfile);
+usersRouter.get("/me/friends", [nocache(), auth], userControllers.getFriends);
 usersRouter.get("/:userId/profile", nocache(), userControllers.getProfile);
-usersRouter.get("/:userId/friends", [nocache(), auth], userControllers.getFriends);
+
+usersRouter.put("/leaderboard/subscribe-update", [nocache(), auth], userControllers.subscribeLeaderboardUpdate);
+usersRouter.get("/leaderboard/global", [nocache(), auth], userControllers.getGlobalLeaderboard);
+usersRouter.get("/leaderboard/friend", [nocache(), auth], userControllers.getFriendLeaderboard);
 
 export default usersRouter;
