@@ -14,8 +14,10 @@ import com.worldexplorationaction.android.data.user.ExpireTime;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
+import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +60,18 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
     @Override
     public LiveData<List<UserProfile>> getUsers() {
         return users;
+    }
+
+    @Override
+    public List<UserListMode> getModes() {
+        if (users.getValue() == null) {
+            return Collections.emptyList();
+        }
+        List<UserListMode> modes = new ArrayList<>(users.getValue().size());
+        for (int i = 0; i < users.getValue().size(); i++) {
+            modes.add(UserListMode.LEADERBOARD);
+        }
+        return modes;
     }
 
     public LiveData<LeaderboardType> getLeaderboardType() {

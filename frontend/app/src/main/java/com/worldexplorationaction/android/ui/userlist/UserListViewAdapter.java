@@ -15,14 +15,12 @@ import com.worldexplorationaction.android.data.user.UserProfile;
 import java.util.List;
 
 class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
-    private final UserListMode mode;
     private final Context context;
     private final UserListView.OnItemClickListener onItemClickListener;
     private List<UserProfile> displayingUsers;
+    private List<UserListMode> modes;
 
-    public UserListViewAdapter(UserListMode mode, Context context,
-                               UserListView.OnItemClickListener onItemClickListener) {
-        this.mode = mode;
+    public UserListViewAdapter(Context context, UserListView.OnItemClickListener onItemClickListener) {
         this.context = context;
         this.onItemClickListener = onItemClickListener;
 
@@ -34,13 +32,12 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
     public UserListRowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View row = inflater.inflate(R.layout.view_user_list_row, parent, false);
-        UserListRowViewHolder viewHolder = new UserListRowViewHolder(row, context, onItemClickListener);
-        viewHolder.setMode(mode);
-        return viewHolder;
+        return new UserListRowViewHolder(row, context, onItemClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserListRowViewHolder holder, int position) {
+        holder.setMode(modes.get(position));
         holder.setUser(displayingUsers.get(position));
         holder.setRank(position + 1);
     }
@@ -61,8 +58,9 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
      * @param newDisplayingUsers users to display
      */
     @SuppressLint("NotifyDataSetChanged")
-    public void updateDisplayingUsers(List<UserProfile> newDisplayingUsers) {
+    public void updateDisplayingUsers(List<UserProfile> newDisplayingUsers, List<UserListMode> modes) {
         this.displayingUsers = newDisplayingUsers;
+        this.modes = modes;
         notifyDataSetChanged();
     }
 }
