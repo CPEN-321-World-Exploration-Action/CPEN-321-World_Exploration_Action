@@ -138,9 +138,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Log.i(TAG, "animateCameraToMyLocation: no location");
                 new AlertDialog.Builder(getContext())
                         .setMessage(R.string.location_retrieval_error)
-                        .setNeutralButton(R.string.location_retrieval_retry,
+                        .setNeutralButton(R.string.common_retry,
                                 (dialog, which) -> animateCameraToMyLocation())
-                        .setPositiveButton(R.string.permission_ok, (dialog, which) -> {
+                        .setPositiveButton(R.string.common_ok, (dialog, which) -> {
                         })
                         .create()
                         .show();

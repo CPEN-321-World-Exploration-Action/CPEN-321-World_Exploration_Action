@@ -1,5 +1,7 @@
 package com.worldexplorationaction.android.ui.leaderboard;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,12 +10,12 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.worldexplorationaction.android.data.user.ExpireTime;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,12 +24,35 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LeaderboardViewModel extends ViewModel implements UserListViewModel {
-    private final MutableLiveData<List<UserProfile>> users;
+    private static final String TAG = LeaderboardViewModel.class.getSimpleName();
+    private final Handler handler;
+    private final UserService userService;
+    private final MediatorLiveData<List<UserProfile>> users;
     private final MutableLiveData<LeaderboardType> leaderboardType;
+    private final MutableLiveData<String> leaderboardFetchError;
+    private boolean subscribing;
+    private Call<List<UserProfile>> fetchLeaderboardCall;
 
     public LeaderboardViewModel() {
-        users = new MutableLiveData<>(Collections.emptyList());
-        leaderboardType = new MutableLiveData<>();
+        this.handler = new Handler(Looper.getMainLooper());
+        this.userService = UserService.getService();
+        this.users = new MediatorLiveData<>();
+        this.leaderboardType = new MutableLiveData<>();
+        this.leaderboardFetchError = new MutableLiveData<>();
+        this.subscribing = false;
+
+        users.setValue(Collections.emptyList());
+        users.addSource(WeaFirebaseMessagingService.getLeaderboardUpdate(), unused -> {
+            Log.i(TAG, "Received leaderboard update message");
+            fetchLeaderboard();
+        });
+
+        subscribeLeaderboardUpdate();
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
     }
 
     @Override
@@ -39,35 +64,128 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         return leaderboardType;
     }
 
+    public LiveData<String> getLeaderboardFetchError() {
+        return leaderboardFetchError;
+    }
+
+    /**
+     * Notify the view model that the user wants to change the leaderboard type
+     *
+     * @param type new leaderboard type
+     */
     public void notifySwitchLeaderboardType(LeaderboardType type) {
         if (type == getLeaderboardType().getValue()) {
             return;
         }
         leaderboardType.setValue(type);
-        users.setValue(Collections.emptyList()); /* Clear content first */
-        if (type == LeaderboardType.GLOBAL) {
-            List<UserProfile> dummy = new ArrayList<>();
-            dummy.add(new UserProfile("id0", "https://m.media-amazon.com/images/M/MV5BMWFmYmRiYzMtMTQ4YS00NjA5LTliYTgtMmM3OTc4OGY3MTFkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_.jpg", "Borivoj Philomele", 2001));
-            dummy.add(new UserProfile("id1", "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/v937-aew-111_3.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=8ce2cd03f94f2baddcb332cfb50f78b9", "Paul C. Ramos", 999));
-            dummy.add(new UserProfile("id2", "https://www.saeinc.com/wp-content/uploads/2019/11/avatar-icon.png", "Paul L. Thoman", 998));
-            dummy.add(new UserProfile("id3", "https://static.wikia.nocookie.net/roblox/images/d/d1/3.0avatar.png/revision/latest/scale-to-width-down/720?cb=20210710212949", "Kelsey T. Donovan", 990));
-            dummy.add(new UserProfile("id4", "", "Paul L. Gregory", 800));
-            dummy.add(new UserProfile("id5", "", "Mary R. Mercado", 700));
-            dummy.add(new UserProfile("id6", "https://media.gettyimages.com/vectors/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-id1227566098?s=612x612", "Theresa N. Maki", 666));
-            dummy.add(new UserProfile("id7", "https://www.adobe.com/express/create/media_1b4d6d299e47dc0415d8111e80f9bfbb14ccc7bf1.jpeg?width=400&format=jpeg&optimize=medium", "Rayen Gülnur", 555));
-            dummy.add(new UserProfile("id8", "", "Dunstan Giusto", 550));
-            dummy.add(new UserProfile("id9", "https://m.media-amazon.com/images/M/MV5BMWFmYmRiYzMtMTQ4YS00NjA5LTliYTgtMmM3OTc4OGY3MTFkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_.jpg", "Feofan Indie", 300));
-            dummy.add(new UserProfile("id10", "", "Dunstan Giusto", 21));
-            users.setValue(dummy);
-        } else {
-            List<UserProfile> dummy = new ArrayList<>();
-            dummy.add(new UserProfile("id1", "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/v937-aew-111_3.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=8ce2cd03f94f2baddcb332cfb50f78b9", "Paul C. Ramos", 999));
-            dummy.add(new UserProfile("id2", "https://www.saeinc.com/wp-content/uploads/2019/11/avatar-icon.png", "Paul L. Thoman", 998));
-            dummy.add(new UserProfile("id3", "https://static.wikia.nocookie.net/roblox/images/d/d1/3.0avatar.png/revision/latest/scale-to-width-down/720?cb=20210710212949", "Kelsey T. Donovan", 990));
-            dummy.add(new UserProfile("id6", "https://media.gettyimages.com/vectors/people-avatar-round-icon-set-profile-diverse-faces-for-social-network-vector-id1227566098?s=612x612", "Theresa N. Maki", 666));
-            dummy.add(new UserProfile("id7", "https://www.adobe.com/express/create/media_1b4d6d299e47dc0415d8111e80f9bfbb14ccc7bf1.jpeg?width=400&format=jpeg&optimize=medium", "Rayen Gülnur", 555));
-            dummy.add(new UserProfile("id9", "https://m.media-amazon.com/images/M/MV5BMWFmYmRiYzMtMTQ4YS00NjA5LTliYTgtMmM3OTc4OGY3MTFkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_.jpg", "Feofan Indie", 300));
-            users.setValue(dummy);
+        fetchLeaderboard();
+    }
+
+    /**
+     * Indicate the leaderboard should update in real-time
+     */
+    public void subscribeLeaderboardUpdate() {
+        if (subscribing) {
+            return;
         }
+        Log.i(TAG, "subscribeLeaderboardUpdate");
+        subscribing = true;
+        doSubscribeLeaderboardUpdate();
+    }
+
+    /**
+     * Indicate it is no longer needed to update the leaderboard
+     */
+    public void unsubscribeLeaderboardUpdate() {
+        if (!subscribing) {
+            return;
+        }
+        Log.i(TAG, "unsubscribeLeaderboardUpdate");
+        subscribing = false;
+    }
+
+    /**
+     * Get the leaderboard from the server
+     */
+    public void fetchLeaderboard() {
+        // TODO: add a loading animation
+        Log.i(TAG, "Fetching leaderboard");
+        if (fetchLeaderboardCall != null) {
+            fetchLeaderboardCall.cancel();
+        }
+        if (leaderboardType.getValue() == LeaderboardType.GLOBAL) {
+            fetchLeaderboardCall = userService.getGlobalLeaderboard();
+        } else if (leaderboardType.getValue() == LeaderboardType.FRIENDS) {
+            fetchLeaderboardCall = userService.getFriendLeaderboard();
+        } else {
+            throw new IllegalStateException("Unknown LeaderboardType");
+        }
+        fetchLeaderboardCall.enqueue(new Callback<List<UserProfile>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                if (response.isSuccessful()) {
+                    users.setValue(response.body());
+                } else {
+                    Log.e(TAG, "userService.getGlobalLeaderboard failed with code " + response.code() + " body: " + response.errorBody());
+                    handleLeaderboardFailure("Error code " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    Log.i(TAG, "userService.getGlobalLeaderboard canceled");
+                    return;
+                }
+                Log.e(TAG, "userService.getGlobalLeaderboard failed: " + t);
+                handleLeaderboardFailure(t.getLocalizedMessage());
+            }
+        });
+    }
+
+    /**
+     * Send requests to the server to indicate that the app wants to
+     * get a message when the leaderboard is update.
+     */
+    private void doSubscribeLeaderboardUpdate() {
+        if (!subscribing) {
+            return;
+        }
+        Log.i(TAG, "doSubscribeLeaderboardUpdate");
+        WeaFirebaseMessagingService.getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e(TAG, "Cannot get FCM registration token: ", task.getException());
+                return;
+            }
+            String token = task.getResult();
+            Log.d(TAG, "FCM token: " + token);
+
+            userService.subscribeLeaderboardUpdate(token).enqueue(new Callback<ExpireTime>() {
+                @Override
+                public void onResponse(@NonNull Call<ExpireTime> call, @NonNull Response<ExpireTime> response) {
+                    if (response.body() == null) {
+                        Log.e(TAG, "userService.subscribeLeaderboardUpdate succeeded with a null body");
+                        return;
+                    }
+                    if (subscribing) {
+                        long expireMillis = response.body().getExpireTime();
+                        long delayMillis = Math.max(0, expireMillis - System.currentTimeMillis() - 1000 * 5);
+                        Log.i(TAG, "Delay until next subscription: " + delayMillis + "ms");
+                        handler.postDelayed(LeaderboardViewModel.this::doSubscribeLeaderboardUpdate, delayMillis);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ExpireTime> call, @NonNull Throwable t) {
+                    Log.e(TAG, "userService.subscribeLeaderboardUpdate failed: " + t);
+                }
+            });
+        });
+    }
+
+    private void handleLeaderboardFailure(String errorMessage) {
+        users.setValue(Collections.emptyList());
+        leaderboardFetchError.setValue(errorMessage);
+        leaderboardFetchError.setValue(null);
     }
 }

@@ -147,9 +147,9 @@ public class UserLocation implements LocationSource {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.location_request_rationale_title)
                 .setMessage(R.string.location_request_rationale_message)
-                .setNegativeButton(R.string.permission_no,
+                .setNegativeButton(R.string.common_no,
                         (dialog, which) -> notifyPermissionsUpdateListener(false))
-                .setPositiveButton(R.string.permission_ok,
+                .setPositiveButton(R.string.common_ok,
                         (dialog, which) -> launchPermissionsRequestActivity())
                 .create()
                 .show();
