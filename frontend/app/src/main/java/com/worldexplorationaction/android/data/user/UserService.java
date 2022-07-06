@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface UserService {
     static UserService getService() {
-        return Utility.getRetrofit("users/").create(UserService.class);
+        return Holder.instance;
     }
 
     @GET("leaderboard/global")
@@ -22,4 +22,11 @@ public interface UserService {
 
     @PUT("leaderboard/subscribe-update")
     Call<ExpireTime> subscribeLeaderboardUpdate(@Query("fcmToken") String fcmToken);
+
+    @GET("account/me/friends")
+    Call<List<UserProfile>> getFriendProfiles();
+
+    class Holder {
+        public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
+    }
 }
