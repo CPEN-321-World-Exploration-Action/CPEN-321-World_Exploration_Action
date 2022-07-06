@@ -3,7 +3,7 @@ import { User } from "../../data/db/user.db.js";
 import { Photo } from "../../data/db/photo.db.js";
 
 // probably should not store anything, so to keep consistency
-let photoSorting = new Map();
+//let photoSorting = new Map();
 
 
 export async function getPhotoIDsByUserID(String userID){

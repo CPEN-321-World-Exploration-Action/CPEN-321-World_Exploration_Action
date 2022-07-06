@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const photoSchema = new Schema(
   {
     photo_id: { type: String, index: true, unique: true },
-    number_of_likes: { type: Number, index: true },
+    number_of_likes: { type: Number, index: true, default: 0 },
     user_id: { type: String, index: true },
     google_id: { type: String, index: true },
     imageUrl: String, //issue we use imageData?
@@ -17,7 +17,8 @@ const photoSchema = new Schema(
 
         var photoList;
 
-        if (method == "userID"){
+        // method: userID
+        if (method === "userID"){
             photoList = this.find({ user_id: userId });
         }
 

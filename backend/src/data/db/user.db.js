@@ -29,12 +29,15 @@ const userSchema = new Schema(
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
       },
-      computeUserRank(String userID){
-
-        user = this.findOne({ user_id: userID });
-        return this.find({score: { $gt : user["score"] }}).count();
-
+      computeUserRank(userID){
+        var user = this.findOne({ user_id: userID });
+        return this.find({score: { $gt : user.score }}).count();
       },
+      incrementTrophyScore(collectorUserId, score){
+        var user = this.findOne({ user_id: userID });
+        user.score += score;
+        user.save();
+      }
     },
     methods: {
         getFriends() {
