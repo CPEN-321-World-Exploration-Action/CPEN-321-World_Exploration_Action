@@ -21,4 +21,6 @@
     <string name="friends_search_placeholder">Search new friends…</string>
     <string name="friends_action_send_request">Send Request</string>
     <string name="friends_action_review_request">Review Request</string>
+    <string name="friends_no_friend">Seems you have no friends</string>
+    <string name="friends_search_no_found">No user found</string>
 </resources>
