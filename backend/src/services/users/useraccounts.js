@@ -9,3 +9,7 @@ export async function onReceiveTrophyCollectedMessage(collectorUserId, collected
 export async function getUserProfile(userId) {
   return await User.findUser(userId).exec();
 }
+
+export async function signOut(){
+    // issue: should not be here?
+}
