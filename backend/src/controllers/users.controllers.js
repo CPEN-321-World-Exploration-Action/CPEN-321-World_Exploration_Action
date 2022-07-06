@@ -16,6 +16,20 @@ export async function getProfile(req, res) {
   }
 }
 
+export async function createProfile(req, res){
+  const userId = req.params['userId'];
+  const user = await userAccounts.createUserProfile(userId);
+  if (user){
+    res.status(200).json({
+      user,
+    });
+  }else{
+    res.status(404).json({
+      message: "Could not create user",
+    })
+  }
+}
+
 export async function getFriends(req, res) {
   const userId = req.params["userId"];
   const frineds = await friends.retrieveFriends(userId);
