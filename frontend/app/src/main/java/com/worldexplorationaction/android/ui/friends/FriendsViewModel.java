@@ -2,7 +2,6 @@ package com.worldexplorationaction.android.ui.friends;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -20,12 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FriendsViewModel extends ViewModel implements UserListViewModel {
     private static final String TAG = FriendsViewModel.class.getSimpleName();
@@ -113,6 +109,16 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
             this.isSearching = true;
             fetchSearchResult(query);
         }
+    }
+
+    public void sendRequest(UserProfile user) {
+        userService.sendRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "sendRequest succeeded");
+            toastMessage.setValue("Successfully send a friend request to " + user.getName());
+        }, null, errorMessage -> {
+            Log.e(TAG, "sendRequest failed " + errorMessage);
+            toastMessage.setValue("Could not send request to " + user.getName() + " because " + errorMessage);
+        }));
     }
 
     public void deleteFriend(UserProfile friend) {

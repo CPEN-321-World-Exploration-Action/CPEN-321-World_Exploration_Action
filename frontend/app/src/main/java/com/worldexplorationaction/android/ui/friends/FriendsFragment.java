@@ -88,14 +88,14 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         if (message == null) {
             return;
         }
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void handleToastMessage(Integer stringResId) {
         if (stringResId == null) {
             return;
         }
-        Toast.makeText(getContext(), stringResId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), stringResId, Toast.LENGTH_LONG).show();
     }
 
     private void onUserClicked(int position) {
@@ -129,11 +129,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
                                 Toast.LENGTH_SHORT
                         ).show();
                     } else {
-                        Toast.makeText(
-                                getContext(),
-                                "Delete friend: " + user.getName(),
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        viewModel.deleteFriend(user);
                     }
                 })
                 .create().show();
@@ -170,11 +166,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.friends_send_request, user.getName()))
                 .setPositiveButton(R.string.common_yes, (dialog, id) -> {
-                    Toast.makeText(
-                            getContext(),
-                            "Send friend request: " + user.getName(),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    viewModel.sendRequest(user);
                 })
                 .setNegativeButton(R.string.common_no, null).create().show();
     }

@@ -33,6 +33,9 @@ public interface UserService {
     @GET("friends/requests")
     Call<List<UserProfile>> getFriendRequests();
 
+    @POST("friends/send-request")
+    Call<Void> sendRequest(@Query("targetUserId") String targetUserId);
+
     @POST("friends/delete")
     Call<Void> deleteFriend(@Query("friendId") String friendId);
 
