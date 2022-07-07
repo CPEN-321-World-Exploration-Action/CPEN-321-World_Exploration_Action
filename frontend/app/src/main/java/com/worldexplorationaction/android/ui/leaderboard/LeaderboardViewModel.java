@@ -4,26 +4,23 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.worldexplorationaction.android.data.user.ExpireTime;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
+import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LeaderboardViewModel extends ViewModel implements UserListViewModel {
     private static final String TAG = LeaderboardViewModel.class.getSimpleName();
@@ -104,7 +101,7 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         }
         Log.i(TAG, "subscribeLeaderboardUpdate");
         subscribing = true;
-        doSubscribeLeaderboardUpdate();
+        getFcmTokenAndSubscribeUpdate();
     }
 
     /**
@@ -134,34 +131,22 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
         } else {
             throw new IllegalStateException("Unknown LeaderboardType");
         }
-        fetchLeaderboardCall.enqueue(new Callback<List<UserProfile>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
-                if (response.isSuccessful()) {
-                    users.setValue(response.body());
-                } else {
-                    Log.e(TAG, "userService.getGlobalLeaderboard failed with code " + response.code() + " body: " + response.errorBody());
-                    handleLeaderboardFailure("Error code " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
-                if (call.isCanceled()) {
-                    Log.i(TAG, "userService.getGlobalLeaderboard canceled");
-                    return;
-                }
-                Log.e(TAG, "userService.getGlobalLeaderboard failed: " + t);
-                handleLeaderboardFailure(t.getLocalizedMessage());
-            }
-        });
+        fetchLeaderboardCall.enqueue(new CustomCallback<>(responseBody -> {
+            Log.i(TAG, "userService.getGlobalLeaderboard succeeded");
+            users.setValue(responseBody);
+        }, () -> {
+            Log.i(TAG, "userService.getGlobalLeaderboard canceled");
+        }, errorMessage -> {
+            Log.e(TAG, "userService.getGlobalLeaderboard " + errorMessage);
+            handleLeaderboardFailure(errorMessage);
+        }));
     }
 
     /**
      * Send requests to the server to indicate that the app wants to
      * get a message when the leaderboard is update.
      */
-    private void doSubscribeLeaderboardUpdate() {
+    private void getFcmTokenAndSubscribeUpdate() {
         if (!subscribing) {
             return;
         }
@@ -174,27 +159,25 @@ public class LeaderboardViewModel extends ViewModel implements UserListViewModel
             String token = task.getResult();
             Log.d(TAG, "FCM token: " + token);
 
-            userService.subscribeLeaderboardUpdate(token).enqueue(new Callback<ExpireTime>() {
-                @Override
-                public void onResponse(@NonNull Call<ExpireTime> call, @NonNull Response<ExpireTime> response) {
-                    if (response.body() == null) {
-                        Log.e(TAG, "userService.subscribeLeaderboardUpdate succeeded with a null body");
-                        return;
-                    }
-                    if (subscribing) {
-                        long expireMillis = response.body().getExpireTime();
-                        long delayMillis = Math.max(0, expireMillis - System.currentTimeMillis() - 1000 * 5);
-                        Log.i(TAG, "Delay until next subscription: " + delayMillis + "ms");
-                        handler.postDelayed(LeaderboardViewModel.this::doSubscribeLeaderboardUpdate, delayMillis);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ExpireTime> call, @NonNull Throwable t) {
-                    Log.e(TAG, "userService.subscribeLeaderboardUpdate failed: " + t);
-                }
-            });
+            subscribeLeaderboardUpdate(token);
         });
+    }
+
+    private void subscribeLeaderboardUpdate(String fcmToken) {
+        userService.subscribeLeaderboardUpdate(fcmToken).enqueue(new CustomCallback<>(responseBody -> {
+            if (responseBody == null) {
+                Log.e(TAG, "userService.subscribeLeaderboardUpdate succeeded with a null body");
+                return;
+            }
+            if (subscribing) {
+                long expireMillis = responseBody.getExpireTime();
+                long delayMillis = Math.max(0, expireMillis - System.currentTimeMillis() - 1000 * 5);
+                Log.i(TAG, "Delay until next subscription: " + delayMillis + "ms");
+                handler.postDelayed(LeaderboardViewModel.this::getFcmTokenAndSubscribeUpdate, delayMillis);
+            }
+        }, null, errorMessage -> {
+            Log.e(TAG, "userService.subscribeLeaderboardUpdate" + errorMessage);
+        }));
     }
 
     private void handleLeaderboardFailure(String errorMessage) {
