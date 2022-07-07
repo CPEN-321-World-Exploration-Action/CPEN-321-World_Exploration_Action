@@ -7,8 +7,8 @@ const trophySchemaTrophy = new Schema(
       trophy_id: { type: String, index: true, unique: true },
       number_of_collectors: { type: Number, default: 0},
       quality: { type: String, enum: ["Gold", "gold", "Silver", "silver", "Bronze", "bronze"], default: "Bronze"},
-      list_of_photos: { type: Array, default: []},
-      list_of_collectors: {type: Array, default: []}
+      list_of_photos: { type: Array, default: [" "] },
+      list_of_collectors: {type: Array, default: [" "] }
       /*
     photo_id: { type: String, index: true, unique: true },
     number_of_likes: { type: Number, index: true },
@@ -71,7 +71,7 @@ const trophySchemaUser = new Schema(
               user.save();
           },
           storeTrophies(userID, trophies){
-              var user = this.find({user_id: userId});
+              var user = this.find({user_id: userID});
               for (let value of trophies){
                   user.collectedTrophies.push(value);
               }
@@ -90,3 +90,13 @@ const trophySchemaUser = new Schema(
 
 export const TrophyUser = mongoose.model("TrophyUser", trophySchemaUser);
 export const TrophyTrophy = mongoose.model("TrophyTrophy", trophySchemaTrophy);
+
+
+//TrophyTrophy.incrementNumberOfCollector("trophyID");
+//TrophyTrophy.getTrophyText("a");
+//TrophyTrophy.addUserToTrophy("a", "b");
+
+  //TrophyUser.removeUncollectedTrophy("A","a");
+  //TrophyUser.addCollectedTrophy("a","a");
+  TrophyUser.storeTrophies("a","a");
+  TrophyUser.getUsersTags("userID");
