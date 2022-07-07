@@ -30,7 +30,8 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
 
     private final UserService userService;
 
-    private final MutableLiveData<String> errorMessage;
+    private final MutableLiveData<String> toastMessage;
+    private final MutableLiveData<Integer> toastMessageResId;
     private final MutableLiveData<Integer> popupMessageResId;
     private final MediatorLiveData<List<UserProfile>> displayingUsers;
     private boolean isSearching;
@@ -42,7 +43,8 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
 
     public FriendsViewModel() {
         this.userService = UserService.getService();
-        this.errorMessage = new MutableLiveData<>();
+        this.toastMessage = new MutableLiveData<>();
+        this.toastMessageResId = new MutableLiveData<>();
         this.popupMessageResId = new MutableLiveData<>();
         this.displayingUsers = new MediatorLiveData<>();
         this.friends = Collections.emptyList();
@@ -84,25 +86,25 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         }
     }
 
-    public LiveData<String> getErrorMessage() {
-        return errorMessage;
+    public LiveData<String> getToastMessage() {
+        return toastMessage;
+    }
+
+    public LiveData<Integer> getToastMessageResId() {
+        return toastMessageResId;
     }
 
     public LiveData<Integer> getPopupMessageResId() {
         return popupMessageResId;
     }
 
+    public boolean canSendRequestTo(UserProfile user) {
+        return !friends.contains(user) && !friendRequests.contains(user);
+    }
+
     public void updateSearchFor(String query) {
         Log.d(TAG, "Searching " + query);
-        if (searchFriendsCall != null) {
-            searchFriendsCall.cancel();
-        }
-        if (fetchFriendsCall != null) {
-            fetchFriendsCall.cancel();
-        }
-        if (fetchFriendRequestsCall != null) {
-            fetchFriendRequestsCall.cancel();
-        }
+        cancelAllRequests();
         if (query.isEmpty()) {
             this.isSearching = false;
             fetchFriends();
@@ -229,7 +231,22 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     }
 
     private void handleFetchFailure(String message) {
-        errorMessage.setValue(message);
-        errorMessage.setValue(null);
+        toastMessage.setValue(message);
+        toastMessage.setValue(null);
+    }
+
+    private void cancelAllRequests() {
+        if (searchFriendsCall != null) {
+            searchFriendsCall.cancel();
+            searchFriendsCall = null;
+        }
+        if (fetchFriendsCall != null) {
+            fetchFriendsCall.cancel();
+            fetchFriendsCall = null;
+        }
+        if (fetchFriendRequestsCall != null) {
+            fetchFriendRequestsCall.cancel();
+            fetchFriendRequestsCall = null;
+        }
     }
 }

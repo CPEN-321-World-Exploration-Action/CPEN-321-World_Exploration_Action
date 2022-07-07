@@ -1,6 +1,7 @@
 <resources>
     <string name="common_no">No</string>
     <string name="common_ok">OK</string>
+    <string name="common_yes">Yes</string>
     <string name="common_retry">Retry</string>
 
     <string name="app_name">World Exploration Action</string>
@@ -18,9 +19,17 @@
     <string name="location_retrieval_error">Could not retrieve current location</string>
     <string name="sign_in_failed_title">Sign-In Failed</string>
     <string name="sign_in_failed_body">%1$s requires a valid Google Account to create your profile.</string>
+
     <string name="friends_search_placeholder">Search new friends…</string>
     <string name="friends_action_send_request">Send Request</string>
     <string name="friends_action_review_request">Review Request</string>
     <string name="friends_no_friend">Seems you have no friends</string>
     <string name="friends_search_no_found">No user found</string>
+    <string name="friends_request_accept">Accept</string>
+    <string name="friends_request_decline">Decline</string>
+    <string name="friends_review_request">Accept %1$s\'s friend request?</string>
+    <string name="friends_send_request">Send a friend request to %1$s?</string>
+    <string name="friends_already_friend">%1$s is already your friend! (or you\'ve received a friend request from %1$s)</string>
+    <string name="friends_view_profile">View Profile</string>
+    <string name="friends_delete">Delete</string>
 </resources>
