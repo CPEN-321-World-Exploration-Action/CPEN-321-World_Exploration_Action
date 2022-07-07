@@ -17,10 +17,13 @@ export async function getProfile(req, res) {
 }
 
 export async function getFriends(req, res) {
-  const friends = await friends.retrieveFriends(req.userId);
-  res.status(200).json({
-    friends,
-  });
+  const friendProfiles = await friends.retrieveFriends(req.userId);
+  res.status(200).json(friendProfiles);
+}
+
+export async function getFriendRequests(req, res) {
+  const requestorProfiles = await friends.getFriendRequests(req.userId);
+  res.status(200).json(requestorProfiles);
 }
 
 export async function getGlobalLeaderboard(req, res) {
@@ -31,6 +34,18 @@ export async function getGlobalLeaderboard(req, res) {
 export async function getFriendLeaderboard(req, res) {
   const users = await leaderboard.getFriendLeaderboard(req.userId);
   res.status(200).json(users);
+}
+
+export async function searchUser(req, res) {
+  const query = req.query.query;
+  if (query) {
+    const result = await userAccounts.searchUser(query);
+    res.status(200).json(result);
+  } else {
+    res.status(400).json({
+      message: "Missing or invalid query",
+    });
+  }
 }
 
 export async function subscribeLeaderboardUpdate(req, res) {

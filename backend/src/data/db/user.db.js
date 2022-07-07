@@ -26,6 +26,9 @@ const userSchema = new Schema(
         // issue: user_id == google_id
         this.collection.insertOne(newUser);
       },
+      findUsers(userIds) {
+        return this.find({ user_id: { $in: userIds } }).exec();
+      },
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
       },
@@ -37,7 +40,16 @@ const userSchema = new Schema(
         var user = this.findOne({ user_id: collectorUserId });
         user.score += score;
         user.save();
-      }
+      },
+      searchUser(query) {
+        return this.find({
+          $or: [
+            { user_id: query },
+            { email: query },
+            { name: { $regex: query, $options: "i" } },
+          ],
+        }).exec();
+      },
     },
     methods: {
         getFriends() {
