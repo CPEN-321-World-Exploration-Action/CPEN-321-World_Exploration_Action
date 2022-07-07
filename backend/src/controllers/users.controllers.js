@@ -42,7 +42,17 @@ export async function getFriendRequests(req, res) {
   res.status(200).json(requestorProfiles);
 }
 
-export async function sendFriendRequest(req, res) {}
+export async function sendFriendRequest(req, res) {
+  const targetId = req.query.targetUserId;
+  if (!targetId) {
+    res.status(400).json({
+      message: "Missing query parameter: targetId",
+    });
+    return;
+  }
+  friends.sendRequest(req.userId, targetId);
+  res.status(200).send();
+}
 
 export async function deleteFriend(req, res) {}
 
@@ -71,7 +81,7 @@ export async function subscribeLeaderboardUpdate(req, res) {
     });
   } else {
     res.status(400).json({
-      message: "Missing parameter: fcmToken",
+      message: "Missing query parameter: fcmToken",
     });
   }
 }
