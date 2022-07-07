@@ -34,7 +34,7 @@ const userSchema = new Schema(
         return this.find({score: { $gt : user.score }}).count();
       },
       incrementTrophyScore(collectorUserId, score){
-        var user = this.findOne({ user_id: userID });
+        var user = this.findOne({ user_id: collectorUserId });
         user.score += score;
         user.save();
       }
