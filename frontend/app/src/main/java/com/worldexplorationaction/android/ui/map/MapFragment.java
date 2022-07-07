@@ -2,6 +2,7 @@ package com.worldexplorationaction.android.ui.map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
+import com.worldexplorationaction.android.ui.profile.ProfileFragment;
+import com.worldexplorationaction.android.ui.trophy.trophy_details;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Collection;
@@ -47,6 +50,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap googleMap;
 
     private Collection<Marker> markers;
+    public static String trophyTitle = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -121,6 +125,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         Trophy trophy = (Trophy) Objects.requireNonNull(marker.getTag());
         // TODO: Show trophy details view here
         Toast.makeText(getContext(), "Clicked trophy " + trophy.title, Toast.LENGTH_SHORT).show();
+        trophyTitle = trophy.title;
+        Intent intent = new Intent(getActivity(), trophy_details.class);
+        startActivity(intent);
         return false;
     }
 

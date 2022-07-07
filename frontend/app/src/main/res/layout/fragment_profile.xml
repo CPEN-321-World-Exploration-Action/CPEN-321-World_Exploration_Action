@@ -8,6 +8,15 @@
 
 
     <ImageView
+        android:id="@+id/imageView22"
+        style="@style/circle_image_view"
+        android:layout_width="481dp"
+        android:layout_height="714dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="481dp"
         android:layout_height="714dp"

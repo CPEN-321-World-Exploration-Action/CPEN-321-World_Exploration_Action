@@ -6,12 +6,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="Trophy Name"
-        android:textSize="30sp"
+        android:id="@+id/trophy_name"
+        android:layout_width="350dp"
+        android:layout_height="78dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="TextView"
+        android:textSize="27sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -21,28 +21,29 @@
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="402dp"
-        android:layout_height="63dp"
-        android:fontFamily="sans-serif-medium"
+        android:layout_width="378dp"
+        android:layout_height="76dp"
+        android:fontFamily="@font/ubuntu"
         android:text="Number of users who collected this trophy:"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/trophy_name"
+        app:layout_constraintVertical_bias="0.421" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="168dp"
+        android:fontFamily="@font/ubuntu_bold"
         android:text="##"
         android:textColor="#6441A5"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintHorizontal_bias="0.305"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,24 +51,23 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="@font/ubuntu_bold"
         android:text="Pictures by others"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintVertical_bias="0.08" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/collect_trophy_button"
         android:layout_width="256dp"
         android:layout_height="56dp"
         android:layout_marginTop="128dp"
-        app:layout_constraintTop_toTopOf="parent"
         android:backgroundTint="#6441A5"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/ubuntu_bold"
         android:text="Collect Trophy"
         android:textColor="@android:color/white"
         android:textSize="18sp"
@@ -76,5 +76,6 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.828" />
 </androidx.constraintlayout.widget.ConstraintLayout>
