@@ -6,7 +6,7 @@ import * as userControllers from "../controllers/users.controllers.js";
 
 const usersRouter = express.Router();
 
-usersRouter.put('/create', [nocache(), auth], userControllers.createProfile);
+usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
 usersRouter.get("/:userId/profile", nocache(), userControllers.getProfile);
 usersRouter.get("/:userId/friends", [nocache(), auth], userControllers.getFriends);
 

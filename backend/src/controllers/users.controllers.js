@@ -19,6 +19,7 @@ export async function getProfile(req, res) {
 export async function createProfile(req, res){
   const userId = req.params['userId'];
   const user = await userAccounts.createUserProfile(userId);
+  console.log(user)
   if (user){
     res.status(200).json({
       user,

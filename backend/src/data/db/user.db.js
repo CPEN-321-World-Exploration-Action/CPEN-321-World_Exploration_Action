@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    user_id: { type: String, index: true },
+    user_id: { type: String, index: true, unique: true },
     google_id: { type: String, index: true },
     name: { type: String, index: true },
     email: {
@@ -12,12 +12,21 @@ const userSchema = new Schema(
       lowercase: true,
       index: true,
     },
+    imageUrl: String,
     friends: [String],
+    score: { type: Number, default: 0, index: true },
+    fcm_token: String,
   },
   {
     statics: {
+      addUser(userId) {
+        return this.create({user_id: userId});
+      },
       findUser(userId) {
         return this.findOne({ user_id: userId });
+      },
+      findTopUsers(limit) {
+        return this.find().sort({ score: -1 }).limit(limit);
       },
     },
     methods: {
