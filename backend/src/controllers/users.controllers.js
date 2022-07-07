@@ -2,6 +2,8 @@ import * as userAccounts from "../services/users/useraccounts.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
+/*** Accounts ***/
+
 export async function getProfile(req, res) {
   const userId = req.params["userId"];
   const user = await userAccounts.getUserProfile(userId);
@@ -16,26 +18,6 @@ export async function getProfile(req, res) {
   }
 }
 
-export async function getFriends(req, res) {
-  const friendProfiles = await friends.retrieveFriends(req.userId);
-  res.status(200).json(friendProfiles);
-}
-
-export async function getFriendRequests(req, res) {
-  const requestorProfiles = await friends.getFriendRequests(req.userId);
-  res.status(200).json(requestorProfiles);
-}
-
-export async function getGlobalLeaderboard(req, res) {
-  const users = await leaderboard.getGlobalLeaderboard();
-  res.status(200).json(users);
-}
-
-export async function getFriendLeaderboard(req, res) {
-  const users = await leaderboard.getFriendLeaderboard(req.userId);
-  res.status(200).json(users);
-}
-
 export async function searchUser(req, res) {
   const query = req.query.query;
   if (query) {
@@ -46,6 +28,38 @@ export async function searchUser(req, res) {
       message: "Missing or invalid query",
     });
   }
+}
+
+/*** Friends ***/
+
+export async function getFriends(req, res) {
+  const friendProfiles = await friends.retrieveFriends(req.userId);
+  res.status(200).json(friendProfiles);
+}
+
+export async function getFriendRequests(req, res) {
+  const requestorProfiles = await friends.getFriendRequests(req.userId);
+  res.status(200).json(requestorProfiles);
+}
+
+export async function sendFriendRequest(req, res) {}
+
+export async function deleteFriend(req, res) {}
+
+export async function acceptFriendRequest(req, res) {}
+
+export async function declineFriendRequest(req, res) {}
+
+/*** Leaderboard ***/
+
+export async function getGlobalLeaderboard(req, res) {
+  const users = await leaderboard.getGlobalLeaderboard();
+  res.status(200).json(users);
+}
+
+export async function getFriendLeaderboard(req, res) {
+  const users = await leaderboard.getFriendLeaderboard(req.userId);
+  res.status(200).json(users);
 }
 
 export async function subscribeLeaderboardUpdate(req, res) {
