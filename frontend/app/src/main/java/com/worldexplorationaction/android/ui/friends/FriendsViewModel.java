@@ -100,7 +100,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     }
 
     public void updateSearchFor(String query) {
-        Log.d(TAG, "Searching " + query);
+        Log.d(TAG, "Searching \"" + query + "\"");
         cancelAllFetchRequests();
         if (query.isEmpty()) {
             this.isSearching = false;
@@ -114,7 +114,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     public void sendRequest(UserProfile user) {
         userService.sendRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "sendRequest succeeded");
-            toastMessage.setValue("Successfully send a friend request to " + user.getName());
+            toastMessage.setValue("Successfully sent a friend request to " + user.getName());
         }, null, errorMessage -> {
             Log.e(TAG, "sendRequest failed " + errorMessage);
             toastMessage.setValue("Could not send request to " + user.getName() + " because " + errorMessage);
@@ -128,7 +128,29 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "deleteFriend failed " + errorMessage);
-            toastMessage.setValue("Could not deleted friend " + friend.getName() + " because " + errorMessage);
+            toastMessage.setValue("Could not delete friend " + friend.getName() + " because " + errorMessage);
+        }));
+    }
+
+    public void acceptRequest(UserProfile user) {
+        userService.acceptRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "acceptRequest succeeded");
+            toastMessage.setValue("Successfully accepted" + user.getName() + "'s friend request");
+            fetchFriendsAndRequests();
+        }, null, errorMessage -> {
+            Log.e(TAG, "acceptRequest failed " + errorMessage);
+            toastMessage.setValue("Could not accept " + user.getName() + "'s friend request because " + errorMessage);
+        }));
+    }
+
+    public void declineRequest(UserProfile user) {
+        userService.declineRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "declineRequest succeeded");
+            toastMessage.setValue("Successfully declined" + user.getName() + "'s friend request");
+            fetchFriendsAndRequests();
+        }, null, errorMessage -> {
+            Log.e(TAG, "declineRequest failed " + errorMessage);
+            toastMessage.setValue("Could not decline " + user.getName() + "'s friend request because " + errorMessage);
         }));
     }
 

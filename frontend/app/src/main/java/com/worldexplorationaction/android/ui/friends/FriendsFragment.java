@@ -72,7 +72,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        viewModel.updateSearchFor(s.toString());
+        viewModel.updateSearchFor(s.toString().trim());
     }
 
     private void handlePopupMessage(@StringRes Integer stringResId) {
@@ -138,20 +138,8 @@ public class FriendsFragment extends Fragment implements TextWatcher {
     private void reviewRequest(UserProfile user) {
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.friends_review_request, user.getName()))
-                .setPositiveButton(R.string.friends_request_accept, (dialog, id) -> {
-                    Toast.makeText(
-                            getContext(),
-                            "Accept request: " + user.getName(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                })
-                .setNegativeButton(R.string.friends_request_decline, (dialog, id) -> {
-                    Toast.makeText(
-                            getContext(),
-                            "Decline request: " + user.getName(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                })
+                .setPositiveButton(R.string.friends_request_accept, (x, y) -> viewModel.acceptRequest(user))
+                .setNegativeButton(R.string.friends_request_decline, (x, y) -> viewModel.declineRequest(user))
                 .create().show();
     }
 
@@ -165,9 +153,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         }
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.friends_send_request, user.getName()))
-                .setPositiveButton(R.string.common_yes, (dialog, id) -> {
-                    viewModel.sendRequest(user);
-                })
+                .setPositiveButton(R.string.common_yes, (x, y) -> viewModel.sendRequest(user))
                 .setNegativeButton(R.string.common_no, null).create().show();
     }
 }

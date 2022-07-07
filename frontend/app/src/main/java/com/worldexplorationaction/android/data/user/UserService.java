@@ -39,6 +39,12 @@ public interface UserService {
     @POST("friends/delete")
     Call<Void> deleteFriend(@Query("friendId") String friendId);
 
+    @POST("friends/accept-request")
+    Call<Void> acceptRequest(@Query("requesterUserId") String requesterUserId);
+
+    @POST("friends/decline-request")
+    Call<Void> declineRequest(@Query("requesterUserId") String requesterUserId);
+
     class Holder {
         public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
     }
