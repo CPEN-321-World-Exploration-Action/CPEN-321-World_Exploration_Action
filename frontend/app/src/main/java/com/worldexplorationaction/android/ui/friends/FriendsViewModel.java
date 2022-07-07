@@ -4,18 +4,22 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
+import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,23 +29,30 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     private static final String TAG = FriendsViewModel.class.getSimpleName();
 
     private final UserService userService;
+
     private final MutableLiveData<String> errorMessage;
     private final MutableLiveData<Integer> popupMessageResId;
-    private final MutableLiveData<List<UserProfile>> displayingUsers;
-    private final List<UserProfile> friendRequests;
-    private final boolean isSearching;
+    private final MediatorLiveData<List<UserProfile>> displayingUsers;
+    private boolean isSearching;
     private List<UserProfile> friends;
+    private List<UserProfile> friendRequests;
     private Call<List<UserProfile>> fetchFriendsCall;
     private Call<List<UserProfile>> fetchFriendRequestsCall;
+    private Call<List<UserProfile>> searchFriendsCall;
 
     public FriendsViewModel() {
         this.userService = UserService.getService();
         this.errorMessage = new MutableLiveData<>();
         this.popupMessageResId = new MutableLiveData<>();
-        this.displayingUsers = new MutableLiveData<>(Collections.emptyList());
+        this.displayingUsers = new MediatorLiveData<>();
         this.friends = Collections.emptyList();
         this.friendRequests = Collections.emptyList();
-        this.isSearching = false;
+
+        displayingUsers.setValue(Collections.emptyList());
+        displayingUsers.addSource(WeaFirebaseMessagingService.getFriendUpdate(), unused -> {
+            fetchFriends();
+            fetchFriendRequests();
+        });
     }
 
     @Override
@@ -73,10 +84,36 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         }
     }
 
-    public void fetchFriends() {
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public LiveData<Integer> getPopupMessageResId() {
+        return popupMessageResId;
+    }
+
+    public void updateSearchFor(String query) {
+        Log.d(TAG, "Searching " + query);
+        if (searchFriendsCall != null) {
+            searchFriendsCall.cancel();
+        }
         if (fetchFriendsCall != null) {
             fetchFriendsCall.cancel();
         }
+        if (fetchFriendRequestsCall != null) {
+            fetchFriendRequestsCall.cancel();
+        }
+        if (query.isEmpty()) {
+            this.isSearching = false;
+            fetchFriends();
+            fetchFriendRequests();
+        } else {
+            this.isSearching = true;
+            fetchSearchResult(query);
+        }
+    }
+
+    private void fetchFriends() {
         fetchFriendsCall = userService.getFriendProfiles();
         fetchFriendsCall.enqueue(new Callback<List<UserProfile>>() {
             @Override
@@ -88,7 +125,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
                     friends = Collections.emptyList();
                     handleFetchFailure("Error code " + response.code());
                 }
-                updateDisplayingUsers();
+                displayFriendList();
             }
 
             @Override
@@ -99,38 +136,96 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
                 }
                 Log.e(TAG, "userService.getFriendProfiles failed: " + t);
                 friends = Collections.emptyList();
-                updateDisplayingUsers();
+                displayFriendList();
                 handleFetchFailure(t.getLocalizedMessage());
             }
         });
     }
 
-    public void fetchFriendRequests() {
+    private void fetchFriendRequests() {
+        fetchFriendRequestsCall = userService.getFriendRequests();
+        fetchFriendRequestsCall.enqueue(new Callback<List<UserProfile>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                if (response.isSuccessful()) {
+                    friendRequests = response.body();
+                } else {
+                    Log.e(TAG, "userService.getFriendRequests failed with code " + response.code() + " body: " + response.errorBody());
+                    friendRequests = Collections.emptyList();
+                    handleFetchFailure("Error code " + response.code());
+                }
+                displayFriendList();
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    Log.i(TAG, "userService.getFriendRequests canceled");
+                    return;
+                }
+                Log.e(TAG, "userService.getFriendRequests failed: " + t);
+                friendRequests = Collections.emptyList();
+                handleFetchFailure(t.getLocalizedMessage());
+                displayFriendList();
+            }
+        });
     }
 
-    public void updateSearchFor(String query) {
+    private void fetchSearchResult(String query) {
+        searchFriendsCall = userService.searchNewFriends(query);
+        searchFriendsCall.enqueue(new Callback<List<UserProfile>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
+                if (response.isSuccessful()) {
+                    handleSearchResult(Objects.requireNonNull(response.body()));
+                } else {
+                    Log.e(TAG, "userService.searchNewFriends failed with code " + response.code() + " body: " + response.errorBody());
+                    handleSearchResult(Collections.emptyList());
+                    handleFetchFailure("Error code " + response.code());
+                }
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
+                if (call.isCanceled()) {
+                    Log.i(TAG, "userService.getFriendRequests canceled");
+                    return;
+                }
+                Log.e(TAG, "userService.getFriendRequests failed: " + t);
+                handleSearchResult(Collections.emptyList());
+                handleFetchFailure(t.getLocalizedMessage());
+            }
+        });
     }
 
-    private void updateDisplayingUsers() {
-        List<UserProfile> users = new ArrayList<>();
-        for (UserProfile request : friendRequests) {
-            users.add(new UserProfile(
-                    request.getId(),
-                    request.getImageUrl(),
-                    "(Friend Request) " + request.getName(),
-                    request.getScore()
-            ));
+    private void handleSearchResult(List<UserProfile> results) {
+        if (!isSearching) {
+            return;
         }
-        users.addAll(friendRequests);
-        users.addAll(friends);
-        displayingUsers.setValue(users);
-        if (users.isEmpty()) {
-            popupMessageResId.setValue(isSearching ? R.string.friends_search_no_found : R.string.friends_no_friend);
+        List<UserProfile> filtered = results.stream()
+                .filter(user -> !friends.contains(user))
+                .collect(Collectors.toList());
+        if (filtered.isEmpty()) {
+            popupMessageResId.setValue(R.string.friends_search_no_found);
         } else {
             popupMessageResId.setValue(null);
         }
+        displayingUsers.setValue(filtered);
+    }
+
+    private void displayFriendList() {
+        if (isSearching) {
+            return;
+        }
+        List<UserProfile> users = new ArrayList<>();
+        users.addAll(friendRequests);
+        users.addAll(friends);
+        if (users.isEmpty()) {
+            popupMessageResId.setValue(R.string.friends_no_friend);
+        } else {
+            popupMessageResId.setValue(null);
+        }
+        displayingUsers.setValue(users);
     }
 
     private void handleFetchFailure(String message) {

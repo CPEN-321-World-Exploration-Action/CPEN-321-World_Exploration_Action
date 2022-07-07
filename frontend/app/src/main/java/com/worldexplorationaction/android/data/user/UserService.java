@@ -14,6 +14,9 @@ public interface UserService {
         return Holder.instance;
     }
 
+    @GET("accounts/search")
+    Call<List<UserProfile>> searchNewFriends(@Query("query") String query);
+
     @GET("leaderboard/global")
     Call<List<UserProfile>> getGlobalLeaderboard();
 
@@ -23,8 +26,11 @@ public interface UserService {
     @PUT("leaderboard/subscribe-update")
     Call<ExpireTime> subscribeLeaderboardUpdate(@Query("fcmToken") String fcmToken);
 
-    @GET("account/me/friends")
+    @GET("friends/list")
     Call<List<UserProfile>> getFriendProfiles();
+
+    @GET("friends/requests")
+    Call<List<UserProfile>> getFriendRequests();
 
     class Holder {
         public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
