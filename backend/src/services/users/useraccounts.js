@@ -11,5 +11,5 @@ export async function getUserProfile(userId) {
 }
 
 export async function createUserProfile(userId) {
-  return await User.addUser(userId).exec();
+  return await User.addUser(userId);
 }

@@ -19,6 +19,9 @@ const userSchema = new Schema(
   },
   {
     statics: {
+      addUser(userId) {
+        return this.create({user_id: userId});
+      },
       findUser(userId) {
         return this.findOne({ user_id: userId });
       },

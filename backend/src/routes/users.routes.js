@@ -6,8 +6,7 @@ import * as userControllers from "../controllers/users.controllers.js";
 
 const usersRouter = express.Router();
 
-usersRouter.put('/create', [nocache(), auth], userControllers.createProfile);
-usersRouter.get("/me/friends", [nocache(), auth], userControllers.getFriends);
+usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
 usersRouter.get("/:userId/profile", nocache(), userControllers.getProfile);
 
 usersRouter.put("/leaderboard/subscribe-update", [nocache(), auth], userControllers.subscribeLeaderboardUpdate);
