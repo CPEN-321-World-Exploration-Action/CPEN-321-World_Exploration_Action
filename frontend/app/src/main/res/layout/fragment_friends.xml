@@ -73,5 +73,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/friends_search_bar_background" />
+        app:layout_constraintTop_toBottomOf="@id/friends_search_bar_background"
+        tools:ignore="SpeakableTextPresentCheck" >
+    </com.worldexplorationaction.android.ui.userlist.UserListView>
+
+    <TextView
+        android:id="@+id/friends_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abeezee"
+        android:text="@string/friends_no_friend"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/friends_user_list"
+        app:layout_constraintEnd_toEndOf="@id/friends_user_list"
+        app:layout_constraintStart_toStartOf="@id/friends_user_list"
+        app:layout_constraintTop_toTopOf="@id/friends_user_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>
