@@ -14,11 +14,13 @@ import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListViewModel;
+import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -34,9 +36,11 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     private final MutableLiveData<Integer> toastMessageResId;
     private final MutableLiveData<Integer> popupMessageResId;
     private final MediatorLiveData<List<UserProfile>> displayingUsers;
+
     private boolean isSearching;
     private List<UserProfile> friends;
     private List<UserProfile> friendRequests;
+
     private Call<List<UserProfile>> fetchFriendsCall;
     private Call<List<UserProfile>> fetchFriendRequestsCall;
     private Call<List<UserProfile>> searchFriendsCall;
@@ -51,10 +55,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         this.friendRequests = Collections.emptyList();
 
         displayingUsers.setValue(Collections.emptyList());
-        displayingUsers.addSource(WeaFirebaseMessagingService.getFriendUpdate(), unused -> {
-            fetchFriends();
-            fetchFriendRequests();
-        });
+        displayingUsers.addSource(WeaFirebaseMessagingService.getFriendUpdate(), x -> fetchFriendsAndRequests());
     }
 
     @Override
@@ -104,100 +105,69 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
 
     public void updateSearchFor(String query) {
         Log.d(TAG, "Searching " + query);
-        cancelAllRequests();
+        cancelAllFetchRequests();
         if (query.isEmpty()) {
             this.isSearching = false;
-            fetchFriends();
-            fetchFriendRequests();
+            fetchFriendsAndRequests();
         } else {
             this.isSearching = true;
             fetchSearchResult(query);
         }
     }
 
-    private void fetchFriends() {
-        fetchFriendsCall = userService.getFriendProfiles();
-        fetchFriendsCall.enqueue(new Callback<List<UserProfile>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
-                if (response.isSuccessful()) {
-                    friends = response.body();
-                } else {
-                    Log.e(TAG, "userService.getFriendProfiles failed with code " + response.code() + " body: " + response.errorBody());
-                    friends = Collections.emptyList();
-                    handleFetchFailure("Error code " + response.code());
-                }
-                displayFriendList();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
-                if (call.isCanceled()) {
-                    Log.i(TAG, "userService.getFriendProfiles canceled");
-                    return;
-                }
-                Log.e(TAG, "userService.getFriendProfiles failed: " + t);
-                friends = Collections.emptyList();
-                displayFriendList();
-                handleFetchFailure(t.getLocalizedMessage());
-            }
-        });
+    public void deleteFriend(UserProfile friend) {
+        userService.deleteFriend(friend.getId()).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "deleteFriend succeeded");
+            toastMessage.setValue("Successfully deleted friend " + friend.getName());
+            fetchFriendsAndRequests();
+        }, null, errorMessage -> {
+            Log.e(TAG, "deleteFriend failed " + errorMessage);
+            toastMessage.setValue("Could not deleted friend " + friend.getName() + " because " + errorMessage);
+        }));
     }
 
-    private void fetchFriendRequests() {
-        fetchFriendRequestsCall = userService.getFriendRequests();
-        fetchFriendRequestsCall.enqueue(new Callback<List<UserProfile>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
-                if (response.isSuccessful()) {
-                    friendRequests = response.body();
-                } else {
-                    Log.e(TAG, "userService.getFriendRequests failed with code " + response.code() + " body: " + response.errorBody());
-                    friendRequests = Collections.emptyList();
-                    handleFetchFailure("Error code " + response.code());
-                }
-                displayFriendList();
-            }
+    private void fetchFriendsAndRequests() {
+        /* Fetch friends */
+        fetchFriendsCall = userService.getFriendProfiles();
+        fetchFriendsCall.enqueue(new CustomCallback<>(responseBody -> {
+            Log.i(TAG, "userService.getFriendProfiles succeeded");
+            friends = responseBody;
+            displayFriendList();
+        }, () -> {
+            Log.i(TAG, "userService.getFriendProfiles canceled");
+        }, errorMessage -> {
+            Log.e(TAG, "userService.getFriendProfiles failed: " + errorMessage);
+            friends = Collections.emptyList();
+            displayFriendList();
+            handleFetchFailure(errorMessage);
+        }));
 
-            @Override
-            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
-                if (call.isCanceled()) {
-                    Log.i(TAG, "userService.getFriendRequests canceled");
-                    return;
-                }
-                Log.e(TAG, "userService.getFriendRequests failed: " + t);
-                friendRequests = Collections.emptyList();
-                handleFetchFailure(t.getLocalizedMessage());
-                displayFriendList();
-            }
-        });
+        /* Fetch friend requests */
+        fetchFriendRequestsCall = userService.getFriendRequests();
+        fetchFriendRequestsCall.enqueue(new CustomCallback<>(responseBody -> {
+            friendRequests = responseBody;
+            displayFriendList();
+        }, () -> {
+            Log.i(TAG, "userService.getFriendRequests canceled");
+        }, errorMessage -> {
+            Log.e(TAG, "userService.getFriendRequests failed: " + errorMessage);
+            friendRequests = Collections.emptyList();
+            handleFetchFailure(errorMessage);
+            displayFriendList();
+        }));
     }
 
     private void fetchSearchResult(String query) {
         searchFriendsCall = userService.searchNewFriends(query);
-        searchFriendsCall.enqueue(new Callback<List<UserProfile>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserProfile>> call, @NonNull Response<List<UserProfile>> response) {
-                if (response.isSuccessful()) {
-                    handleSearchResult(Objects.requireNonNull(response.body()));
-                } else {
-                    Log.e(TAG, "userService.searchNewFriends failed with code " + response.code() + " body: " + response.errorBody());
-                    handleSearchResult(Collections.emptyList());
-                    handleFetchFailure("Error code " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<UserProfile>> call, @NonNull Throwable t) {
-                if (call.isCanceled()) {
-                    Log.i(TAG, "userService.getFriendRequests canceled");
-                    return;
-                }
-                Log.e(TAG, "userService.getFriendRequests failed: " + t);
-                handleSearchResult(Collections.emptyList());
-                handleFetchFailure(t.getLocalizedMessage());
-            }
-        });
+        searchFriendsCall.enqueue(new CustomCallback<>(responseBody -> {
+            handleSearchResult(Objects.requireNonNull(responseBody));
+        }, () -> {
+            Log.i(TAG, "userService.getFriendRequests canceled");
+        }, errorMessage -> {
+            Log.e(TAG, "userService.searchNewFriends failed " + errorMessage);
+            handleSearchResult(Collections.emptyList());
+            handleFetchFailure(errorMessage);
+        }));
     }
 
     private void handleSearchResult(List<UserProfile> results) {
@@ -235,7 +205,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         toastMessage.setValue(null);
     }
 
-    private void cancelAllRequests() {
+    private void cancelAllFetchRequests() {
         if (searchFriendsCall != null) {
             searchFriendsCall.cancel();
             searchFriendsCall = null;

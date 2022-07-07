@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
@@ -31,6 +32,9 @@ public interface UserService {
 
     @GET("friends/requests")
     Call<List<UserProfile>> getFriendRequests();
+
+    @POST("friends/delete")
+    Call<Void> deleteFriend(@Query("friendId") String friendId);
 
     class Holder {
         public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
