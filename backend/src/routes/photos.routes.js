@@ -6,6 +6,6 @@ import * as photoControllers from "../controllers/photos.controllers.js";
 
 const photosRouter = express.Router();
 
-photosRouter.get("/photo/photoIDs", nocache(), photoControllers.getPhotoIDsByTrophyID);
+photosRouter.get("/photo/photoIDs", [nocache(), auth], photoControllers.getPhotoIDsByTrophyID);
 
 export default photosRouter;

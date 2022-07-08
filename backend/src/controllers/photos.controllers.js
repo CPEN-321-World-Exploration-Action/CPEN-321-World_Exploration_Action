@@ -4,8 +4,8 @@ import * as photoStoring from "../services/photos/photostoring";
 
 export async function getPhotoIDsByTrophyID(req, res) {
 
-  const trophyID = req.params["trophyID"];
-  const order = req.params["order"];
+  const trophyID = req.query.trophyID;
+  const order = req.query.order;
 
   const photos = await photoSorting.getPhotoIDsByTrophyID(trophyID, order);
   if (photos) {
@@ -17,4 +17,11 @@ export async function getPhotoIDsByTrophyID(req, res) {
       message: "Could not find the photos",
     });
   }
+}
+
+export async function userLikePhoto(req, res) {
+  const userID = req.query.userID;
+  const picID = req.query.picID;
+
+
 }
