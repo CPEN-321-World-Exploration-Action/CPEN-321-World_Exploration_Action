@@ -34,9 +34,12 @@ const userSchema = new Schema(
         return this.find({ score: { $gt: user.score } }).count();
       },
       incrementTrophyScore(collectorUserId, score) {
+        /*
         var user = this.findOne({ user_id: collectorUserId });
         user.score += score;
         user.save();
+        */
+        this.updateOne({ user_id: collectorUserId }, { score: score + 1 }).sort();
       },
     },
     methods: {

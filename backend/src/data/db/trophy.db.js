@@ -37,6 +37,19 @@ const trophySchemaTrophy = new Schema(
         trophy.list_of_collectors.push(userID).sort();
         trophy.save();
       },
+      getTrophyScore(collectedTrophyId) {
+        var trophy = this.findOne({ trophy_id: collectedTrophyId });
+        // issue: score value?
+        let quality = trophy.quality;
+
+        if (quality == "Gold" || quality == "gold") {
+          return 10;
+        } else if (quality == "Silver" || quality == "silver") {
+          return 5;
+        } else {
+          return 1;
+        }
+      },
     },
     methods: {},
   }
@@ -71,16 +84,31 @@ const trophySchemaUser = new Schema(
         user.save();
       },
       addCollectedTrophy(userId, trophyId) {
+        /*
         var user = this.find({ user_id: userId });
         user.collectedTrophies.push(trophyId).sort();
         user.save();
+        */
+        this.updateOne(
+          { user_id: userId },
+          { $push: { collectedTrophies: trophyId } }
+        );
       },
       storeTrophies(userID, trophies) {
+        /*
         var user = this.find({ user_id: userID });
         for (let value of trophies) {
           user.collectedTrophies.push(value);
         }
         user.save();
+        */
+        var user = this.find({ user_id: userID });
+        for (let value of trophies) {
+          this.updateOne(
+            { user_id: userID },
+            { $push: { collectedTrophies: value } }
+          ).sort();
+        }
       },
       getUsersTags(userID) {
         return this.find({ user_id: userID }).trophyTags;
@@ -99,5 +127,5 @@ export const TrophyTrophy = mongoose.model("TrophyTrophy", trophySchemaTrophy);
 
 //TrophyUser.removeUncollectedTrophy("A","a");
 //TrophyUser.addCollectedTrophy("a","a");
-TrophyUser.storeTrophies("a", "a");
-TrophyUser.getUsersTags("userID");
+//TrophyUser.storeTrophies("a", "a");
+//TrophyUser.getUsersTags("userID");
