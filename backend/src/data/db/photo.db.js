@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const { Schema } = mongoose; 
+const { Schema } = mongoose;
 
 const photoSchema = new Schema(
   {
@@ -71,11 +71,31 @@ const photoSchema = new Schema(
         // check user liked photo before?
         let pic = this.findOne({ photo_id: picID });
         if (userID in pic.likedUsers) {
+          /*
           pic.likedUsers = pic.likedUsers.filter(function (value, index, arr) {
             return value !== userID;
           });
+          */
+          this.updateOne(
+            { photo_id: picID },
+            {
+              $pullAll: {
+                likedUsers: userID,
+              },
+            }
+          );
+          this.updateOne(
+            { photo_id: picID },
+            {
+              $pullAll: {
+                like: like - 1,
+              },
+            }
+          );
+          /*
           pic.like -= 1;
           pic.save();
+          */
         }
       },
     },
