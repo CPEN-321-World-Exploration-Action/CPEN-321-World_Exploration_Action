@@ -66,9 +66,29 @@ export async function deleteFriend(req, res) {
   res.status(200).send();
 }
 
-export async function acceptFriendRequest(req, res) {}
+export async function acceptFriendRequest(req, res) {
+  const requesterId = req.query.requesterUserId;
+  if (!requesterId) {
+    res.status(400).json({
+      message: "Missing query parameter: requesterUserId",
+    });
+    return;
+  }
+  friends.acceptUser(req.userId, requesterId);
+  res.status(200).send();
+}
 
-export async function declineFriendRequest(req, res) {}
+export async function declineFriendRequest(req, res) {
+  const requesterId = req.query.requesterUserId;
+  if (!requesterId) {
+    res.status(400).json({
+      message: "Missing query parameter: requesterUserId",
+    });
+    return;
+  }
+  friends.declineUser(req.userId, requesterId);
+  res.status(200).send();
+}
 
 /*** Leaderboard ***/
 

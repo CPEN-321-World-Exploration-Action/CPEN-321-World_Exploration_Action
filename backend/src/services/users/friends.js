@@ -1,4 +1,5 @@
 import { User } from "../../data/db/user.db.js";
+import "../../utils/utils.js";
 
 const friendRequests = new Map();
 
@@ -27,5 +28,22 @@ export async function sendRequest(userId, targetId) {
 export async function deleteFriend(userId, friendId) {
   await User.deleteFriend(userId, friendId);
   await User.deleteFriend(friendId, userId);
+}
+
+export async function acceptUser(userId, friendId) {
+  removeRequest(friendId, userId);
+  // TODO: send notification
+}
+
+export async function declineUser(userId, friendId) {
+  removeRequest(friendId, userId);
+  // TODO: send notification
+}
+
+function removeRequest(source, target) {
+  const existingRequests = friendRequests.get(target);
+  if (existingRequests) {
+    friendRequests.set(target, existingRequests.removed(source));
+  }
 }
 
