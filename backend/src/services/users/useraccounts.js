@@ -18,3 +18,7 @@ export async function getUserProfile(userId) {
 export async function signOut(){
     // issue: should not be here?
 }
+
+export async function searchUser(query) {
+  return await User.searchUser(query);
+}
