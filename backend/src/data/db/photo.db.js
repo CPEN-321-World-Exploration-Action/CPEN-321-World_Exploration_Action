@@ -70,33 +70,33 @@ const photoSchema = new Schema(
       userUnlikePhoto(userID, picID) {
         // check user liked photo before?
         let pic = this.findOne({ photo_id: picID });
-        if (userID in pic.likedUsers) {
-          /*
+
+        /*
           pic.likedUsers = pic.likedUsers.filter(function (value, index, arr) {
             return value !== userID;
           });
           */
-          this.updateOne(
-            { photo_id: picID },
-            {
-              $pullAll: {
-                likedUsers: userID,
-              },
-            }
-          );
-          this.updateOne(
-            { photo_id: picID },
-            {
-              $pullAll: {
-                like: like - 1,
-              },
-            }
-          );
-          /*
+        // issue: referring to the same query?
+        this.updateOne(
+          { photo_id: picID },
+          {
+            $pullAll: {
+              likedUsers: userID,
+            },
+          }
+        );
+        this.updateOne(
+          { photo_id: picID },
+          {
+            $pullAll: {
+              like: pic.like - 1,
+            },
+          }
+        );
+        /*
           pic.like -= 1;
           pic.save();
           */
-        }
       },
     },
     methods: {},
@@ -126,3 +126,4 @@ Photo.addPhoto(new Photo({
     imageURL: "@"
 }));
 */
+Photo.userUnlikePhoto("userID", "picID");

@@ -39,7 +39,8 @@ const userSchema = new Schema(
         user.score += score;
         user.save();
         */
-        this.updateOne({ user_id: collectorUserId }, { score: score + 1 }).sort();
+        var user = this.findOne({ user_id: collectorUserId });
+        this.updateOne({ user_id: collectorUserId }, { score: user.score + 1 }).sort();
       },
     },
     methods: {
