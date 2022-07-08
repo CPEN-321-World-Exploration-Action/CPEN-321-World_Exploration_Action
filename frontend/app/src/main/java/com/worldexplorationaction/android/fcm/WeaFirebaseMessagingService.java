@@ -16,6 +16,7 @@ import java.util.Map;
 public class WeaFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = WeaFirebaseMessagingService.class.getSimpleName();
     private static final MutableLiveData<Void> leaderboardUpdate = new MutableLiveData<>();
+    private static final MutableLiveData<Void> friendUpdate = new MutableLiveData<>();
 
     @NonNull
     public static Task<String> getToken() {
@@ -24,6 +25,10 @@ public class WeaFirebaseMessagingService extends FirebaseMessagingService {
 
     public static LiveData<Void> getLeaderboardUpdate() {
         return leaderboardUpdate;
+    }
+
+    public static LiveData<Void> getFriendUpdate() {
+        return friendUpdate;
     }
 
     @Override

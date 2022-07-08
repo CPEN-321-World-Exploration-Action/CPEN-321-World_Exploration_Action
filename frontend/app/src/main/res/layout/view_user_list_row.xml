@@ -120,24 +120,33 @@
                     tools:ignore="HardcodedText" />
             </LinearLayout>
 
-            <FrameLayout
-                android:id="@+id/user_list_row_score_view"
+            <TextView
+                android:id="@+id/user_list_row_score_text"
                 android:layout_width="60dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:fontFamily="@font/abeezee"
+                android:gravity="center"
+                android:text="166"
+                android:textColor="@color/black"
+                android:textFontWeight="400"
+                android:textSize="15sp"
+                tools:ignore="HardcodedText,TextContrastCheck" />
 
-                <TextView
-                    android:id="@+id/user_list_row_score_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/abeezee"
-                    android:gravity="center"
-                    android:text="166"
-                    android:textColor="@color/black"
-                    android:textFontWeight="400"
-                    android:textSize="15sp"
-                    tools:ignore="HardcodedText,TextContrastCheck" />
-            </FrameLayout>
+            <TextView
+                android:id="@+id/user_list_row_action_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="@font/ubuntu"
+                android:gravity="center"
+                android:letterSpacing="0.02"
+                android:text="Send Request"
+                android:textColor="@color/purple_700"
+                android:textFontWeight="800"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText,TextContrastCheck" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
