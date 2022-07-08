@@ -50,7 +50,7 @@ export async function sendFriendRequest(req, res) {
     });
     return;
   }
-  friends.sendRequest(req.userId, targetId);
+  await friends.sendRequest(req.userId, targetId);
   res.status(200).send();
 }
 
@@ -62,7 +62,7 @@ export async function deleteFriend(req, res) {
     });
     return;
   }
-  friends.deleteFriend(req.userId, friendId);
+  await friends.deleteFriend(req.userId, friendId);
   res.status(200).send();
 }
 
@@ -74,7 +74,7 @@ export async function acceptFriendRequest(req, res) {
     });
     return;
   }
-  friends.acceptUser(req.userId, requesterId);
+  await friends.acceptUser(req.userId, requesterId);
   res.status(200).send();
 }
 
@@ -86,7 +86,7 @@ export async function declineFriendRequest(req, res) {
     });
     return;
   }
-  friends.declineUser(req.userId, requesterId);
+  await friends.declineUser(req.userId, requesterId);
   res.status(200).send();
 }
 

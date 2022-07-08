@@ -32,6 +32,7 @@ export async function deleteFriend(userId, friendId) {
 
 export async function acceptUser(userId, friendId) {
   removeRequest(friendId, userId);
+  await User.mutuallyAddFriend(userId, friendId);
   // TODO: send notification
 }
 
