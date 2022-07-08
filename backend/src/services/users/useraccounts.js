@@ -21,5 +21,3 @@ export async function getUserProfile(userId) {
 export async function signOut() {
   // issue: should not be here?
 }
-
-//onReceiveTrophyCollectedMessage("A", "a");
