@@ -1,6 +1,0 @@
-<resources>
-    <array name="preloaded_fonts" translatable="false">
-        <item>@font/abeezee</item>
-        <item>@font/ubuntu</item>
-    </array>
-</resources>
