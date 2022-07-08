@@ -89,7 +89,7 @@ const photoSchema = new Schema(
           { photo_id: picID },
           {
             $pullAll: {
-              like: pic.like - 1,
+              like: pic.like - 1, 
             },
           }
         );
