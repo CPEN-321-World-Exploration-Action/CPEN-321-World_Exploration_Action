@@ -22,4 +22,4 @@ export async function signOut() {
   // issue: should not be here?
 }
 
-onReceiveTrophyCollectedMessage("A", "a");
+//onReceiveTrophyCollectedMessage("A", "a");
