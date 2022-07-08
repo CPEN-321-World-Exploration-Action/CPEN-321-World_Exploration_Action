@@ -2,18 +2,17 @@
 import * as userAccounts from "../services/users/useraccounts.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 
-export default {
-  publishTrophyCollectedMessage(collectorUserId, collectedTrophyId) {
-    userAccounts
-      .onReceiveTrophyCollectedMessage(collectorUserId, collectedTrophyId)
-      .catch((err) => {
-        console.log(err);
-      });
-  },
+export function publishNewMessage(message) {
+  notifySubscribers(message).catch((err) => {
+    console.log(err);
+  });
+}
 
-  publishUserScoreUpdatedMessage(userId) {
-    leaderboard.onReceiveUserScoreUpdatedMessage(userId).catch((err) => {
-      console.log(err);
-    });
-  },
-};
+async function notifySubscribers(message) {
+  // Statically configured subscribers
+  if (message.type === "trophy_collected") {
+    await userAccounts.onReceiveTrophyCollectedMessage(message);
+  } else if (message.type === "user_score_updated") {
+    await leaderboard.onReceiveUserScoreUpdatedMessage(message);
+  }
+}
