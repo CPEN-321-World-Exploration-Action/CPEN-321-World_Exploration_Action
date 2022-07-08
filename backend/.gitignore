@@ -1,4 +1,7 @@
 /node_modules/
 .env
 .DS_Store
+/.idea/
+.idea
 /firebase-service-account.json
+.idea
