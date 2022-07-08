@@ -6,10 +6,8 @@ import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 // probably should not store anything, so to keep consistency
 //let photoSorting = new Map();
 
-
-export async function getPhotoIDsByUserID(userID){
-
-    /*
+export async function getPhotoIDsByUserID(userID) {
+  /*
     photoList = photoSorting.get(userID);
 
     if (photoList == null){
@@ -20,26 +18,24 @@ export async function getPhotoIDsByUserID(userID){
     }
     */
 
-    let photos = await Photo.findPhotos(userID, "userID").exec();
-    photoSorting.set(userID, photos); // add item to the photoSorting
-    let photoList = photos;
+  let photos = await Photo.findPhotos(userID, "userID").exec();
+  photoSorting.set(userID, photos); // add item to the photoSorting
+  let photoList = photos;
 
-    return photoList;
+  return photoList;
 }
 
-export async function getPhotoIDsByTrophyID(trophyID, order){
-    let photos;
+export async function getPhotoIDsByTrophyID(trophyID, order) {
+  let photos;
 
-    // issue: need to handle other situatons
-    if (order == "random"){
-        photos = await Photo.getRandom(trophyID, 9).exec();
-    }
-    else if (order == "time"){
-        photos = await Photo.getSortedByTime(trophyID, 9).exec();
-    }
-    else if (order == "like"){
-        photos = await Photo.getSortedByLike(trophyID, 9).exec();
-    }
+  // issue: need to handle other situatons
+  if (order == "random") {
+    photos = await Photo.getRandom(trophyID, 9).exec();
+  } else if (order == "time") {
+    photos = await Photo.getSortedByTime(trophyID, 9).exec();
+  } else if (order == "like") {
+    photos = await Photo.getSortedByLike(trophyID, 9).exec();
+  }
 
-    return photos;
+  return photos;
 }

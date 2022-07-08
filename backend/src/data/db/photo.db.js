@@ -22,26 +22,32 @@ const photoSchema = new Schema(
         // method: userID
         if (method === "userID") {
           photoList = this.find({ user_id: ID });
-        }
-        else if (method === "photoID") {
-            photoList = this.find({ photo_id: ID });
+        } else if (method === "photoID") {
+          photoList = this.find({ photo_id: ID });
         }
 
         return photoList;
       },
       addPhoto(photo) {
-          this.collection.insertOne(photo);
+        this.collection.insertOne(photo);
       },
-      getRandom(trophyID, limit) { //wrong
+      getRandom(trophyID, limit) {
+        //wrong
         return this.aggregate([{ $sample: { size: limit } }]);
       },
       getSortedByTime(trophyID, limit) {
-        return this.find({ trophy_id: trophyID }).sort({ time: -1 }).limit(limit).select('imageUrl');
+        return this.find({ trophy_id: trophyID })
+          .sort({ time: -1 })
+          .limit(limit)
+          .select("imageUrl");
       },
       getSortedByLike(trophyID, limit) {
-        return this.find({ trophy_id: trophyID }).sort({ like: -1 }).limit(limit).select('imageUrl');
+        return this.find({ trophy_id: trophyID })
+          .sort({ like: -1 })
+          .limit(limit)
+          .select("imageUrl");
       },
-      userLikePhoto: async function(userID, picID) {
+      userLikePhoto: async function (userID, picID) {
         // issue: if pic not exist...
         /*
         let pic = this.findOne({ photo_id: picID });
@@ -50,15 +56,15 @@ const photoSchema = new Schema(
         pic.save();
         */
         this.upadateOne(
-            { photo_id: picID },
-            { $push: {likedUsers: [userID]} },
-            function (error, success) {
-                if (error) {
-                    console.log(error);
-                } else {
-                    console.log(success);
-                }
+          { photo_id: picID },
+          { $push: { likedUsers: [userID] } },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(success);
             }
+          }
         );
       },
       userUnlikePhoto(userID, picID) {
@@ -80,13 +86,13 @@ const photoSchema = new Schema(
 export const Photo = mongoose.model("Photo", photoSchema);
 
 var test = {
-    photo_id: "1",
-    user_id: "0",
-    google_id: "1",
-    imageUrl: "1", //issue we use imageData?
-  }
+  photo_id: "1",
+  user_id: "0",
+  google_id: "1",
+  imageUrl: "1", //issue we use imageData?
+};
 
-  /*
+/*
 Photo.getRandom("asd", 10);
 Photo.getSortedByTime("asd", 10);
 Photo.getSortedByLike("asd", 10);
