@@ -1,0 +1,29 @@
+<resources>
+    <style name="circle_image_view">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="LeaderboardButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingHorizontal">14dp</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/ubuntu</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginHorizontal">6dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+
+    <style name="LeaderboardButton.Active">
+        <item name="android:textColor">@color/leaderboard_button_active_font</item>
+        <item name="android:backgroundTint">@color/leaderboard_button_active_background</item>
+    </style>
+
+    <style name="LeaderboardButton.InActive">
+        <item name="android:textColor">@color/leaderboard_button_inactive_font</item>
+        <item name="android:backgroundTint">@color/leaderboard_button_inactive_background</item>
+    </style>
+</resources>
