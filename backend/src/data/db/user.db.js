@@ -22,14 +22,27 @@ const userSchema = new Schema(
       findUser(userId) {
         return this.findOne({ user_id: userId });
       },
+      addUser(newUser){
+        // issue: user_id == google_id
+        this.collection.insertOne(newUser);
+      },
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
       },
+      computeUserRank(userID){
+        var user = this.findOne({ user_id: userID });
+        return this.find({score: { $gt : user.score }}).count();
+      },
+      incrementTrophyScore(collectorUserId, score){
+        var user = this.findOne({ user_id: collectorUserId });
+        user.score += score;
+        user.save();
+      }
     },
     methods: {
-      getFriends() {
-        return User.find().where("user_id").in(this.friends);
-      },
+        getFriends() {
+          return User.find().where("user_id").in(this.friends);
+        },
     },
   }
 );
