@@ -19,6 +19,7 @@ import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
 
 import java.util.Map;
+import java.util.Random;
 
 public class WeaFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = WeaFirebaseMessagingService.class.getSimpleName();
@@ -64,6 +65,7 @@ public class WeaFirebaseMessagingService extends FirebaseMessagingService {
             }
         }
 
+        /* The notification is not automatically shown when the app is running in the foreground */
         RemoteMessage.Notification notification = message.getNotification();
         if (notification != null) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -83,7 +85,7 @@ public class WeaFirebaseMessagingService extends FirebaseMessagingService {
                     NotificationManager.IMPORTANCE_DEFAULT)
             );
             manager.notify(
-                    0,
+                    new Random().nextInt(),
                     new NotificationCompat.Builder(this, channelId)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle(notification.getTitle())
