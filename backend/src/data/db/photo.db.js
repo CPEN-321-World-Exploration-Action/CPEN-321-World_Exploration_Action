@@ -8,23 +8,29 @@ const photoSchema = new Schema(
     like: { type: Number, index: true, default: 0 },
     user_id: { type: String, index: true },
     trophy_id: { type: String, index: true },
-    google_id: { type: String, index: true },
-    imageUrl: String, //issue we use imageData?
+    //google_id: { type: String, index: true },
+    imageUrl: { type: String }, //issue we use imageData?
     time: { type: Date, default: new Date().getTime(), index: true },
     likedUsers: { type: Array, default: [null] },
   },
   {
     statics: {
       //returns photo ID
-      findPhotos(userId, method) {
+      findPhotos(ID, method) {
         var photoList;
 
         // method: userID
         if (method === "userID") {
-          photoList = this.find({ user_id: userId });
+          photoList = this.find({ user_id: ID });
+        }
+        else if (method === "photoID") {
+            photoList = this.find({ photo_id: ID });
         }
 
         return photoList;
+      },
+      addPhoto(photo) {
+          this.collection.insertOne(photo);
       },
       getRandom(trophyID, limit) { //wrong
         return this.aggregate([{ $sample: { size: limit } }]);
@@ -80,8 +86,17 @@ var test = {
     imageUrl: "1", //issue we use imageData?
   }
 
+  /*
 Photo.getRandom("asd", 10);
 Photo.getSortedByTime("asd", 10);
 Photo.getSortedByLike("asd", 10);
 Photo.userLikePhoto("as", "as");
 Photo.userUnlikePhoto("userID", "picID");
+
+Photo.addPhoto(new Photo({
+    photo_id: "7",
+    trophy_id: "2",
+    user_id: "2",
+    imageURL: "@"
+}));
+*/

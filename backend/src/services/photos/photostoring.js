@@ -1,20 +1,20 @@
-import { User } from "../../data/db/user.db.js";
-import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 import { Photo } from "../../data/db/photo.db.js";
 
-export async function getPhotoIDsByTrophyID(trophyID, order){
-    let photos = [];
+export async function uploadPhoto(userID, trophyID, photoURL){
+    // issue, photoID generation?
+    let newphoto = new Photo({
+        photo_id: "7",
+        trophy_id: trophyID,
+        user_id: userID,
+        imageURL: photoURL
+    });
 
-    // issue: need to handle other situatons
-    if (order == "random"){
-        photos = Photo.getRandom(trophyID, 9);
-    }
-    else if (order == "time"){
-        photos = Photo.getSortedByTime(trophyID, 9);
-    }
-    else if (order == "like"){
-        photos = Photo.getSortedByLike(trophyID, 9);
-    }
+    Photo.addPhoto(newphoto);
+};
 
-    return photos;
-}
+export async function getImage(picID){
+    // issue, photoID generation?
+    return Photo.findPhotos(picID, "photoID").select("imageURL");
+};
+
+//uploadPhoto("a", "b", "c");
