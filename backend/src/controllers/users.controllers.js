@@ -54,7 +54,17 @@ export async function sendFriendRequest(req, res) {
   res.status(200).send();
 }
 
-export async function deleteFriend(req, res) {}
+export async function deleteFriend(req, res) {
+  const friendId = req.query.friendId;
+  if (!friendId) {
+    res.status(400).json({
+      message: "Missing query parameter: friendId",
+    });
+    return;
+  }
+  friends.deleteFriend(req.userId, friendId);
+  res.status(200).send();
+}
 
 export async function acceptFriendRequest(req, res) {}
 

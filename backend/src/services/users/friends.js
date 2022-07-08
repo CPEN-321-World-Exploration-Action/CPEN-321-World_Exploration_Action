@@ -24,3 +24,8 @@ export async function sendRequest(userId, targetId) {
   // TODO: send notification
 }
 
+export async function deleteFriend(userId, friendId) {
+  await User.deleteFriend(userId, friendId);
+  await User.deleteFriend(friendId, userId);
+}
+
