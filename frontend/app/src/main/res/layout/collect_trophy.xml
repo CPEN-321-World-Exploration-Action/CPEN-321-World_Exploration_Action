@@ -62,20 +62,31 @@
         app:layout_constraintVertical_bias="0.08" />
 
     <Button
-        android:id="@+id/collect_trophy_button"
+        android:id="@+id/button"
         android:layout_width="256dp"
         android:layout_height="56dp"
-        android:layout_marginTop="128dp"
-        android:backgroundTint="#6441A5"
-        android:fontFamily="@font/ubuntu_bold"
+        android:layout_marginStart="44dp"
+        android:backgroundTint="#B8B8B8"
+        android:fontFamily="sans-serif-medium"
         android:text="Collect Trophy"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintVertical_bias="0.811" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="63dp"
+        android:layout_height="57dp"
+        android:background="#0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.354"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:layout_constraintVertical_bias="0.812"
+        app:srcCompat="@drawable/camera__2__2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@ const userSchema = new Schema(
       index: true,
     },
     imageUrl: String,
-    friends: [String],
+    friends: { type: [String], default: [] },
     score: { type: Number, default: 0, index: true },
     fcm_token: String,
   },
@@ -25,6 +25,9 @@ const userSchema = new Schema(
       addUser(newUser) {
         // issue: user_id == google_id
         this.collection.insertOne(newUser);
+      },
+      findUsers(userIds) {
+        return this.find({ user_id: { $in: userIds } }).exec();
       },
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
@@ -42,12 +45,37 @@ const userSchema = new Schema(
         var user = this.findOne({ user_id: collectorUserId });
         this.updateOne({ user_id: collectorUserId }, { score: user.score + 1 }).sort();
       },
-    },
-    methods: {
-      getFriends() {
-        return User.find().where("user_id").in(this.friends);
+      searchUser(query) {
+        return this.find({
+          $or: [
+            { user_id: query },
+            { email: query },
+            { name: { $regex: query, $options: "i" } },
+          ],
+        }).exec();
+      },
+      async getFriends(userId) {
+        const user = await this.findOne({ user_id: userId }).exec();
+        return this.find({ user_id: { $in: user.friends } }).exec();
+      },
+      async mutuallyAddFriend(user1Id, user2Id) {
+        await this.updateOne(
+          { user_id: user1Id },
+          { $push: { friends: user2Id } }
+        ).exec();
+        await this.updateOne(
+          { user_id: user2Id },
+          { $push: { friends: user1Id } }
+        ).exec();
+      },
+      deleteFriend(userId, friendId) {
+        return this.updateOne(
+          { user_id: userId },
+          { $pull: { friends: friendId } }
+        ).exec();
       },
     },
+    methods: {},
   }
 );
 

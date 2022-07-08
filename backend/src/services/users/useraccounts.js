@@ -18,6 +18,10 @@ export async function getUserProfile(userId) {
   return await User.findUser(userId).exec();
 }
 
-export async function signOut() {
-  // issue: should not be here?
+export async function signOut(){
+    // issue: should not be here?
+}
+
+export async function searchUser(query) {
+  return await User.searchUser(query);
 }

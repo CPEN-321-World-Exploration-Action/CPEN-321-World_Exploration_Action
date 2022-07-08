@@ -25,6 +25,8 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
         this.mode = mode;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
+
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -44,6 +46,11 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
     }
 
     @Override
+    public long getItemId(int position) {
+        return displayingUsers.get(position).getId().hashCode();
+    }
+
+    @Override
     public int getItemCount() {
         return displayingUsers.size();
     }
@@ -55,7 +62,6 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
      */
     @SuppressLint("NotifyDataSetChanged")
     public void updateDisplayingUsers(List<UserProfile> newDisplayingUsers) {
-        // TODO: animate this
         this.displayingUsers = newDisplayingUsers;
         notifyDataSetChanged();
     }

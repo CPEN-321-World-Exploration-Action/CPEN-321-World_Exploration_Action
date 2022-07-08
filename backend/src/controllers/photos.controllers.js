@@ -3,6 +3,7 @@ import * as photoSorting from "../services/photos/photosorting";
 import * as photoStoring from "../services/photos/photostoring";
 
 export async function getPhotoIDsByTrophyID(req, res) {
+
   const trophyID = req.params["trophyID"];
   const order = req.params["order"];
 

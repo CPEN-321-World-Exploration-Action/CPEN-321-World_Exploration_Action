@@ -125,5 +125,5 @@ Photo.addPhoto(new Photo({
     user_id: "2",
     imageURL: "@"
 }));
-*/
 Photo.userUnlikePhoto("userID", "picID");
+*/
