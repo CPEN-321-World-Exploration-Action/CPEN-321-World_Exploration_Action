@@ -20,7 +20,7 @@ const userSchema = new Schema(
   {
     statics: {
       findUser(userId) {
-        return this.findOne({ user_id: userId });
+        return this.findOne({ user_id: userId }).exec();
       },
       addUser(newUser) {
         // issue: user_id == google_id
@@ -36,14 +36,10 @@ const userSchema = new Schema(
         var user = this.findOne({ user_id: userID });
         return this.find({ score: { $gt: user.score } }).count();
       },
-      incrementTrophyScore(collectorUserId, score) {
-        /*
-        var user = this.findOne({ user_id: collectorUserId });
+      async incrementTrophyScore(userId, score) {
+        const user = await this.findUser(userId);
         user.score += score;
-        user.save();
-        */
-        var user = this.findOne({ user_id: collectorUserId });
-        this.updateOne({ user_id: collectorUserId }, { score: user.score + 1 }).sort();
+        await user.save();
       },
       searchUser(query) {
         return this.find({
