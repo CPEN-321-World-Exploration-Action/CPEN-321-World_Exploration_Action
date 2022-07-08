@@ -90,13 +90,3 @@ const trophySchemaUser = new Schema(
 
 export const TrophyUser = mongoose.model("TrophyUser", trophySchemaUser);
 export const TrophyTrophy = mongoose.model("TrophyTrophy", trophySchemaTrophy);
-
-
-//TrophyTrophy.incrementNumberOfCollector("trophyID");
-//TrophyTrophy.getTrophyText("a");
-//TrophyTrophy.addUserToTrophy("a", "b");
-
-  //TrophyUser.removeUncollectedTrophy("A","a");
-  //TrophyUser.addCollectedTrophy("a","a");
-  TrophyUser.storeTrophies("a","a");
-  TrophyUser.getUsersTags("userID");
