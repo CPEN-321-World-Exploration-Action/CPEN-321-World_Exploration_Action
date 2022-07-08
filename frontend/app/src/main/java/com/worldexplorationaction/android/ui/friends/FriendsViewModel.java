@@ -114,48 +114,49 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     public void sendRequest(UserProfile user) {
         userService.sendRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "sendRequest succeeded");
-            toastMessage.setValue("Successfully sent a friend request to " + user.getName());
+            showToastMessage("Successfully sent a friend request to " + user.getName());
         }, null, errorMessage -> {
             Log.e(TAG, "sendRequest failed " + errorMessage);
-            toastMessage.setValue("Could not send request to " + user.getName() + " because " + errorMessage);
+            showToastMessage("Could not send request to " + user.getName() + " because " + errorMessage);
         }));
     }
 
     public void deleteFriend(UserProfile friend) {
         userService.deleteFriend(friend.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "deleteFriend succeeded");
-            toastMessage.setValue("Successfully deleted friend " + friend.getName());
+            showToastMessage("Successfully deleted friend " + friend.getName());
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "deleteFriend failed " + errorMessage);
-            toastMessage.setValue("Could not delete friend " + friend.getName() + " because " + errorMessage);
+            showToastMessage("Could not delete friend " + friend.getName() + " because " + errorMessage);
         }));
     }
 
     public void acceptRequest(UserProfile user) {
         userService.acceptRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "acceptRequest succeeded");
-            toastMessage.setValue("Successfully accepted" + user.getName() + "'s friend request");
+            showToastMessage("Successfully accepted" + user.getName() + "'s friend request");
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "acceptRequest failed " + errorMessage);
-            toastMessage.setValue("Could not accept " + user.getName() + "'s friend request because " + errorMessage);
+            showToastMessage("Could not accept " + user.getName() + "'s friend request because " + errorMessage);
         }));
     }
 
     public void declineRequest(UserProfile user) {
         userService.declineRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "declineRequest succeeded");
-            toastMessage.setValue("Successfully declined" + user.getName() + "'s friend request");
+            showToastMessage("Successfully declined" + user.getName() + "'s friend request");
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "declineRequest failed " + errorMessage);
-            toastMessage.setValue("Could not decline " + user.getName() + "'s friend request because " + errorMessage);
+            showToastMessage("Could not decline " + user.getName() + "'s friend request because " + errorMessage);
         }));
     }
 
     private void fetchFriendsAndRequests() {
         /* Fetch friends */
+        Log.i(TAG, "Fetching friends");
         fetchFriendsCall = userService.getFriendProfiles();
         fetchFriendsCall.enqueue(new CustomCallback<>(responseBody -> {
             Log.i(TAG, "userService.getFriendProfiles succeeded");
@@ -167,10 +168,11 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
             Log.e(TAG, "userService.getFriendProfiles failed: " + errorMessage);
             friends = Collections.emptyList();
             displayFriendList();
-            handleFetchFailure(errorMessage);
+            showToastMessage(errorMessage);
         }));
 
         /* Fetch friend requests */
+        Log.i(TAG, "Fetching friend requests");
         fetchFriendRequestsCall = userService.getFriendRequests();
         fetchFriendRequestsCall.enqueue(new CustomCallback<>(responseBody -> {
             friendRequests = responseBody;
@@ -180,7 +182,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         }, errorMessage -> {
             Log.e(TAG, "userService.getFriendRequests failed: " + errorMessage);
             friendRequests = Collections.emptyList();
-            handleFetchFailure(errorMessage);
+            showToastMessage(errorMessage);
             displayFriendList();
         }));
     }
@@ -194,7 +196,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         }, errorMessage -> {
             Log.e(TAG, "userService.searchNewFriends failed " + errorMessage);
             handleSearchResult(Collections.emptyList());
-            handleFetchFailure(errorMessage);
+            showToastMessage(errorMessage);
         }));
     }
 
@@ -228,11 +230,6 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
         displayingUsers.setValue(users);
     }
 
-    private void handleFetchFailure(String message) {
-        toastMessage.setValue(message);
-        toastMessage.setValue(null);
-    }
-
     private void cancelAllFetchRequests() {
         if (searchFriendsCall != null) {
             searchFriendsCall.cancel();
@@ -246,5 +243,10 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
             fetchFriendRequestsCall.cancel();
             fetchFriendRequestsCall = null;
         }
+    }
+
+    private void showToastMessage(String value) {
+        toastMessage.setValue(value);
+        toastMessage.setValue(null);
     }
 }
