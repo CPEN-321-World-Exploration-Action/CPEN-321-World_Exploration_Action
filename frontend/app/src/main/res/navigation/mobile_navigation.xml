@@ -15,17 +15,17 @@
         android:id="@+id/navigation_map"
         android:name="com.worldexplorationaction.android.ui.map.MapFragment"
         android:label="@string/title_map"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_leaderboard"
         android:name="com.worldexplorationaction.android.ui.leaderboard.LeaderboardFragment"
         android:label="@string/title_leaderboard"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_leaderboard" />
 
     <fragment
         android:id="@+id/navigation_friends"
         android:name="com.worldexplorationaction.android.ui.friends.FriendsFragment"
         android:label="@string/title_friends"
-        tools:layout="@layout/fragment_leaderboard" />
+        tools:layout="@layout/fragment_friends" />
 </navigation>

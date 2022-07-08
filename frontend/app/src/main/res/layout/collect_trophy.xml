@@ -61,6 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8"
         app:layout_constraintVertical_bias="0.08" />
 
+
     <Button
         android:id="@+id/button"
         android:layout_width="256dp"
@@ -77,7 +78,7 @@
         app:layout_constraintVertical_bias="0.811" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/button_capture"
         android:layout_width="63dp"
         android:layout_height="57dp"
         android:background="#0000"

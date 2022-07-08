@@ -123,7 +123,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         Trophy trophy = (Trophy) Objects.requireNonNull(marker.getTag());
-        // TODO: Show trophy details view here
         Toast.makeText(getContext(), "Clicked trophy " + trophy.title, Toast.LENGTH_SHORT).show();
         trophyTitle = trophy.title;
         Intent intent = new Intent(getActivity(), trophy_details.class);

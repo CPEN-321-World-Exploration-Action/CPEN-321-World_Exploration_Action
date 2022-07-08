@@ -6,17 +6,86 @@
     android:layout_height="match_parent"
     tools:context=".ui.friends.FriendsFragment">
 
-    <TextView
-        android:id="@+id/text_friends"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/friends_search_bar_background"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="24dp"
+        android:backgroundTint="#EFEFEF"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintEnd_toStartOf="@id/friends_friends_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:src="@drawable/ic_friends_search_black_21dp"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/friends_search_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:defaultFocusHighlightEnabled="false"
+                android:ems="10"
+                android:hint="@string/friends_search_placeholder"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textColorHighlight="@color/purple_200"
+                android:textColorLink="@color/purple_200" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/friends_friends_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/friends_search_bar_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/friends_search_bar_background"
+        app:layout_constraintTop_toTopOf="@id/friends_search_bar_background"
+        app:srcCompat="@mipmap/ic_friends"
+        tools:ignore="ContentDescription" />
+
+    <com.worldexplorationaction.android.ui.userlist.UserListView
+        android:id="@+id/friends_user_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:clipToPadding="false"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/friends_search_bar_background"
+        tools:ignore="SpeakableTextPresentCheck" >
+    </com.worldexplorationaction.android.ui.userlist.UserListView>
+
+    <TextView
+        android:id="@+id/friends_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abeezee"
+        android:text="@string/friends_no_friend"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/friends_user_list"
+        app:layout_constraintEnd_toEndOf="@id/friends_user_list"
+        app:layout_constraintStart_toStartOf="@id/friends_user_list"
+        app:layout_constraintTop_toTopOf="@id/friends_user_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>

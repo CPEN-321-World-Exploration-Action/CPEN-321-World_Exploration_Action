@@ -1,4 +1,5 @@
 import { User } from "../../data/db/user.db.js";
+import * as fcm from "../../data/external/fcm.external.js";
 import "../../utils/utils.js";
 
 const friendRequests = new Map();
@@ -16,13 +17,19 @@ export async function getFriendRequests(userId) {
   }
 }
 
-export async function sendRequest(userId, targetId) {
+export async function sendRequest(senderId, targetId) {
   const existingRequests = friendRequests.get(targetId) ?? [];
-  if (!existingRequests.includes(userId)) {
-    existingRequests.push(userId);
+  if (!existingRequests.includes(senderId)) {
+    existingRequests.push(senderId);
   }
   friendRequests.set(targetId, existingRequests);
-  // TODO: send notification
+
+  const sender = await User.findUser(senderId);
+  sendNotificationInBackground(
+    targetId,
+    "New Friend Request",
+    sender.name + " sent you a friend request"
+  );
 }
 
 export async function deleteFriend(userId, friendId) {
@@ -33,12 +40,24 @@ export async function deleteFriend(userId, friendId) {
 export async function acceptUser(userId, friendId) {
   removeRequest(friendId, userId);
   await User.mutuallyAddFriend(userId, friendId);
-  // TODO: send notification
+
+  const acceptor = await User.findUser(userId);
+  sendNotificationInBackground(
+    friendId,
+    "Accepted Friend Request",
+    acceptor.name + " accepted your friend request"
+  );
 }
 
 export async function declineUser(userId, friendId) {
   removeRequest(friendId, userId);
-  // TODO: send notification
+
+  const user = await User.findUser(userId);
+  sendNotificationInBackground(
+    friendId,
+    "Declined Friend Request",
+    user.name + " declined your friend request"
+  );
 }
 
 function removeRequest(source, target) {
@@ -48,3 +67,15 @@ function removeRequest(source, target) {
   }
 }
 
+function sendNotificationInBackground(targetUserId, title, body) {
+  (async () => {
+    const targetUser = await User.findUser(targetUserId);
+    if (!targetUser.fcm_token) {
+      console.log("User %s does not have an fcm_token", targetUserId);
+      return;
+    }
+    await fcm.sendFriendNotification(targetUser.fcm_token, title, body);
+  })().catch((err) => {
+    console.log(err);
+  });
+}

@@ -1,6 +1,6 @@
-import * as photoManaging from "../services/photos/photomanaging";
-import * as photoSorting from "../services/photos/photosorting";
-import * as photoStoring from "../services/photos/photostoring";
+import * as photoManaging from "../services/photos/photomanaging.js";
+import * as photoSorting from "../services/photos/photosorting.js";
+import * as photoStoring from "../services/photos/photostoring.js";
 
 export async function getPhotoIDsByTrophyID(req, res) {
 

@@ -1,17 +1,13 @@
-import messageManager from "../../utils/message-manager.js";
+import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
-import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 
-export async function onReceiveTrophyCollectedMessage(
-  collectorUserId,
-  collectedTrophyId
-) {
-  // TODO: Update UserDB
-  var trophy = TrophyTrophy.getTrophyScore(collectedTrophyId);
-
-  User.incrementTrophyScore(collectorUserId, trophy.score);
-
-  messageManager.publishUserScoreUpdatedMessage(collectorUserId);
+export async function onReceiveTrophyCollectedMessage(message) {
+  // TODO: Test
+  await User.incrementTrophyScore(message.userId, message.trophyScore);
+  messageManager.publishNewMessage({
+    type: "user_score_updated",
+    userId: message.userId,
+  });
 }
 
 export async function getUserProfile(userId) {

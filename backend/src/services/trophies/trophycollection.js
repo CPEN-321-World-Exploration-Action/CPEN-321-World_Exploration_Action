@@ -1,26 +1,31 @@
-import messageManager from "../../utils/message-manager.js";
-import { TrophyUser, TrophyTrophy} from "../../data/db/trophy.db.js";
+import * as messageManager from "../../utils/message-manager.js";
+import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 
 export async function collectTrophy(userId, trophyId) {
+  // TrophyUser.removeUncollectedTrophy(userId, trophyId);
 
-  TrophyUser.removeUncollectedTrophy(userId, trophyId);
+  // TrophyUser.addCollectedTrophy(userId, trophyId);
 
-  TrophyUser.addCollectedTrophy(userId, trophyId);
+  // // issue: what is newTags
+  // // TrophyTrophy.updateUserTags(newTags);
+  // TrophyTrophy.incrementNumberOfCollector(trophyId);
 
-  // issue: what is newTags
-  // TrophyTrophy.updateUserTags(newTags);
-  TrophyTrophy.incrementNumberOfCollector(trophyId);
+  // const trophyScore = await TrophyTrophy.getTrophyScore(message.trophyId);
+  const trophyScore = 1;
 
-  var message = buildTrophyCollectedMessage(userId, trophyId);
+  const message = buildTrophyCollectedMessage(userId, trophyId, trophyScore);
+  messageManager.publishNewMessage(message);
 
-  messageManager.publishTrophyCollectedMessage(userId, trophyId);
   return {
     success: true,
   };
-  //messageManager.publishNewMessage(message);
 }
 
-export async function buildTrophyCollectedMessage(userId, trophyId){
-
-
+function buildTrophyCollectedMessage(userId, trophyId, trophyScore) {
+  return {
+    type: "trophy_collected",
+    userId,
+    trophyId,
+    trophyScore,
+  };
 }
