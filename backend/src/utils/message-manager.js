@@ -1,4 +1,3 @@
-// TODO: make a better one
 import * as userAccounts from "../services/users/useraccounts.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 
