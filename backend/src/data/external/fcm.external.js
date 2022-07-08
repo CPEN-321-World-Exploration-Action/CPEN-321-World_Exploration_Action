@@ -23,3 +23,18 @@ export async function sendLeaderboardUpdateMessage(tokens) {
     tokens,
   });
 }
+
+export async function sendFriendNotification(token, title, body) {
+  console.log("Sending FriendNotification to:", token);
+  await messaging.send({
+    data: {
+      type: "update",
+      update: "friends",
+    },
+    notification: {
+      title,
+      body,
+    },
+    token,
+  });
+}
