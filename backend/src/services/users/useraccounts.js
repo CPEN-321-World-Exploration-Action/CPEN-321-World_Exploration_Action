@@ -1,10 +1,10 @@
 import messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
-import { Trophy } from "../../data/db/trophy.db.js";
+import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
 export async function onReceiveTrophyCollectedMessage(collectorUserId, collectedTrophyId) {
   // TODO: Update UserDB
-  var trophy = Trophy.getTrophyScore(collectedTrophyId);
+  var trophy = TrophyTrophy.getTrophyScore(collectedTrophyId);
 
   User.incrementTrophyScore(collectorUserId, trophy.score);
 
