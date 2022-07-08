@@ -33,6 +33,8 @@ export async function getGlobalLeaderboard() {
 
 export async function getFriendLeaderboard(userId) {
   const friends = await User.getFriends(userId);
+  const user = await User.findUser(userId);
+  friends.push(user);
   sortByTrophyScore(friends);
   return friends;
 }
