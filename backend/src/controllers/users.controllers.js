@@ -8,27 +8,24 @@ export async function login(req, res){
   // If a user doesnt exist we can use the token payload to create a new User - however we also need user lat and lon. So we must ensure that is in the post request.
   // After, we setup a session for the user.
 
-  const userId = req.userId
-
-  req.session.userId = userId
+  const userId = req.session.userId
   req.session.save()
 
   try{
-    const user = await userAccounts.getUserProfile(userId)
-    if (!user){
-      req.payload.user_id = userId
-      console.log(`User does not exist. Creating User with id: ${userId}`)
-      userAccounts.createUserProfile(req.payload)
+    let user = await userAccounts.getUserProfile(userId)
 
+    if (!user){
+      req.payload.user_id = userId // Add to payload so payload can be used to create profile with one object
+      console.log(`User does not exist. Creating User with id: ${userId}`)
+      user = await userAccounts.createUserProfile(req.payload)
       //Using newly created account, we also need to create a TrophyUser document
-      
+
     }
-    return res.status(201).json({user})
+
+    res.status(201).json({user})
   } catch (error){
     res.status(500).json({message: error})
   }
-
-  res.status(200).send(req.session)
 }
 
 export async function getProfile(req, res) {
