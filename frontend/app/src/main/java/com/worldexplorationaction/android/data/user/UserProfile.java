@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 
 public class UserProfile {
-    @SerializedName(value = "id", alternate = {"user_id"})
+    @SerializedName("user_id")
     private final String id;
     private final String imageUrl;
     private final String name;
@@ -28,13 +28,13 @@ public class UserProfile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserProfile)) return false;
-        UserProfile that = (UserProfile) o;
-        return score == that.score && id.equals(that.id) && Objects.equals(imageUrl, that.imageUrl) && name.equals(that.name);
+        UserProfile profile = (UserProfile) o;
+        return score == profile.score && Objects.equals(id, profile.id) && Objects.equals(imageUrl, profile.imageUrl) && Objects.equals(name, profile.name) && Objects.equals(email, profile.email) && Objects.equals(rank, profile.rank);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id, imageUrl, name, email, score, rank);
     }
 
     @NonNull
@@ -42,9 +42,11 @@ public class UserProfile {
     public String toString() {
         return "UserProfile{" +
                 "id='" + id + '\'' +
-                ", image='" + imageUrl + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", score=" + score +
+                ", rank=" + rank +
                 '}';
     }
 
