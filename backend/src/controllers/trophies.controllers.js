@@ -1,4 +1,3 @@
-import { TrophyTrophy } from "../data/db/trophy.db.js";
 import * as trophyCollection from "../services/trophies/trophycollection.js";
 import * as trophyDetail from "../services/trophies/trophydetails.js";
 
@@ -17,11 +16,33 @@ export async function collectTrophy(req, res) {
 }
 
 export async function getTrophiesUser(req, res) {
-    const trophies = await trophyDetail.getTrophiesUser(
-        req.userId ,
-        req.params["userLocation"]
-    );
-    res.status(200).json(trophies);
+  try{ 
+    const {user_id} = req.params
+    const { user_latitude, user_longitude} = req.body
+
+    if(! user_id){
+      // This should never happen
+      return res.status(400).json({message: "No user_id provided."})
+    }
+    if(! user_latitude || ! user_longitude){
+      return res.status(400).json({message: "User latitude and longitude are required."})
+    }
+
+    const user = await trophyDetail.getUser(user_id);
+    if (!user){
+      return res.status(401).json({message:  `User with id ${user_id} not found in TrophyUser database`})
+    }
+
+    const trophies = await trophyDetail.getTrophiesUser(user_id, user_latitude, user_longitude);
+      if (!trophies){
+        // trophies should only be null if Places API call is erroneous or empty
+        return res.status(404).json({message: `No Trophies found near user ${user_id}`});
+      }
+
+      res.status(200).json(trophies);
+  } catch (error){
+    res.status(500).json({message: error})
+  }
 }
 
 // Dev Functions

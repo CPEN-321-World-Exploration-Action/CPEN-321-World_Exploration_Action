@@ -83,7 +83,7 @@ const trophySchemaUser = new Schema(
               return this.find({user_id: userID}).trophyTags;
           },
           getUserUncollectedTrophyIDs(userID){
-            return this.find({user_id: userID}).uncollectedTrophies;
+            return this.findOne({user_id: userID}).uncollectedTrophies;
           }
 
       },

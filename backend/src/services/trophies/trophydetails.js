@@ -1,9 +1,13 @@
 import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
-export async function getTrophiesUser(userId, userLocation){
-    const uncollectedTrophyIds = await TrophyUser.getUserUncollectedTrophyIDs(userId).exec();
-    
+export async function getUser(user_id){
+    return await TrophyUser.findOne({user_id:user_id});
+}
+
+export async function getTrophiesUser(user_id, user_latitude, user_longitude){
+    const uncollectedTrophyIds = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
+    console.log(uncollectedTrophyIds)
     if (uncollectedTrophyIds.length < 10){
         // Get trophies from Google Places API.
         console.log('Need more Trophies')
@@ -15,7 +19,7 @@ export async function getTrophiesUser(userId, userLocation){
     }
 
     // Need to get info from all trophies. 
-    const trophies = []
+    let trophies = []
     for (let i=0; i< uncollectedTrophyIds.length; i++){
         trophies.push(await TrophyTrophy.getTrophyText(uncollectedTrophyIds[i]));
     }
