@@ -78,12 +78,6 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
     public void setUser(UserProfile userProfile) {
         nameTextView.setText(userProfile.getName());
         scoreTextView.setText(String.format(Locale.getDefault(), "%d", userProfile.getScore()));
-<<<<<<< HEAD
-        Glide.with(context)
-                .load(userProfile.getImageUrl())
-                .apply(imageLoadOptions)
-                .into(profileImageView);
-=======
         String imageUrl = userProfile.getImageUrl();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(context)
@@ -93,7 +87,6 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
         } else {
             profileImageView.setImageResource(R.drawable.ic_default_avatar_35dp);
         }
->>>>>>> feature/back-end-view-map
     }
 
     public void setRank(int rank) {
