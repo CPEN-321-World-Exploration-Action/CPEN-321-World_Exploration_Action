@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    user_id: { type: String, index: true, unique: true },
+    user_id: { type: String, index: true, unique: true, required:true },
     user_latitude: {type: Number, required:true},
     user_longitude: {type: Number, required:true},
     google_id: { type: String, index: true },

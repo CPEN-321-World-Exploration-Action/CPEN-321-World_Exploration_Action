@@ -15,5 +15,7 @@ usersRouter.get("/leaderboard/friend", [nocache(), auth], userControllers.getFri
 
 //dev
 usersRouter.post("/create", userControllers.createUser);
+usersRouter.get("/", userControllers.getAllUsers);
+usersRouter.delete("/:userID", userControllers.deleteUser);
 
 export default usersRouter;
