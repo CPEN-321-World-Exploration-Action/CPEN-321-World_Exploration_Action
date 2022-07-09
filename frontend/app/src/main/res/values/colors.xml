@@ -22,4 +22,7 @@
     <color name="leaderboard_button_inactive_background">#FFFBFCF9</color>
     <color name="leaderboard_button_inactive_font">#FF132D2F</color>
     <color name="leaderboard_button_inactive_ripple">#4D979797</color>
+
+    <color name="like_button_active_background">#F41010</color>
+    <color name="like_button_inactive_background">#FFFFFF</color>
 </resources>

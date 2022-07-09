@@ -4,3 +4,8 @@ Array.prototype.removed = function (element) {
     return e != element;
   });
 };
+
+Array.prototype.last = function () {
+  console.log(this)
+  return this[this.length - 1];
+};

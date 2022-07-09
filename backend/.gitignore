@@ -1,7 +1,6 @@
 /node_modules/
 .env
 .DS_Store
-/.idea/
-.idea
-/firebase-service-account.json
+firebase-service-account.json
+firebase-service-account.json:Zone.Identifier
 .idea

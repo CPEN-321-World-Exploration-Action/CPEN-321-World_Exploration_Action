@@ -15,7 +15,12 @@
         <item name="android:layout_marginHorizontal">6dp</item>
         <item name="cornerRadius">12dp</item>
         <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:src">@drawable/huge_icon__1_ </item>
     </style>
+
+    <style name="LikeButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+    </style>
+
 
     <style name="LeaderboardButton.Active">
         <item name="android:textColor">@color/leaderboard_button_active_font</item>
@@ -25,5 +30,14 @@
     <style name="LeaderboardButton.InActive">
         <item name="android:textColor">@color/leaderboard_button_inactive_font</item>
         <item name="android:backgroundTint">@color/leaderboard_button_inactive_background</item>
+    </style>
+
+    <style name="LikeButton.InActive">
+        <item name="android:textColor">@color/leaderboard_button_inactive_font</item>
+        <item name="android:backgroundTint">@color/like_button_inactive_background</item>
+    </style>
+
+    <style name="LikeButton.Active">
+        <item name="android:backgroundTint">@color/like_button_active_background</item>
     </style>
 </resources>

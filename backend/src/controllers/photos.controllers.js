@@ -58,6 +58,7 @@ export async function getPhotoIDsByUserID(req, res) {
 
 /* Storing */
 
+/*
 export async function uploadPhoto(req, res) {
   const userID = req.query.userID;
   const trophyID = req.query.trophyID;
@@ -83,6 +84,7 @@ export async function uploadPhoto(req, res) {
   await photoStoring.uploadPhoto(userID, trophyID, photoURL);
   res.status(200).send();
 }
+*/
 
 export async function getImage(req, res) {
   const picID = req.query.picID;
@@ -98,4 +100,27 @@ export async function getImage(req, res) {
       message: "Could not find the photo",
     });
   }
+}
+
+export async function uploadPhoto(req, res) {
+  if (!req.file) {
+    res.status(400).json({
+      message: "No photo received",
+    });
+  }
+  await photoStoring.uploadPhoto(
+    req.params["userId"],
+    req.params["trophyId"],
+    req.file.filename
+  );
+  res.status(201).json({
+    photoId: req.file.filename,
+  });
+}
+
+export async function getPhoto(req, res) {
+  const photoId = req.params["photoId"];
+  res.download(photoId, {
+    root: "uploads",
+  });
 }
