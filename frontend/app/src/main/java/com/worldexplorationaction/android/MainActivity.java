@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private GoogleSignInClient mGoogleSignInClient;
+    public static String loggedName = "";
+    public static String emailAddress = "";
+    public static Uri photoURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Log.d(TAG, "Pref Name: " +  account.getDisplayName());
             Log.d(TAG, account.getGivenName() + " " + account.getFamilyName());
+            loggedName = account.getDisplayName();
+            emailAddress = account.getEmail();
+            photoURI = account.getPhotoUrl();
+            Log.d(TAG,  "logged Name: " + loggedName);
+            Log.d(TAG, "emailAddress: " + emailAddress);
+            Log.d (TAG, "Display URI: " + photoURI);
 
             // Send to backend
             // account.getIdToken();
