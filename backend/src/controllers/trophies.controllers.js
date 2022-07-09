@@ -44,5 +44,18 @@ export async function createTrophy(req, res){
   }catch (error){
     res.status(500).json({message: error})
   }
+}
 
+export async function deleteTrophy(req, res){
+  try{
+    const {id:trophyID} = req.params
+    const trophy = await trophyDetail.deleteTrophy(trophyID);
+    if(! trophy){
+      return res.status(404).json({message: `Could not find Trophy with id: ${trophyID}`})
+    }
+    // Return info about deleted trophy only for testing.
+    res.status(200).json({trophy})
+  }catch (error){
+    res.status(500).json({message:error})
+  }
 }

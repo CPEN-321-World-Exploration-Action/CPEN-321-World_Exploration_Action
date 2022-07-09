@@ -24,12 +24,14 @@ export async function getTrophiesUser(userId, userLocation){
 
 // Dev function
 export async function getAllTrophies(){
-    const trophies = await TrophyTrophy.find({})
-    return trophies
+    return await TrophyTrophy.find({})
 }
 
 export async function createTrophy(req){
-    const trophy = await TrophyTrophy.create(req.body)
-    return trophy
+    return await TrophyTrophy.create(req.body)
+}
+
+export async function deleteTrophy(trophyID){
+    return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
 }
 
