@@ -6,22 +6,8 @@ import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 // probably should not store anything, so to keep consistency
 //let photoSorting = new Map();
 
-export async function getPhotoIDsByUserID(userID) {
-  /*
-    photoList = photoSorting.get(userID);
-
-    if (photoList == null){
-        // if cannot find in the photoSorting, this method need to be added to PhotoDB
-        photos = Photo.findPhotos(userID, "userID");
-        photoSorting.set(userID, photos); // add item to the photoSorting
-        photoList = photos;
-    }
-    */
-
-  //photoSorting.set(userID, photos); // add item to the photoSorting
-  //let photoList = photos;
-
-  return await Photo.findPhotos(userID, "userID").exec();
+export async function getPhotoIDsByUserID(userId) {
+  return await Photo.getPhotosByUser(userId);
 }
 
 export async function getPhotoIDsByTrophyID(trophyID, order) {
