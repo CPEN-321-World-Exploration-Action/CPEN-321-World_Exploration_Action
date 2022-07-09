@@ -2,9 +2,11 @@ package com.worldexplorationaction.android.ui.profile;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,25 +15,33 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
 
+import java.util.List;
+
 public class ProfileFragment extends Fragment {
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     private FragmentProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ProfileViewModel profileViewModel =
+        ProfileViewModel viewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
-        profileViewModel.getUserProfile().observe(getViewLifecycleOwner(), this::onNewUserProfile);
+        viewModel.getUserProfile().observe(getViewLifecycleOwner(), this::onNewUserProfile);
+        viewModel.getPhotos().observe(getViewLifecycleOwner(), this::onNewPhotos);
 
         binding.profileLogoutButton.setOnClickListener(v -> {
+            viewModel.logOut();
             MainActivity activity = (MainActivity) requireActivity();
             activity.logOut();
         });
+
+        viewModel.fetchProfileAndPhotos("id7");
 
         return binding.getRoot();
     }
@@ -44,6 +54,7 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void onNewUserProfile(UserProfile user) {
+        Log.i(TAG, "onNewUserProfile: " + user);
         if (user == null) {
             return;
         }
@@ -63,6 +74,22 @@ public class ProfileFragment extends Fragment {
                     .into(binding.profileProfileImage);
         } else {
             binding.profileProfileImage.setImageResource(R.drawable.ic_default_avatar_35dp);
+        }
+    }
+
+    private void onNewPhotos(List<Photo> photos) {
+        Log.i(TAG, "onNewPhotos: " + photos);
+        for (int i = 0; i < binding.profileImagesGrid.getChildCount(); i++) {
+            ImageView imageView = (ImageView) binding.profileImagesGrid.getChildAt(i);
+            if (i < photos.size()) {
+                Glide.with(requireContext())
+                        .load(photos.get(i).getPhotoUrl())
+                        .placeholder(R.drawable.ic_default_avatar_35dp)
+                        .into(imageView);
+            } else {
+                Glide.with(requireContext())
+                        .clear(imageView);
+            }
         }
     }
 }
