@@ -18,11 +18,10 @@ export async function getPhotoIDsByUserID(userID) {
     }
     */
 
-  let photos = await Photo.findPhotos(userID, "userID").exec();
-  photoSorting.set(userID, photos); // add item to the photoSorting
-  let photoList = photos;
+  //photoSorting.set(userID, photos); // add item to the photoSorting
+  //let photoList = photos;
 
-  return photoList;
+  return await Photo.findPhotos(userID, "userID").exec();
 }
 
 export async function getPhotoIDsByTrophyID(trophyID, order) {
