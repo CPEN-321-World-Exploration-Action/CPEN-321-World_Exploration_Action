@@ -14,7 +14,7 @@ export async function login(req, res){
 
   try{
     let user = await userAccounts.getUserProfile(userId)
-    let trophyUser = await trophyDetail.getTrophyUser(userId) // If user!=null then trophyUser should never be null either.
+    let trophyUser = await trophyDetail.getTrophyUser(userId) 
 
     if (!user){
       req.payload.user_id = userId // Add to payload so payload can be used to create profile with one object
@@ -22,6 +22,10 @@ export async function login(req, res){
       user = await userAccounts.createUserProfile(req.payload)
       //Using newly created account, we also need to create a TrophyUser document
       trophyUser = await trophyDetail.createTrophyUser(req.payload)
+    }
+    if (!trophyUser){
+      // If user!=null then trophyUser should never be null either.
+      return res.status(500).json({message:`User with id ${userId} exists in the user database but not in the Trophy database`})
     }
     res.status(201).json({user, trophyUser})
   } catch (error){
@@ -176,16 +180,23 @@ export async function getAllUsers(req, res){
 
 export async function deleteUser(req, res){
 
-  // Also need to remove user from TrophyUser database
-
   const {userID: user_id} = req.params
   try{
     // Return deleted user for testing purposes
     const user = await userAccounts.deleteUser(user_id)
     if (!user){
-      res.status(404).json({message: `User with id ${user_id} not found.`})
+      return res.status(404).json({message: `User with id ${user_id} not found.`})
     }
-    res.status(200).json({user})
+    // Also need to remove user from TrophyUser database
+    const trophyUser = await trophyDetail.deleteTrophyUser(user_id)
+    if (!trophyUser){
+      return res.status(404).json({message: `TrophyUser with id ${user_id} not found.`})
+    }
+
+    // Regenerate session to wipe userId
+    req.session.regenerate(function(err){if (err){console.log(err)}})
+
+    res.status(200).json({user, trophyUser})
   }catch (error){
     res.status(500).json({message:error})
   }

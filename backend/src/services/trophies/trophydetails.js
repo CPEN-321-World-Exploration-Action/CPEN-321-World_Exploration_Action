@@ -26,12 +26,16 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     return trophies
 }
 
-export async function createTrophyUser(req){
-   return await TrophyUser.create(req.body)
+export async function createTrophyUser(body){
+   return await TrophyUser.create(body)
 }
 
 export async function getTrophyUser(user_id){
-    return await TrophyUser.findOne({user_id})
+    return await TrophyUser.findOne({user_id:user_id})
+}
+
+export async function deleteTrophyUser(user_id){
+    return await TrophyUser.findOneAndDelete({user_id:user_id})
 }
 
 // Dev function
