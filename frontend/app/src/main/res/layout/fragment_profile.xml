@@ -10,8 +10,9 @@
 
     <ImageView
         android:id="@+id/profile_stat_background"
-        android:layout_width="160dp"
+        android:layout_width="120dp"
         android:layout_height="418dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/image_8"
@@ -108,55 +109,110 @@
 
     <TextView
         android:id="@+id/profile_your_images_title"
-        android:layout_width="186dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/ubuntu_bold"
         android:text="Your Images"
+        android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
         app:layout_constraintTop_toTopOf="@+id/profile_stat_background" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView22"
-        app:layout_constraintVertical_bias="0.934" />
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/profile_images_grid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="500dp"
-        android:fontFamily="@font/ubuntu"
-        android:text="TextView"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView22"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="24dp"
+        app:columnCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@+id/profile_your_images_title"
+        app:rowCount="3">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="112dp"
-        android:layout_height="103dp"
-        android:src="@drawable/t1"
-        app:civ_border_color="#D9D9D9"
-        app:civ_border_width="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView22"
-        app:layout_constraintVertical_bias="0.879" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+    </androidx.gridlayout.widget.GridLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
