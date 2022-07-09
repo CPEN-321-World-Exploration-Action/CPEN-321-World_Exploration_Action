@@ -45,7 +45,8 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_profile_image"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/profile_email"
@@ -57,14 +58,15 @@
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/profile_rank_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu"
-        android:text="Rank"
+        android:text="@string/profile_rank_title"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
         app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
@@ -81,14 +83,15 @@
         app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
         app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
         app:layout_constraintTop_toTopOf="@+id/profile_stat_background"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.25"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/profile_trophies_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu"
-        android:text="Trophies"
+        android:text="@string/profile_trophies_title"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
         app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
@@ -105,7 +108,8 @@
         app:layout_constraintEnd_toEndOf="@id/profile_stat_background"
         app:layout_constraintStart_toStartOf="@id/profile_stat_background"
         app:layout_constraintTop_toTopOf="@id/profile_stat_background"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintVertical_bias="0.65"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/profile_your_images_title"
@@ -114,11 +118,23 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/ubuntu_bold"
-        android:text="Your Images"
+        android:text="@string/profile_your_images_title"
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
         app:layout_constraintTop_toTopOf="@+id/profile_stat_background" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        android:padding="16dp"
+        android:src="@mipmap/ic_profile_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/profile_images_grid"

@@ -32,4 +32,9 @@
     <string name="friends_already_friend">%1$s is already your friend! (or you\'ve received a friend request from %1$s)</string>
     <string name="friends_view_profile">View Profile</string>
     <string name="friends_delete">Delete</string>
+
+    <string name="profile_logout_button_title">Logout</string>
+    <string name="profile_rank_title">Rank</string>
+    <string name="profile_trophies_title">Trophies</string>
+    <string name="profile_your_images_title">Your Images</string>
 </resources>
