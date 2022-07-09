@@ -2,6 +2,26 @@ import * as userAccounts from "../services/users/useraccounts.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
+export async function login(req, res){
+  // After auth middleware, we have a session with userId. 
+  // Now we check if the user exists.
+  // If a user doesnt exist we can use the token payload to create a new User - however we also need user lat and lon. So we must ensure that is in the post request.
+  // After, we setup a session for the user.
+
+
+  // TODO: For some reason, regenerating the session, adding userID and saving doesnt actually save the session with userID.
+
+  // req.session.regenerate(function (err) {
+  //   if (err){
+  //     console.log(err)
+  //   }
+  req.session.userId = req.userId
+  req.session.save()
+  console.log(req.session)
+  // })
+  res.status(200).send(req.session)
+}
+
 export async function getProfile(req, res) {
   const userId = req.params["userId"];
   const user = await userAccounts.getUserProfile(userId);

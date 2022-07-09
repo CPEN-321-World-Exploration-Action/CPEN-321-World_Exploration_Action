@@ -5,17 +5,31 @@ const CLIENT_ID=process.env.CLIENT_ID
 const client = new OAuth2Client.OAuth2Client(CLIENT_ID);
 
 export default async (req, res, next) => {
-  const token = req.header("Authorization");
-  // if (!token) return res.status(401).send("Missing Authorization");
-  console.log('Authorizing...')
-  try {
-    const userId = await verifyUser(token);
-    req.userId = userId
-    console.log(`Authorization Successfull: user_id: ${userId}`)
-  } catch (err) {
-    res.status(401).send({ error: "Authorization failed" });
+
+  // Don't need to authenticate tokenID if user is in authenticated session
+  if (req.session.userId){
+    console.log(`User Session is still valid. User ID is ${req.session.userId}`)
+    next()
   }
-  next();
+  else{
+
+    // Authenticate token before regenerating and storing session
+    const token = req.header("Authorization");
+
+    // if (!token) return res.status(401).send("Missing Authorization");
+    console.log('Authorizing...')
+    try {
+      const {userId, payload} = await verifyUser(token);
+
+      req.userId = userId
+      req.payload = payload
+
+      console.log(`Authorization Successfull: user_id: ${userId}`)
+      next()
+    } catch (err) {
+      res.status(401).send({ error: "Authorization failed"  });
+    }
+  }
 };
 
 async function verifyUser(token) {
@@ -26,8 +40,8 @@ async function verifyUser(token) {
       //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
   });
   const payload = ticket.getPayload();
-  const userid = payload['sub'];
+  const userId = payload['sub'];
   // If request specified a G Suite domain:
   // const domain = payload['hd'];
-  return userid;
+  return {userId, payload};
 }

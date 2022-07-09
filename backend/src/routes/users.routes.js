@@ -6,8 +6,9 @@ import * as userControllers from "../controllers/users.controllers.js";
 
 const usersRouter = express.Router();
 
-usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
-usersRouter.get("/:userId/profile", nocache(), userControllers.getProfile);
+//usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
+usersRouter.post('/login', auth, userControllers.login);
+usersRouter.get("/:userId/profile", [nocache(), auth], userControllers.getProfile);
 
 usersRouter.put("/leaderboard/subscribe-update", [nocache(), auth], userControllers.subscribeLeaderboardUpdate);
 usersRouter.get("/leaderboard/global", [nocache(), auth], userControllers.getGlobalLeaderboard);
