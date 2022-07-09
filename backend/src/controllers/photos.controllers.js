@@ -4,12 +4,17 @@ import * as photoStoring from "../services/photos/photostoring.js";
 
 export async function uploadPhoto(req, res) {
   if (!req.file) {
-    return res.status(400).json({
+    res.status(400).json({
       message: "No photo received",
     });
   }
-  return res.status(201).json({
-    photoId: req.file.filename
+  await photoStoring.uploadPhoto(
+    req.params["userId"],
+    req.params["trophyId"],
+    req.file.filename
+  );
+  res.status(201).json({
+    photoId: req.file.filename,
   });
 }
 
