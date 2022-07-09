@@ -11,14 +11,17 @@ public class UserProfile {
     private final String id;
     private final String imageUrl;
     private final String name;
+    private final String email;
     private final int score;
-    private String email;
+    private final Integer rank;
 
     public UserProfile(String id, String imageUrl, String name, int score) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.name = name;
         this.score = score;
+        this.email = null;
+        this.rank = null;
     }
 
     @Override
@@ -63,5 +66,9 @@ public class UserProfile {
 
     public int getScore() {
         return score;
+    }
+
+    public Integer getRank() {
+        return rank;
     }
 }

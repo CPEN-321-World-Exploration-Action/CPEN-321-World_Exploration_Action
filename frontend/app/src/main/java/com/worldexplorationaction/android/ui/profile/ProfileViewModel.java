@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProfileViewModel extends ViewModel {
+import com.worldexplorationaction.android.data.user.UserProfile;
 
-    private final MutableLiveData<String> mText;
+public class ProfileViewModel extends ViewModel {
+    private final MutableLiveData<UserProfile> userProfile;
 
     public ProfileViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is profile fragment");
+        userProfile = new MutableLiveData<>();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<UserProfile> getUserProfile() {
+        return userProfile;
     }
 }
