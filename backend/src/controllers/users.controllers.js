@@ -46,3 +46,16 @@ export async function subscribeLeaderboardUpdate(req, res) {
     });
   }
 }
+
+
+// Dev functions
+export async function createUser(req, res){
+  // When creating a user, we also need to create a document in the TrophyUser DB
+  try{
+    const user = userAccounts.createUser( req.body)
+    res.status(201).json({user})
+  } catch (error){
+    res.status(500).json({message: error})
+  }
+
+}

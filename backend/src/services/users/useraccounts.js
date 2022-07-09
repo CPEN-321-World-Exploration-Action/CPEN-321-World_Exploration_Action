@@ -9,3 +9,8 @@ export async function onReceiveTrophyCollectedMessage(collectorUserId, collected
 export async function getUserProfile(userId) {
   return await User.findUser(userId).exec();
 }
+
+// dev functions
+export async function createUser(user_id, body){
+  return await User.create(req.body)
+}
