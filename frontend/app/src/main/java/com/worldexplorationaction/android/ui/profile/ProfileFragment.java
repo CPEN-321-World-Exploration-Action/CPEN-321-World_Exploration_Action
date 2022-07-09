@@ -7,6 +7,8 @@ import static com.worldexplorationaction.android.MainActivity.photoURI;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -49,12 +52,13 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         //final TextView textView = binding.textProfile;
         //profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        Log.d (TAG, "Display URI: " + photoURI);
         photo = view.findViewById(R.id.profile_image);
         Glide.with(this)
                 .load(photoURI)
                 .into(photo);
 
-        return root;
+        return view;
     }
 
     @Override
@@ -62,12 +66,8 @@ public class ProfileFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         name1 = (TextView) getActivity().findViewById(R.id.name);
         email1 = (TextView) getActivity().findViewById(R.id.email);
-        //photo = (CircleImageView) getActivity().findViewById(R.id.profile_image);
         name1.setText(loggedName);
         email1.setText(emailAddress);
-        //photo.setImageURI(photoURI);
-        //photo.setImageResource(R.drawable.t1);
-        //photo.setImageURI(photoURI);
     }
 
     @Override
