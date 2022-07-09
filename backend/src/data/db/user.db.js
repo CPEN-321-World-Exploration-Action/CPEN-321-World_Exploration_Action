@@ -5,16 +5,16 @@ const { Schema } = mongoose;
 const userSchema = new Schema(
   {
     user_id: { type: String, index: true, unique: true, required:true },
-    user_latitude: {type: Number, required:true},
-    user_longitude: {type: Number, required:true},
-    google_id: { type: String, index: true },
+    user_latitude: {type: Number},
+    user_longitude: {type: Number},
+    //google_id: { type: String, index: true },
     name: { type: String, index: true },
     email: {
       type: String,
       lowercase: true,
       index: true,
     },
-    imageUrl: String,
+    picture: String,
     friends: { type: [String], default: [] },
     score: { type: Number, default: 0, index: true },
     fcm_token: String,
