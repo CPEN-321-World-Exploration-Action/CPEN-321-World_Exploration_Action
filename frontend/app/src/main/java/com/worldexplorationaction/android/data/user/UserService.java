@@ -1,6 +1,6 @@
 package com.worldexplorationaction.android.data.user;
 
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
 
 import java.util.List;
 
@@ -46,6 +46,6 @@ public interface UserService {
     Call<Void> declineRequest(@Query("requesterUserId") String requesterUserId);
 
     class Holder {
-        public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
+        private static final UserService instance = RetrofitUtility.getRetrofit("users/").create(UserService.class);
     }
 }
