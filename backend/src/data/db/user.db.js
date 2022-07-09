@@ -37,9 +37,10 @@ const userSchema = new Schema(
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
       },
-      computeUserRank(userID) {
-        var user = this.findOne({ user_id: userID });
-        return this.find({ score: { $gt: user.score } }).count();
+      async computeUserRank(userId) {
+        const user = await this.findUser(userId);
+        const gtCount = await this.count({ score: { $gt: user.score } }).count();
+        return gtCount + 1;
       },
       async incrementTrophyScore(userId, score) {
         const user = await this.findUser(userId);
