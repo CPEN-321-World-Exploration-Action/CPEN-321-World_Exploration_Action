@@ -10,12 +10,6 @@ import android.util.TypedValue;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class Utility {
     private static final String TAG = Utility.class.getSimpleName();
 
@@ -62,16 +56,5 @@ public class Utility {
         }
         drawable.draw(canvas);
         return bitmap;
-    }
-
-    public static Retrofit getRetrofit(String path) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(3, TimeUnit.SECONDS)
-                .build();
-        return new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8081/" + path)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
     }
 }
