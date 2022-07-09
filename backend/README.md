@@ -3,9 +3,11 @@
 ## How to Run
 
 1. Put `firebase-service-account.json` in this folder
-2. Make sure `npm` is installed
-3. `npm install [--production]`
-4. `npm start`
+2. In the `.env` file, set `CLIENT_ID` to the Google Sign-in Web Client ID
+3. For remote MongoDB connection, set `dbURI` in the `.env` to the database URL
+4. Make sure `npm` is installed
+5. `npm install [--production]`
+6. `npm start`
 
 ## Project Structure
 
