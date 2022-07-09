@@ -10,10 +10,6 @@ export async function getUserProfile(userId) {
   return await User.findUser(userId).exec();
 }
 
-<<<<<<< HEAD
-export async function createUserProfile(userId) {
-  return await User.addUser(userId);
-=======
 // dev functions
 export async function createUser(req, res){
   try{
@@ -30,5 +26,4 @@ export async function getAllUsers(){
 
 export async function deleteUser(user_id){
   return await User.findOneAndDelete({user_id:user_id}, {})
->>>>>>> feature/back-end-view-map
 }

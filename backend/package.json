@@ -6,13 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-<<<<<<< HEAD
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ."
-=======
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
->>>>>>> feature/back-end-view-map
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
