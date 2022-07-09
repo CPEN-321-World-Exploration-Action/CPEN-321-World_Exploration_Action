@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentLeaderboardBinding;
-import com.worldexplorationaction.android.ui.userlist.UserListMode;
 import com.worldexplorationaction.android.ui.userlist.UserListView;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
@@ -48,7 +47,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         leaderboardViewModel.notifySwitchLeaderboardType(DEFAULT_TYPE);
 
         final UserListView userListView = binding.leaderboardContent;
-        userListView.init(UserListMode.LEADERBOARD, context, getViewLifecycleOwner(), leaderboardViewModel);
+        userListView.init(context, getViewLifecycleOwner(), leaderboardViewModel);
         userListView.setOnItemClickListener(itemPosition ->
                 Toast.makeText(getContext(),
                         Objects.requireNonNull(leaderboardViewModel.getUsers().getValue())
@@ -124,12 +123,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         }
         new AlertDialog.Builder(getContext())
                 .setMessage(getString(R.string.leaderboard_fetch_error, errorMessage))
-                .setNeutralButton(R.string.common_retry, (dialog, which) -> {
-                    leaderboardViewModel.fetchLeaderboard();
-                })
-                .setPositiveButton(R.string.common_ok,
-                        (dialog, which) -> {
-                        })
+                .setNeutralButton(R.string.common_retry, (dialog, which) -> leaderboardViewModel.fetchLeaderboard())
+                .setPositiveButton(R.string.common_ok, (dialog, which) -> {})
                 .create()
                 .show();
     }

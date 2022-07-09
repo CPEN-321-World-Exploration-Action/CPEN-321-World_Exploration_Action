@@ -21,25 +21,35 @@ const trophySchemaTrophy = new Schema(
   },
   {
     statics: {
-        incrementNumberOfCollector(trophyID){
-          this.findOne({trophy_id: trophyID}).number_of_collectors += 1; // initialized to be 0
-        },
-        getTrophyText(id){
-            var trophyInfo = this.findOne({trophy_id: id});
-            delete trophyInfo.list_of_photos;
+      incrementNumberOfCollector(trophyID) {
+        this.findOne({ trophy_id: trophyID }).number_of_collectors += 1; // initialized to be 0
+      },
+      getTrophyText(id) {
+        var trophyInfo = this.findOne({ trophy_id: id });
+        delete trophyInfo.list_of_photos;
 
-            return trophyInfo;
-        },
-        addUserToTrophy(userID, trophyID){
-            var trophy = this.find({trophy_id: trophyID});
-            trophy.list_of_collectors.push(userID).sort();
-            trophy.save();
+        return trophyInfo;
+      },
+      addUserToTrophy(userID, trophyID) {
+        var trophy = this.find({ trophy_id: trophyID });
+        trophy.list_of_collectors.push(userID).sort();
+        trophy.save();
+      },
+      getTrophyScore(collectedTrophyId) {
+        var trophy = this.findOne({ trophy_id: collectedTrophyId });
+        // issue: score value?
+        let quality = trophy.quality;
+
+        if (quality == "Gold" || quality == "gold") {
+          return 10;
+        } else if (quality == "Silver" || quality == "silver") {
+          return 5;
+        } else {
+          return 1;
         }
-
+      },
     },
-    methods: {
-
-    },
+    methods: {},
   }
 );
 
@@ -95,3 +105,4 @@ const trophySchemaUser = new Schema(
 
 export const TrophyUser = mongoose.model("TrophyUser", trophySchemaUser);
 export const TrophyTrophy = mongoose.model("TrophyTrophy", trophySchemaTrophy);
+

@@ -14,4 +14,9 @@ public interface UserListViewModel {
      * Get users to display in the user list
      */
     LiveData<List<UserProfile>> getUsers();
+
+    /**
+     * Get the displaying mode for each row
+     */
+    List<UserListMode> getModes();
 }

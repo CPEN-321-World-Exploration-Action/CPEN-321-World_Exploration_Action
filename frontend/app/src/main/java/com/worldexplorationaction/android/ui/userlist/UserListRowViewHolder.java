@@ -32,8 +32,8 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
     private final TextView rankViewNormalTextView;
     private final ImageView profileImageView;
     private final TextView nameTextView;
-    private final FrameLayout scoreView;
     private final TextView scoreTextView;
+    private final TextView actionTextView;
 
     private final RequestOptions imageLoadOptions;
 
@@ -50,8 +50,8 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
         this.rankViewNormalTextView = itemView.findViewById(R.id.user_list_row_rank_number_normal);
         this.profileImageView = itemView.findViewById(R.id.user_list_row_profile_picture);
         this.nameTextView = itemView.findViewById(R.id.user_list_row_name);
-        this.scoreView = itemView.findViewById(R.id.user_list_row_score_view);
         this.scoreTextView = itemView.findViewById(R.id.user_list_row_score_text);
+        this.actionTextView = itemView.findViewById(R.id.user_list_row_action_text);
 
         this.imageLoadOptions = new RequestOptions()
                 .placeholder(getProfileImagePlaceholder())
@@ -65,12 +65,25 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
         switch (mode) {
             case LEADERBOARD:
                 rankView.setVisibility(View.VISIBLE);
+                scoreTextView.setVisibility(View.VISIBLE);
+                actionTextView.setVisibility(View.GONE);
                 break;
-            case FRIENDS:
+            case FRIEND:
                 rankView.setVisibility(View.GONE);
+                scoreTextView.setVisibility(View.VISIBLE);
+                actionTextView.setVisibility(View.GONE);
                 break;
             case SEARCH:
                 rankView.setVisibility(View.GONE);
+                scoreTextView.setVisibility(View.GONE);
+                actionTextView.setVisibility(View.VISIBLE);
+                actionTextView.setText(R.string.friends_action_send_request);
+                break;
+            case FRIEND_REQUEST:
+                rankView.setVisibility(View.GONE);
+                scoreTextView.setVisibility(View.GONE);
+                actionTextView.setVisibility(View.VISIBLE);
+                actionTextView.setText(R.string.friends_action_review_request);
                 break;
         }
     }
