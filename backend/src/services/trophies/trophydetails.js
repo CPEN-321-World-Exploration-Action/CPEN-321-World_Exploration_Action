@@ -35,3 +35,9 @@ export async function deleteTrophy(trophyID){
     return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
 }
 
+export async function updateTrophy(trophyID, body){
+    return await TrophyTrophy.findOneAndUpdate({trophy_id:trophyID},body, {
+        new: true, 
+        runValidators: true
+    })
+}

@@ -12,6 +12,7 @@ trophiesRouter.get("/:userId/trophies", [nocache(), auth], trophyControllers.get
 // Dev Routes
 trophiesRouter.get("/", trophyControllers.getAllTrophies);
 trophiesRouter.post("/create", trophyControllers.createTrophy);
+trophiesRouter.put("/:id", trophyControllers.updateTrophy);
 trophiesRouter.delete("/:id", trophyControllers.deleteTrophy);
 
 export default trophiesRouter;
