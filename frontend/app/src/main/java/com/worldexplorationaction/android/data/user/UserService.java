@@ -8,12 +8,19 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
     static UserService getService() {
         return Holder.instance;
     }
+
+    @POST("accounts/logout")
+    Call<UserProfile> logout();
+
+    @GET("accounts/profiles/{userId}")
+    Call<UserProfile> getUserProfile(@Path("userId") String userId);
 
     @GET("accounts/search")
     Call<List<UserProfile>> searchNewFriends(@Query("query") String query);
