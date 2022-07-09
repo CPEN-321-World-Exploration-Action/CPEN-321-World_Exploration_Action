@@ -75,7 +75,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintVertical_bias="0.811" />
+        app:layout_constraintVertical_bias="0.811"
+        android:enabled="false" />
 
     <ImageButton
         android:id="@+id/button_capture"

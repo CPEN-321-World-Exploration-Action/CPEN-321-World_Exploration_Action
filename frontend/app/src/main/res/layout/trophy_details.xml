@@ -78,4 +78,79 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.828" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="313dp"
+        android:layout_height="269dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/collect_trophy_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
+
+        <LinearLayout
+            android:layout_width="157dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/trophy_image3"
+                android:layout_width="155dp"
+                android:layout_height="98dp"
+                android:background="#0000"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_default_avatar_35dp" />
+
+            <ImageButton
+                android:id="@+id/trophy_image2"
+                android:layout_width="155dp"
+                android:layout_height="84dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_default_avatar_35dp"
+                android:background="#0000"/>
+
+            <ImageButton
+                android:id="@+id/trophy_image1"
+                android:layout_width="155dp"
+                android:layout_height="101dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_default_avatar_35dp"
+                android:background="#0000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/trophy_image4"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_default_avatar_35dp"
+                android:background="#0000"/>
+
+            <ImageButton
+                android:id="@+id/trophy_image5"
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                app:srcCompat="@drawable/ic_default_avatar_35dp"
+                android:scaleType="centerCrop"
+                android:background="#0000"/>
+
+            <ImageButton
+                android:id="@+id/trophy_image6"
+                android:layout_width="match_parent"
+                android:layout_height="99dp"
+                app:srcCompat="@drawable/ic_default_avatar_35dp"
+                android:scaleType="centerCrop"
+                android:background="#0000"/>
+        </LinearLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
