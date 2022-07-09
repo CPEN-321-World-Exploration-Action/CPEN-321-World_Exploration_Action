@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import "express-async-errors";
+import session from 'express-session'
 
 import usersRouter from "./routes/users.routes.js";
 import trophiesRouter from "./routes/trophies.routes.js";
@@ -14,10 +15,16 @@ const app = express();
 
 app.use(express.json());
 app.use(
-  morgan(
-    '[:date[clf]] :remote-addr ":method :url HTTP/:http-version" :status :res[content-length] - :response-time ms'
-  )
+  morgan('[:date[clf]] :remote-addr ":method :url HTTP/:http-version" :status :res[content-length] - :response-time ms')
 );
+
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: oneDay },
+}))
 
 app.use("/users", usersRouter);
 app.use("/trophies", trophiesRouter);
