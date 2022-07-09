@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
             handleSignInResult(task);
         }
+
     }
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {

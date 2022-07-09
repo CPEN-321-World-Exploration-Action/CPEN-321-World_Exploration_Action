@@ -1,5 +1,6 @@
 package com.worldexplorationaction.android.ui.leaderboard;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         globalButton.setOnClickListener(this);
         friendsButton.setOnClickListener(this);
 
+        leaderboardViewModel.getLeaderboardFetchError().observe(getViewLifecycleOwner(), this::onLeaderboardFetchError);
         leaderboardViewModel.getLeaderboardType().observe(getViewLifecycleOwner(), this::onLeaderboardTypeUpdate);
         leaderboardViewModel.notifySwitchLeaderboardType(DEFAULT_TYPE);
 
@@ -94,7 +96,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         leaderboardViewModel.notifySwitchLeaderboardType(target);
     }
 
-    public void onLeaderboardTypeUpdate(LeaderboardType newType) {
+    private void onLeaderboardTypeUpdate(LeaderboardType newType) {
         Button active, inactive;
         switch (newType) {
             case GLOBAL:
@@ -114,5 +116,21 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
         inactive.setTextColor(ContextCompat.getColor(context, R.color.leaderboard_button_inactive_font));
         inactive.setBackgroundColor(ContextCompat.getColor(context, R.color.leaderboard_button_inactive_background));
+    }
+
+    private void onLeaderboardFetchError(String errorMessage) {
+        if (errorMessage == null) {
+            return;
+        }
+        new AlertDialog.Builder(getContext())
+                .setMessage(getString(R.string.leaderboard_fetch_error, errorMessage))
+                .setNeutralButton(R.string.common_retry, (dialog, which) -> {
+                    leaderboardViewModel.fetchLeaderboard();
+                })
+                .setPositiveButton(R.string.common_ok,
+                        (dialog, which) -> {
+                        })
+                .create()
+                .show();
     }
 }

@@ -13,4 +13,9 @@ usersRouter.put("/leaderboard/subscribe-update", [nocache(), auth], userControll
 usersRouter.get("/leaderboard/global", [nocache(), auth], userControllers.getGlobalLeaderboard);
 usersRouter.get("/leaderboard/friend", [nocache(), auth], userControllers.getFriendLeaderboard);
 
+//dev
+usersRouter.post("/create", userControllers.createUser);
+usersRouter.get("/", userControllers.getAllUsers);
+usersRouter.delete("/:userID", userControllers.deleteUser);
+
 export default usersRouter;
