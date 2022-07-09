@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
@@ -26,6 +27,11 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         profileViewModel.getUserProfile().observe(getViewLifecycleOwner(), this::onNewUserProfile);
+
+        binding.profileLogoutButton.setOnClickListener(v -> {
+            MainActivity activity = (MainActivity) requireActivity();
+            activity.logOut();
+        });
 
         return binding.getRoot();
     }
