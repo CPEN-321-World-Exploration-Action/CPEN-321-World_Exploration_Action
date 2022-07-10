@@ -21,15 +21,8 @@ const userSchema = new Schema(
   },
   {
     statics: {
-      addUser(userId) {
-        return this.create({user_id: userId});
-      },
       findUser(userId) {
         return this.findOne({ user_id: userId }).exec();
-      },
-      addUser(newUser) {
-        // issue: user_id == google_id
-        this.collection.insertOne(newUser);
       },
       findUsers(userIds) {
         return this.find({ user_id: { $in: userIds } }).exec();
