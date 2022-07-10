@@ -2,7 +2,6 @@ import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
 
 const numberOfUsersOnLeaderboard = 2;
-const notificationThreshold = 5;
 
 let subscribers = new Map();
 const validDuration = 1000 * 60 * 60; /* 1 hour */
@@ -29,6 +28,7 @@ export async function onReceiveUserScoreUpdatedMessage(message) {
     console.log("Global leaderboard updated");
     await notifyAllSubscribingUsers();
     await sendNewChampionNotificationIfNeeded(newLeaderboard);
+    await sendNotificationsToUsersDroppedOut(newLeaderboard);
     oldLeaderboard = newLeaderboard;
   } else {
     const collector = await User.findUser(userId);
@@ -100,6 +100,19 @@ async function sendNewChampionNotificationIfNeeded(newLeaderboard) {
     await fcm.sendNewChampionNotification(
       newLeaderboard[0].name,
       newLeaderboard[0].score
+    );
+  }
+}
+
+async function sendNotificationsToUsersDroppedOut(newLeaderboard) {
+  const newUsers = new Set(newLeaderboard.map((x) => x.user_id));
+  const targetUsers = oldLeaderboard.filter((x) => !newUsers.has(x.user_id));
+  const tokens = targetUsers.map((x) => x.fcm_token).filter((x) => x);
+  if (tokens.length > 0) {
+    await fcm.sendNormalNotifications(
+      tokens,
+      "No Longer on the Leaderboard",
+      "You are no longer on the leaderboard."
     );
   }
 }

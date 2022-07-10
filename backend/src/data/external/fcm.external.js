@@ -7,16 +7,16 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-export async function sendNormalNotification(token, title, body) {
+export async function sendNormalNotifications(tokens, title, body) {
   console.log(
-    `Sending NormalNotification to ${token}, title: ${title}, body: ${body}`
+    `Sending NormalNotification to ${tokens}, title: ${title}, body: ${body}`
   );
-  await messaging.send({
+  await messaging.sendMulticast({
     notification: {
       title,
       body,
     },
-    token,
+    tokens,
   });
 }
 
