@@ -1,7 +1,4 @@
-import * as messageManager from "../../utils/message-manager.js";
-import { User } from "../../data/db/user.db.js";
 import { Photo } from "../../data/db/photo.db.js";
-import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 
 // probably should not store anything, so to keep consistency
 //let photoSorting = new Map();
