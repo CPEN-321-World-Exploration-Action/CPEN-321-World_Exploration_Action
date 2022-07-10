@@ -39,7 +39,6 @@ public class collect_trophy extends AppCompatActivity {
     GridLayout trophyGrid;
     ImageButton sortPhotos;
     ImageButton buttonCapture;
-    Button collectInactiveButton;
     private CollectTrophyViewModel viewModel;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String TAG = collect_trophy.class.getSimpleName();
@@ -53,7 +52,6 @@ public class collect_trophy extends AppCompatActivity {
         sortPhotos = findViewById(R.id.sort_photos_collect);
         collectorsNumber = findViewById(R.id.collectors1);
         trophyGrid = findViewById(R.id.collect_images_grid);
-        collectInactiveButton = findViewById(R.id.collect_inactive_button);
         trophyName=findViewById(R.id.trophy_name_collect);
         //trophyName.setText(trophyTitle);
 
@@ -68,17 +66,6 @@ public class collect_trophy extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
-
-        collectInactiveButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                viewModel.collectTrophy(viewModel.getUserProfile().getValue().getId(),
-                                        viewModel.getTrophyDetails().getValue().getId());
-            }
-        });
-
-
 
         viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
         viewModel.getPhotos().observe(this, this::onNewPhotos);

@@ -7,6 +7,7 @@ import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.photo.PhotoService;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyService;
+import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
 import android.util.Log;
 
@@ -26,13 +27,22 @@ public class TrophyDetailsViewModel extends ViewModel {
     private final MutableLiveData<Trophy> trophy;
     private final TrophyService trophyService;
     private final MutableLiveData<List<Photo>> photos;
+    private final MutableLiveData<UserProfile> userProfile;
+    private final MutableLiveData<String> toastMessage;
 
     public TrophyDetailsViewModel() {
+        this.userProfile = new MutableLiveData<>();
+        this.toastMessage = new MutableLiveData<>();
         this.trophy = new MutableLiveData<>();
         this.photos = new MutableLiveData<>(Collections.emptyList());
         this.userService = UserService.getService();
         this.photoService = PhotoService.getService();
         this.trophyService = TrophyService.getService();
+
+    }
+
+    public LiveData<UserProfile> getUserProfile() {
+        return userProfile;
     }
 
     public LiveData<Trophy> getTrophyDetails() {
@@ -63,6 +73,21 @@ public class TrophyDetailsViewModel extends ViewModel {
         }, null, errorMessage -> {
             Log.e(TAG, "photoService.getPhotoIdsByUserId error: " + errorMessage);
         }));
+    }
+
+    public void collectTrophy(String userId, String trophyId) {
+        trophyService.collectTrophy(userId, trophyId).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "trophy is collected successfully");
+            showToastMessage("You have collected this trophy");
+        }, null, errorMessage -> {
+            Log.e(TAG, "collecting trophy is failed " + errorMessage);
+            showToastMessage("Could not collect trophy");
+        }));
+    }
+
+    private void showToastMessage(String value) {
+        toastMessage.setValue(value);
+        toastMessage.setValue(null);
     }
 
 

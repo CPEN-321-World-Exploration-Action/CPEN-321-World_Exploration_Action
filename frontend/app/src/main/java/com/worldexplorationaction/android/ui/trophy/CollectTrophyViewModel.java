@@ -61,16 +61,6 @@ public class CollectTrophyViewModel extends TrophyDetailsViewModel {
         }));
     }
 
-    public void collectTrophy(String userId, String trophyId) {
-        trophyService.collectTrophy(userId, trophyId).enqueue(new CustomCallback<>(unused -> {
-            Log.i(TAG, "trophy is collected successfully");
-            showToastMessage("You have collected this trophy");
-        }, null, errorMessage -> {
-            Log.e(TAG, "collecting trophy is failed " + errorMessage);
-            showToastMessage("Could not collect trophy");
-        }));
-    }
-
 
     private void showToastMessage(String value) {
         toastMessage.setValue(value);
