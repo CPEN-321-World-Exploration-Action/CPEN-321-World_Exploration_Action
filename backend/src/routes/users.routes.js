@@ -8,6 +8,7 @@ const usersRouter = express.Router();
 
 //usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
 usersRouter.post('/login', auth, userControllers.login);
+usersRouter.post('/logout', auth, userControllers.logout);
 usersRouter.get("/:userId/profile", [nocache(), auth], userControllers.getProfile);
 
 usersRouter.get("/accounts/profiles/:userId", nocache(), userControllers.getProfile);

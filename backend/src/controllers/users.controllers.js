@@ -5,10 +5,6 @@ import * as friends from "../services/users/friends.js";
 
 export async function login(req, res){
   // After auth middleware, we have a session with userId. 
-  // Now we check if the user exists.
-  // If a user doesnt exist we can use the token payload to create a new User - however we also need user lat and lon. So we must ensure that is in the post request.
-  // After, we setup a session for the user.
-
   const userId = req.session.userId
   req.session.save()
 
@@ -31,6 +27,13 @@ export async function login(req, res){
   } catch (error){
     res.status(500).json({message: error})
   }
+}
+
+export async function logout(req, res){
+  if (req.session.userId){
+    req.session.destroy();
+  }
+  res.status(200).json({message: "Logged Out."})
 }
 
 export async function getProfile(req, res) {
