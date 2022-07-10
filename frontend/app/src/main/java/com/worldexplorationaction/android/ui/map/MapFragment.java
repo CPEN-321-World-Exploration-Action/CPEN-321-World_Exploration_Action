@@ -25,7 +25,6 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
-import com.worldexplorationaction.android.ui.profile.ProfileFragment;
 import com.worldexplorationaction.android.ui.trophy.trophy_details;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
@@ -39,18 +38,15 @@ import java.util.Set;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener {
     private static final String TAG = MapFragment.class.getSimpleName();
+    public static String trophyTitle = "";
     private static CameraPosition lastCameraPosition;
-
     private MapViewModel mapViewModel;
     private TrophyBitmaps trophyBitmaps;
     private UserLocation userLocation;
-
     private FragmentMapBinding binding;
     private GoogleMapsFragment googleMapsFragment;
     private GoogleMap googleMap;
-
     private Collection<Marker> markers;
-    public static String trophyTitle = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +60,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 getChildFragmentManager().findFragmentById(R.id.map_google_maps)
         );
         googleMapsFragment.getMapAsync(this);
+
+        mapViewModel.getToastMessage().observe(getViewLifecycleOwner(), this::handleToastMessage);
 
         return binding.getRoot();
     }
@@ -195,7 +193,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     new MarkerOptions()
                             .position(new LatLng(trophy.latitude, trophy.longitude))
                             .anchor(0.5f, 0.7f)
-                            .icon(trophyBitmaps.getBitmapDescriptorForTrophy(trophy.quality))
+                            .icon(trophyBitmaps.getBitmapDescriptorForTrophy(trophy.getQuality()))
             );
             if (newMarker == null) {
                 Log.e(TAG, "Could not add marker for trophy: " + trophy);
@@ -206,5 +204,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
 
         Log.i(TAG, "onDisplayTrophiesUpdate took " + (System.nanoTime() - startTime) / 1e6 + "ms");
+    }
+
+    private void handleToastMessage(String message) {
+        if (message != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+        }
     }
 }
