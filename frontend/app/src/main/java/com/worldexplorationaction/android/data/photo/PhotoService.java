@@ -9,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PhotoService {
     static PhotoService getService() {
@@ -22,7 +23,7 @@ public interface PhotoService {
     Call<Void> userLikePhoto(@Path("userId") String userId, @Path("picID") String photoId);
 
     @GET("sorting/photo-ids")
-    Call<List<Photo>> getPhotoIDsByTrophyID(@Path("trophyId") String trophyId, @Path ("order") String order);
+    Call<List<Photo>> getPhotoIDsByTrophyID(@Query("trophyId") String trophyId, @Query("order") String order);
 
     @POST("storing/{trophyId}/{userId}")
     Call<Void> uploadPhoto(@Path("userId") String userId, @Path("trophyId") String trophyId, @Path("picID") String photoId);

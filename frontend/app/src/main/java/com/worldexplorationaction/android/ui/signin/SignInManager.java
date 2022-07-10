@@ -27,11 +27,11 @@ import java.util.function.BiConsumer;
 
 public class SignInManager implements ActivityResultCallback<ActivityResult> {
     private static final String TAG = SignInManager.class.getSimpleName();
+    public static String signedInUserId;
     private final GoogleSignInClient googleSignInClient;
     private final ActivityResultLauncher<Intent> googleSignInLauncher;
     private final UserService userService;
     private BiConsumer<Boolean, String> onSignInResultListener;
-    private String signedInUserId;
 
     /**
      * Must be called before the activity is started

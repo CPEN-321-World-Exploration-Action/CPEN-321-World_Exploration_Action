@@ -5,10 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.VectorDrawable;
+import android.location.Location;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class Utility {
     private static final String TAG = Utility.class.getSimpleName();
@@ -56,5 +59,12 @@ public class Utility {
         }
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public static float getDistance(Location location, LatLng latLng) {
+        Location location2 = new Location(location);
+        location2.setLatitude(latLng.latitude);
+        location2.setLongitude(latLng.longitude);
+        return location.distanceTo(location2);
     }
 }

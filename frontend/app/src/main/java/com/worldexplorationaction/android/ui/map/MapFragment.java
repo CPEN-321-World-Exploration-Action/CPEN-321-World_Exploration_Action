@@ -2,7 +2,6 @@ package com.worldexplorationaction.android.ui.map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,10 +120,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
         Trophy trophy = (Trophy) Objects.requireNonNull(marker.getTag());
-        Toast.makeText(getContext(), "Clicked trophy " + trophy.title, Toast.LENGTH_SHORT).show();
-        trophyTitle = trophy.title;
-        Intent intent = new Intent(getActivity(), trophy_details.class);
-        startActivity(intent);
+        userLocation.getCurrentLocation(location -> {
+            if (location == null) {
+                Toast.makeText(requireContext(), "Cannot get the current location.", Toast.LENGTH_LONG).show();
+                trophy_details.start(requireContext(), trophy, false);
+            } else {
+                double distance = Utility.getDistance(location, marker.getPosition());
+                boolean canCollect = distance < 500.0f;
+                trophy_details.start(requireContext(), trophy, canCollect);
+            }
+        });
         return false;
     }
 
