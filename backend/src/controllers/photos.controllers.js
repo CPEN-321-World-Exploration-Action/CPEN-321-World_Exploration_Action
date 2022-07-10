@@ -42,18 +42,9 @@ export async function getPhotoIDsByTrophyID(req, res) {
 }
 
 export async function getPhotoIDsByUserID(req, res) {
-  const userID = req.query.userID;
-
+  const userID = req.params.userId;
   const photos = await photoSorting.getPhotoIDsByUserID(userID);
-  if (photos) {
-    res.status(200).json({
-      photos,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not find the photos",
-    });
-  }
+  res.status(200).json(photos);
 }
 
 /* Storing */

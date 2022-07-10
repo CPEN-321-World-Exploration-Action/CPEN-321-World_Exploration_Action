@@ -13,18 +13,11 @@ const photoSchema = new Schema(
   },
   {
     statics: {
-      //returns photo ID
-      findPhotos(ID, method) {
-        var photoList;
-
-        // method: userID
-        if (method === "userID") {
-          photoList = this.find({ user_id: ID });
-        } else if (method === "photoID") {
-          photoList = this.find({ photo_id: ID }).exec();
-        }
-
-        return photoList;
+      getPhotosByUser(userId) {
+        return this.find({ user_id: userId }).sort({ time: -1 }).exec();
+      },
+      findPhoto(photoId) {
+        return this.findOne({ photo_id: photoId }).exec();
       },
       addOrReplacePhoto(photoId, trophyId, userId) {
         return this.findOneAndUpdate(

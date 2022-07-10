@@ -1,4 +1,5 @@
 import * as userAccounts from "../services/users/useraccounts.js";
+import * as trophyDetail from "../services/trophies/trophydetails.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
@@ -8,27 +9,35 @@ export async function login(req, res){
   // If a user doesnt exist we can use the token payload to create a new User - however we also need user lat and lon. So we must ensure that is in the post request.
   // After, we setup a session for the user.
 
-
-  // TODO: For some reason, regenerating the session, adding userID and saving doesnt actually save the session with userID.
-
-  // req.session.regenerate(function (err) {
-  //   if (err){
-  //     console.log(err)
-  //   }
-  req.session.userId = req.userId
+  const userId = req.session.userId
   req.session.save()
-  console.log(req.session)
-  // })
-  res.status(200).send(req.session)
+
+  try{
+    let user = await userAccounts.getUserProfile(userId)
+    let trophyUser = await trophyDetail.getTrophyUser(userId) 
+
+    if (!user){
+      req.payload.user_id = userId // Add to payload so payload can be used to create profile with one object
+      console.log(`User does not exist. Creating User with id: ${userId}`)
+      user = await userAccounts.createUserProfile(req.payload)
+      //Using newly created account, we also need to create a TrophyUser document
+      trophyUser = await trophyDetail.createTrophyUser(req.payload)
+    }
+    if (!trophyUser){
+      // If user!=null then trophyUser should never be null either.
+      return res.status(500).json({message:`User with id ${userId} exists in the user database but not in the Trophy database`})
+    }
+    res.status(201).json({user, trophyUser})
+  } catch (error){
+    res.status(500).json({message: error})
+  }
 }
 
 export async function getProfile(req, res) {
-  const userId = req.params["userId"];
+  const userId = req.params.userId;
   const user = await userAccounts.getUserProfile(userId);
   if (user) {
-    res.status(200).json({
-      user,
-    });
+    res.status(200).json(user);
   } else {
     res.status(404).json({
       message: "Could not find the user",
@@ -169,16 +178,23 @@ export async function getAllUsers(req, res){
 
 export async function deleteUser(req, res){
 
-  // Also need to remove user from TrophyUser database
-
   const {userID: user_id} = req.params
   try{
     // Return deleted user for testing purposes
     const user = await userAccounts.deleteUser(user_id)
     if (!user){
-      res.status(404).json({message: `User with id ${user_id} not found.`})
+      return res.status(404).json({message: `User with id ${user_id} not found.`})
     }
-    res.status(200).json({user})
+    // Also need to remove user from TrophyUser database
+    const trophyUser = await trophyDetail.deleteTrophyUser(user_id)
+    if (!trophyUser){
+      return res.status(404).json({message: `TrophyUser with id ${user_id} not found.`})
+    }
+
+    // Regenerate session to wipe userId
+    req.session.regenerate(function(err){if (err){console.log(err)}})
+
+    res.status(200).json({user, trophyUser})
   }catch (error){
     res.status(500).json({message:error})
   }

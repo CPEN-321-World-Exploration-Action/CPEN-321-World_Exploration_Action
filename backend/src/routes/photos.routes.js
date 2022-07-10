@@ -13,7 +13,7 @@ photosRouter.put("/managing/likes", [nocache(), auth], photoControllers.userLike
 
 /* Sorting */
 
-photosRouter.get("/sorting/photoIDs", [nocache(), auth], photoControllers.getPhotoIDsByUserID); //good
+photosRouter.get("/sorting/user/:userId", nocache(), photoControllers.getPhotoIDsByUserID);
 
 /* Storing */
 photosRouter.get("/photo/photoIDs", [nocache(), auth], photoControllers.getImage); // not going to use?

@@ -11,7 +11,10 @@ export async function onReceiveTrophyCollectedMessage(message) {
 }
 
 export async function getUserProfile(userId) {
-  return await User.findUser(userId);
+  const userDocument = await User.findUser(userId);
+  const user = userDocument.toObject();
+  user.rank = await User.computeUserRank(userId);
+  return user;
 }
 
 export async function loginWithGoogle(idToken) {
@@ -22,22 +25,8 @@ export async function extractGoogleID(idToken) {
   // issue: what is token
 }
 
-export async function createUserProfile(idToken) {
-  // addUser(newUser)
-  /*
-  user_id: { type: String, index: true, unique: true },
-    google_id: { type: String, index: true },
-    name: { type: String, index: true },
-    email: {
-      type: String,
-      lowercase: true,
-      index: true,
-    },
-    imageUrl: String,
-    friends: [String],
-    score: { type: Number, default: 0, index: true },
-    fcm_token: String,
-    */
+export async function createUserProfile(body) {
+  return await User.create(body);
 }
 
 export async function getProfileImage(userID){
