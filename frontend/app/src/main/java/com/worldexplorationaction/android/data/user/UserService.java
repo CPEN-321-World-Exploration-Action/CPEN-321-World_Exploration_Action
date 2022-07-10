@@ -7,6 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Header;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -15,6 +16,9 @@ public interface UserService {
     static UserService getService() {
         return Holder.instance;
     }
+
+    @POST("accounts/login")
+    Call<UserProfile> login(@Header("Authorization") String tokenId);
 
     @POST("accounts/logout")
     Call<UserProfile> logout();
