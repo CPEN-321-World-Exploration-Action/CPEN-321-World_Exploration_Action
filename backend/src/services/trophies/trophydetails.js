@@ -1,36 +1,42 @@
-import * as Places from "../../data/external/googleplaces.external";
+import * as Places from "../../data/external/googleplaces.external.js";
 import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
-    let uncollectedTrophyIds = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
+    console.log(user_id, user_latitude, user_longitude)
+    let uncollectedTrophies = await TrophyUser.getUserUncollectedTrophies(user_id);
+    
+    if (!uncollectedTrophies){
+        uncollectedTrophies = [];
+    }
 
-    if (uncollectedTrophyIds.length < 10){
+    if ( uncollectedTrophies.length < 10){
 
         try{
-            const numberOfNewTrophies = 10 - uncollectedTrophyIds.length
-            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies )
+            const numberOfNewTrophies = 10 - uncollectedTrophies.length
+            console.log(`Getting ${numberOfNewTrophies} new Trophies`)
+            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies)
             
             if (!locations){
                 console.log('No Locations found near User')
                 return null // Handle null trophies in controllers.
             }
-            // Convert locations into New Trophies, added into the TrophyTrophy Database
-            const newTrophies = await createManyTrophies(locations)
-            
-            // Add TrophyIds to the Users list of Uncollected Trophy Ids
-
+            // Convert locations into Trophies, and add them to the TrophyTrophy Database
+            const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
+            if (! newTrophyIds){
+                return Error("Adding newly generated trophies to TrophyDB returned null.")
+            }
+            uncollectedTrophies.push(...newTrophyIds);
+        
         }catch (error){
             console.log(error)
+            return error
         }
     }
+    // Update User's list of uncollected trophies
+    await updateTrophyUser(user_id, {uncollectedTrophies})
 
-    // Need to get info from all trophies. 
-    let trophies = []
-    for (let i=0; i< uncollectedTrophyIds.length; i++){
-        trophies.push(await TrophyTrophy.getTrophyText(uncollectedTrophyIds[i]));
-    }
-    return trophies
+    return getTrophiesById(uncollectedTrophies)
 }
 
 export async function createTrophyUser(body){
@@ -45,6 +51,20 @@ export async function deleteTrophyUser(user_id){
     return await TrophyUser.findOneAndDelete({user_id:user_id})
 }
 
+export async function updateTrophyUser(user_id, body){
+        // By default this will return the TrophyUser before being updated
+        // It will update it correctly, just return the old task here.
+        // Also validators aren't running - need options object
+        return await TrophyUser.findOneAndUpdate({user_id:user_id}, body, {
+            new: true, 
+            runValidators: true
+        })
+}
+
+export async function getTrophiesById(ids){
+    return await TrophyTrophy.find({trophy_id:{$in: ids}})
+}
+
 // Dev function
 export async function getAllTrophies(){
     return await TrophyTrophy.find({})
@@ -54,8 +74,46 @@ export async function createTrophy(req){
     return await TrophyTrophy.create(req.body)
 }
 
-export async function createManyTrophies(trophies){
-    return await TrophyTrophy.insertMany(trophies)
+export async function createManyTrophies(locations){
+    let trophies = [];
+    for(let i=0; i< locations.length;i++){
+        const {name, place_id:trophy_id, geometry, types:tags, rating, user_ratings_total} = locations[i]
+        //console.log(name, trophy_id, geometry, types,  rating, user_ratings_total)
+
+        // Ensure locations have a place_id
+        if(trophy_id){
+            // Geometry Object contains lat, lng location
+            const {lat:latitude, lng:longitude} = geometry.location
+            // Default quality is Bronze.
+            let quality = "Bronze";
+            if (rating && user_ratings_total){
+                // Quality is the average of normalized rating and user_ratings, clamped at 1000. 
+                const user_ratings_norm = Math.min(Number(user_ratings_total)/1000, 1)
+                const quality_num = (Number(rating)/5 + Number(user_ratings_norm))/2
+                switch(true){
+                    case (quality_num < 0.33):
+                        quality = "Bronze";
+                        break;
+                    case(quality_num < 0.66):
+                        quality = "Silver";
+                        break;
+                    case(quality_num <= 1):
+                        quality = "Gold";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            trophies.push({trophy_id, name, latitude, longitude, quality, tags})
+        }
+    }
+    // Instead of returning the result of insertMany(), which may not always be the inserted trophies,
+    // as in the case where a trophy already exists, we return the list of trophy ids.
+    await TrophyTrophy.insertMany(trophies,{ ordered : false }, function (err, docs){
+        //console.log(err)
+    })
+    let trophy_ids = trophies.map(trophy => trophy.trophy_id)
+    return trophy_ids
 }
 
 export async function deleteTrophy(trophyID){

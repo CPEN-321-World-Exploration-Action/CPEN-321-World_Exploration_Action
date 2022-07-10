@@ -8,6 +8,7 @@ export async function getPlaces(latitude, longitude, number){
       url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=30000&key=${key}`,
       headers: { }
     };
+    console.log(config)
     
     try{
         const response = await axios(config)
@@ -15,10 +16,14 @@ export async function getPlaces(latitude, longitude, number){
     
         if (response.data.status == "ZERO_RESULTS"){
             console.log("Handle no results")
-            return null
+            return null;
+        }else if (response.data.status != "OK"){
+            return Error("Error Occured during Places API request.");
         }else{
-            const locations = response.data.results.slice(0, number)
-            return locations;
+            // Filter locations to ensure they have the place_id key.
+            // TODO - this functionality may be better located in trophyFilter
+            let locations = response.data.results.filter(location => {return location.place_id})
+            return locations.slice(0, number)
     }
     }catch (error){
         console.log(error)
