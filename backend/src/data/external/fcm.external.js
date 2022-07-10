@@ -7,6 +7,19 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+export async function sendNormalNotification(token, title, body) {
+  console.log(
+    `Sending NormalNotification to ${token}, title: ${title}, body: ${body}`
+  );
+  await messaging.send({
+    notification: {
+      title,
+      body,
+    },
+    token,
+  });
+}
+
 /**
  * Send a multicast message to devices to notify an leaderboard update
  * @export
@@ -21,6 +34,19 @@ export async function sendLeaderboardUpdateMessage(tokens) {
       update: "leaderboard",
     },
     tokens,
+  });
+}
+
+export async function sendNewChampionNotification(name, score) {
+  console.log(
+    `Sending NewChampionNotification, name: ${name}, score: ${score}`
+  );
+  await messaging.send({
+    notification: {
+      title: "New Champion",
+      body: `${name} with score ${score} is the new champion!`,
+    },
+    topic: "new_champion",
   });
 }
 

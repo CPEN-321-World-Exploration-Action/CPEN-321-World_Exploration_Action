@@ -26,7 +26,9 @@ export async function onReceiveUserScoreUpdatedMessage(message) {
     newLeaderboard
   );
   if (updatingGlobalLeaderboard) {
+    console.log("Global leaderboard updated");
     await notifyAllSubscribingUsers();
+    await sendNewChampionNotificationIfNeeded(newLeaderboard);
     oldLeaderboard = newLeaderboard;
   } else {
     const collector = await User.findUser(userId);
@@ -62,15 +64,10 @@ function sortByTrophyScore(users) {
 
 async function willChangeGlobalLeaderboard(newLeaderboard) {
   if (newLeaderboard.length !== oldLeaderboard.length) {
-    console.log("Global leaderboard updated");
     return true;
   }
   for (let i = 0; i < newLeaderboard.length; i++) {
-    if (
-      newLeaderboard[i].user_id !== oldLeaderboard[i].user_id ||
-      newLeaderboard[i].score !== oldLeaderboard[i].score
-    ) {
-      console.log("Global leaderboard updated");
+    if (!compareUser(newLeaderboard[i], oldLeaderboard[i])) {
       return true;
     }
   }
@@ -94,4 +91,19 @@ async function notifyIfSubscribing(userIds) {
   await fcm.sendLeaderboardUpdateMessage(tokens);
 }
 
-function compareLeaderboard(x, y) {}
+async function sendNewChampionNotificationIfNeeded(newLeaderboard) {
+  if (
+    oldLeaderboard.length !== 0 &&
+    newLeaderboard.length !== 0 &&
+    newLeaderboard[0].user_id != oldLeaderboard[0].user_id
+  ) {
+    await fcm.sendNewChampionNotification(
+      newLeaderboard[0].name,
+      newLeaderboard[0].score
+    );
+  }
+}
+
+function compareUser(u1, u2) {
+  return u1.user_id === u2.user_id && u1.score === u2.score;
+}
