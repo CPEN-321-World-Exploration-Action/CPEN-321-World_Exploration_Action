@@ -10,6 +10,7 @@ import java.util.Objects;
 public class UserProfile implements Serializable {
     @SerializedName("user_id")
     private final String id;
+    @SerializedName(value="picture", alternate = "imageUrl")
     private final String imageUrl;
     private final String name;
     private final String email;
