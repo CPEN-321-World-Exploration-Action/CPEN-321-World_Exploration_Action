@@ -30,7 +30,8 @@ export async function getTrophiesUser(req, res) {
         .json({ message: "User latitude and longitude are required." });
     }
 
-    const trophyUser = await trophyDetail.getUser(user_id);
+    const trophyUser = await trophyDetail.getTrophyUser(user_id);
+
     if (!trophyUser) {
       return res
         .status(401)
@@ -59,7 +60,6 @@ export async function getTrophiesUser(req, res) {
 
 
 export async function getTrophyDetails(req, res){
-
   try{
     const {trophyId} = req.params;
     const trophy = await trophyDetail.getTrophyDetails(trophyId);

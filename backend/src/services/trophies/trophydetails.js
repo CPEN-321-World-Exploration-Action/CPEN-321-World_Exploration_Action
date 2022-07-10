@@ -3,12 +3,20 @@ import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
 const MAX_TROPHIES = 10;
+const MIN_DISTANCE_METERS = 30000; // Enfore that the closest trophy must be closer than 30km
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
-    let uncollectedTrophies = await TrophyUser.getUserUncollectedTrophies(user_id);
+    let uncollectedTrophies = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
+    console.log(uncollectedTrophies)
     if (!uncollectedTrophies){
         uncollectedTrophies = [];
+    }else{
+        const minTrophyDistance = await computeMinTrophyDistance(user_latitude, user_longitude, uncollectedTrophies);
+        if (minTrophyDistance > MIN_DISTANCE_METERS){
+            console.log(`All User Uncollected Trophies exceed ${MIN_DISTANCE_METERS} meters from the User. Regenerating Trophies for new Location`)
+            uncollectedTrophies = []; // Collect an entire new set of trophies
+        }
     }
 
     if ( uncollectedTrophies.length < MAX_TROPHIES){
@@ -131,4 +139,40 @@ export async function updateTrophy(trophyID, body){
         new: true, 
         runValidators: true
     })
+}
+
+export async function computeMinTrophyDistance(user_latitude, user_longitude, trophyIds){
+
+    const trophies = await getTrophyDetails(trophyIds);
+
+    if (!trophies){
+        return Error('Trophy Ids are not valid');
+    }
+
+    var minDist = Number.MAX_VALUE;
+    for(let i = 0; i < trophies.length; i++){
+        const {latitude, longitude} = trophies[i]
+        minDist = Math.min(minDist, haversineDistance(user_latitude, user_longitude, latitude, longitude))
+    }
+    console.log(minDist);
+    return minDist;
+}  
+
+export function haversineDistance(lat1, lon1, lat2, lon2){
+    // The Haversine formula computes the great circle distance between two points
+
+    const R = 6371e3; // metres - radius of Earth
+    const phi_1 = lat1 * Math.PI/180; // φ, λ in radians
+    const phi_2 = lat2 * Math.PI/180;
+    const dphi = (lat2-lat1) * Math.PI/180;
+    const dlambda = (lon2-lon1) * Math.PI/180;
+
+    const a = Math.sin(dphi/2) * Math.sin(dphi/2) +
+            Math.cos(phi_1) * Math.cos(phi_2) *
+            Math.sin(dlambda/2) * Math.sin(dlambda/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    const d = R * c; // in metres
+    console.log(d)
+    return d
 }
