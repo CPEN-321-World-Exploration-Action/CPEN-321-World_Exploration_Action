@@ -52,6 +52,10 @@
         </activity>
 
         <activity
+            android:name=".ui.profile.ProfileActivity"
+            />
+
+        <activity
             android:name=".ui.trophy.trophy_details"
             />
 

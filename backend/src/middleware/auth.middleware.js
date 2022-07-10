@@ -23,11 +23,11 @@ export default async (req, res, next) => {
     try {
       const {userId, payload} = await verifyUser(token);
 
-      req.userId = userId
+      req.session.userId = userId
       // Store payload to create new User.
       req.payload = payload
 
-      console.log(`Authorization Successfull: user_id: ${userId}`)
+      console.log(`Authorization Successful: user_id: ${userId}`)
       next()
     } catch (err) {
       res.status(401).send({ error: "Authorization failed"  });
