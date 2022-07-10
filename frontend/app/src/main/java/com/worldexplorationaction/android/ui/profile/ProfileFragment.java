@@ -41,13 +41,15 @@ public class ProfileFragment extends Fragment {
             viewModel.setDisplayingUser(activity.getUser());
             binding.profileLogoutButton.setVisibility(View.GONE);
             binding.profileYourImagesTitle.setText(R.string.profile_friend_images_title);
-        } else {
-            viewModel.fetchProfileAndPhotos("id7");
+        } else if (getActivity() instanceof MainActivity) {
+            MainActivity activity = (MainActivity) requireActivity();
+            viewModel.fetchProfileAndPhotos(activity.getSignInManager().getSignedInUserId());
             binding.profileLogoutButton.setOnClickListener(v -> {
                 viewModel.logOut();
-                MainActivity activity = (MainActivity) requireActivity();
                 activity.logOut();
             });
+        } else {
+            throw new IllegalStateException("Unknown activity");
         }
 
         return binding.getRoot();

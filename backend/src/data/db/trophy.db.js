@@ -78,6 +78,7 @@ const trophySchemaTrophy = new Schema(
 const trophySchemaUser = new Schema(
   {
     user_id: { type: String, index: true, unique: true },
+
     uncollectedTrophies: { type: Array, default: [" "] },
     collectedTrophies: { type: Array, default: [" "] },
     list_of_photos: { type: Array, default: [" "] },
