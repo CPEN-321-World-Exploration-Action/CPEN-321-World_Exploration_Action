@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentFriendsBinding;
+import com.worldexplorationaction.android.ui.profile.ProfileActivity;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Objects;
@@ -33,8 +34,6 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         this.binding = FragmentFriendsBinding.inflate(inflater, container, false);
 
         binding.friendsErrorText.setVisibility(View.GONE);
-
-        viewModel.updateSearchFor("");
 
         viewModel.getToastMessage().observe(getViewLifecycleOwner(), this::handleToastMessage);
         viewModel.getToastMessageResId().observe(getViewLifecycleOwner(), this::handleToastMessage);
@@ -123,11 +122,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
                         getString(R.string.friends_delete)
                 }, (dialog, which) -> {
                     if (which == 0) {
-                        Toast.makeText(
-                                getContext(),
-                                "View profile: " + user.getName(),
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        ProfileActivity.start(requireContext(), user);
                     } else {
                         viewModel.deleteFriend(user);
                     }

@@ -1,6 +1,6 @@
 package com.worldexplorationaction.android.data.user;
 
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
 
 import java.util.List;
 
@@ -8,12 +8,19 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserService {
     static UserService getService() {
         return Holder.instance;
     }
+
+    @POST("accounts/logout")
+    Call<UserProfile> logout();
+
+    @GET("accounts/profiles/{userId}")
+    Call<UserProfile> getUserProfile(@Path("userId") String userId);
 
     @GET("accounts/search")
     Call<List<UserProfile>> searchNewFriends(@Query("query") String query);
@@ -46,6 +53,6 @@ public interface UserService {
     Call<Void> declineRequest(@Query("requesterUserId") String requesterUserId);
 
     class Holder {
-        public static UserService instance = Utility.getRetrofit("users/").create(UserService.class);
+        private static final UserService instance = RetrofitUtility.getRetrofit("users/").create(UserService.class);
     }
 }

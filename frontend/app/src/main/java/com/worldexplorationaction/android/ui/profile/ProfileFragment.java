@@ -1,21 +1,12 @@
 package com.worldexplorationaction.android.ui.profile;
 
-import static com.worldexplorationaction.android.MainActivity.emailAddress;
-import static com.worldexplorationaction.android.MainActivity.loggedName;
-import static com.worldexplorationaction.android.MainActivity.photoURI;
-
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,55 +15,88 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.photo.Photo;
+import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
-
-    private static final String TAG = ProfileFragment.class.getSimpleName();;
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     private FragmentProfileBinding binding;
-    TextView name1;
-    TextView email1;
-    CircleImageView photo;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ProfileViewModel profileViewModel =
+        ProfileViewModel viewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        //final TextView textView = binding.textProfile;
-        //profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        Log.d (TAG, "Display URI: " + photoURI);
-        photo = view.findViewById(R.id.profile_image);
-        Glide.with(this)
-                .load(photoURI)
-                .into(photo);
 
-        return view;
-    }
+        viewModel.getUserProfile().observe(getViewLifecycleOwner(), this::onNewUserProfile);
+        viewModel.getPhotos().observe(getViewLifecycleOwner(), this::onNewPhotos);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        name1 = (TextView) getActivity().findViewById(R.id.name);
-        email1 = (TextView) getActivity().findViewById(R.id.email);
-        name1.setText(loggedName);
-        email1.setText(emailAddress);
+        if (getActivity() instanceof ProfileActivity) {
+            /* Showing a friend's profile */
+            ProfileActivity activity = (ProfileActivity) requireActivity();
+            viewModel.setDisplayingUser(activity.getUser());
+            binding.profileLogoutButton.setVisibility(View.GONE);
+            binding.profileYourImagesTitle.setText(R.string.profile_friend_images_title);
+        } else {
+            viewModel.fetchProfileAndPhotos("id7");
+            binding.profileLogoutButton.setOnClickListener(v -> {
+                viewModel.logOut();
+                MainActivity activity = (MainActivity) requireActivity();
+                activity.logOut();
+            });
+        }
+
+        return binding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void onNewUserProfile(UserProfile user) {
+        Log.i(TAG, "onNewUserProfile: " + user);
+        if (user == null) {
+            return;
+        }
+        binding.profileName.setText(user.getName());
+        binding.profileEmail.setText(user.getEmail());
+
+        binding.profileTrophiesNumber.setText(Integer.toString(user.getScore()));
+        if (user.getRank() == null) {
+            binding.profileRankNumber.setText("-");
+        } else {
+            binding.profileRankNumber.setText(Integer.toString(user.getRank()));
+        }
+
+        if (user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+            Glide.with(requireContext())
+                    .load(user.getImageUrl())
+                    .into(binding.profileProfileImage);
+        } else {
+            binding.profileProfileImage.setImageResource(R.drawable.ic_default_avatar_35dp);
+        }
+    }
+
+    private void onNewPhotos(List<Photo> photos) {
+        Log.i(TAG, "onNewPhotos: " + photos);
+        for (int i = 0; i < binding.profileImagesGrid.getChildCount(); i++) {
+            ImageView imageView = (ImageView) binding.profileImagesGrid.getChildAt(i);
+            if (i < photos.size()) {
+                Glide.with(requireContext())
+                        .load(photos.get(i).getPhotoUrl())
+                        .placeholder(R.drawable.ic_default_avatar_35dp)
+                        .into(imageView);
+            } else {
+                Glide.with(requireContext())
+                        .clear(imageView);
+            }
+        }
     }
 }

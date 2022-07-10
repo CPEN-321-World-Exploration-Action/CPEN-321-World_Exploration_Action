@@ -15,11 +15,7 @@ photosRouter.put(
 
 /* Sorting */
 
-photosRouter.get(
-  "/photo/photoIDs",
-  [nocache(), auth],
-  photoControllers.getPhotoIDsByUserID
-);
+photosRouter.get("/sorting/user/:userId", nocache(), photoControllers.getPhotoIDsByUserID);
 
 /* Storing */
 photosRouter.get(
