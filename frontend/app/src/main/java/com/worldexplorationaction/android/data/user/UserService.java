@@ -18,10 +18,10 @@ public interface UserService {
     }
 
     @POST("accounts/login")
-    Call<UserProfile> login(@Header("Authorization") String tokenId);
+    Call<String> login(@Header("Authorization") String tokenId);
 
     @POST("accounts/logout")
-    Call<UserProfile> logout();
+    Call<Void> logout();
 
     @GET("accounts/profiles/{userId}")
     Call<UserProfile> getUserProfile(@Path("userId") String userId);

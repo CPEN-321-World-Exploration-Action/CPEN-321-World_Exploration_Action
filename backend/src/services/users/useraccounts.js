@@ -12,6 +12,9 @@ export async function onReceiveTrophyCollectedMessage(message) {
 
 export async function getUserProfile(userId) {
   const userDocument = await User.findUser(userId);
+  if (!userDocument) {
+    return null;
+  }
   const user = userDocument.toObject();
   user.rank = await User.computeUserRank(userId);
   return user;

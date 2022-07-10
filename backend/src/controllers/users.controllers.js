@@ -23,8 +23,9 @@ export async function login(req, res){
       // If user!=null then trophyUser should never be null either.
       return res.status(500).json({message:`User with id ${userId} exists in the user database but not in the Trophy database`})
     }
-    res.status(201).json({user, trophyUser})
+    res.status(201).json(user.user_id)
   } catch (error){
+    console.log(error)
     res.status(500).json({message: error})
   }
 }
