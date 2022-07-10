@@ -20,6 +20,10 @@ export async function getUserProfile(userId) {
   return user;
 }
 
+export async function uploadFcmToken(userId, fcmToken) {
+  await User.updateFcmToken(userId, fcmToken);
+}
+
 export async function loginWithGoogle(idToken) {
   // issue: what is token
 }

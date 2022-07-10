@@ -23,6 +23,9 @@ public interface UserService {
     @POST("accounts/logout")
     Call<Void> logout();
 
+    @PUT("accounts/fcm-token/{fcmToken}")
+    Call<Void> uploadFcmToken(@Path("fcmToken") String fcmToken);
+
     @GET("accounts/profiles/{userId}")
     Call<UserProfile> getUserProfile(@Path("userId") String userId);
 

@@ -21,6 +21,9 @@ const userSchema = new Schema(
   },
   {
     statics: {
+      updateFcmToken(userId, fcmToken) {
+        return this.updateOne({ user_id: userId }, { fcm_token: fcmToken }).exec();
+      },
       findUser(userId) {
         return this.findOne({ user_id: userId }).exec();
       },

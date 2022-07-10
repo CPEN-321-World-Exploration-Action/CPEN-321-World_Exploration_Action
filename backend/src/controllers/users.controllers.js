@@ -37,6 +37,12 @@ export async function logout(req, res){
   res.status(200).json({message: "Logged Out."})
 }
 
+export async function uploadFcmToken(req, res) {
+  const fcmToken = req.params.fcmToken;
+  await userAccounts.uploadFcmToken(req.userId, fcmToken);
+  res.status(200).send();
+}
+
 export async function getProfile(req, res) {
   const userId = req.params.userId;
   const user = await userAccounts.getUserProfile(userId);
