@@ -15,8 +15,7 @@ export async function collectTrophy(userId, trophyId) {
   const trophyScore = await TrophyTrophy.getTrophyScore(message.trophyId);
   //const trophyScore = 1;
 
-  // issue should this be here?
-  User.incrementTrophyScore(userId, trophyScore);
+  //User.incrementTrophyScore(userId, trophyScore);
 
   const message = buildTrophyCollectedMessage(userId, trophyId, trophyScore);
   messageManager.publishNewMessage(message);
