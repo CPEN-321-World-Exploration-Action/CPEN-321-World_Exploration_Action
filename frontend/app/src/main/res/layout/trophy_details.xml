@@ -79,86 +79,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.828" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="313dp"
-        android:layout_height="269dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/collect_trophy_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9">
-
-        <LinearLayout
-            android:layout_width="157dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/trophy_image3"
-                android:layout_width="155dp"
-                android:layout_height="98dp"
-                android:background="#0000"
-                android:scaleType="centerCrop"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/t2" />
-
-            <ImageButton
-                android:id="@+id/trophy_image2"
-                android:layout_width="155dp"
-                android:layout_height="84dp"
-                android:scaleType="centerCrop"
-                android:background="#0000"
-                android:onClick="onClick"
-                app:srcCompat="@drawable/t1"/>
-
-            <ImageButton
-                android:id="@+id/trophy_image1"
-                android:layout_width="155dp"
-                android:layout_height="101dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/t3"
-                android:onClick="onClick"
-                android:background="#0000"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/trophy_image4"
-                android:layout_width="match_parent"
-                android:layout_height="96dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/t1"
-                android:onClick="onClick"
-                android:background="#0000"/>
-
-            <ImageButton
-                android:id="@+id/trophy_image5"
-                android:layout_width="match_parent"
-                android:layout_height="84dp"
-                app:srcCompat="@drawable/t3"
-                android:scaleType="centerCrop"
-                android:onClick="onClick"
-                android:background="#0000"/>
-
-            <ImageButton
-                android:id="@+id/trophy_image6"
-                android:layout_width="match_parent"
-                android:layout_height="99dp"
-                app:srcCompat="@drawable/t2"
-                android:scaleType="centerCrop"
-                android:onClick="onClick"
-                android:background="#0000"/>
-        </LinearLayout>
-    </LinearLayout>
-
     <ImageButton
         android:id="@+id/sort_photos"
         android:layout_width="150dp"
@@ -197,5 +117,95 @@
         app:layout_constraintStart_toStartOf="@+id/sort_photos"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
         app:srcCompat="@drawable/ellipse" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/trophy_images_grid"
+        android:layout_width="268dp"
+        android:layout_height="255dp"
+
+        app:columnCount="2"
+        app:layout_constraintBottom_toTopOf="@+id/collect_trophy_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:rowCount="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+    </androidx.gridlayout.widget.GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

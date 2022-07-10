@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class trophy_details extends AppCompatActivity {
     private static final String TAG = trophy_details.class.getSimpleName();
     TextView trophyName;
     TextView collectorsNumber;
+    GridLayout trophyGrid;
     private Button collectTrophyButton;
     ImageButton sortPhotos;
     ImageButton trophyImage1;
@@ -48,16 +50,7 @@ public class trophy_details extends AppCompatActivity {
     ImageButton trophyImage4;
     ImageButton trophyImage5;
     ImageButton trophyImage6;
-    /*
-    private static final int[] BUTTONS = {
-            R.id.trophy_image1,
-            R.id.trophy_image2,
-            R.id.trophy_image3,
-            R.id.trophy_image4,
-            R.id.trophy_image5,
-            R.id.trophy_image6
-};
-*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,6 +60,7 @@ public class trophy_details extends AppCompatActivity {
 
         sortPhotos = findViewById(R.id.sort_photos);
         collectorsNumber = findViewById(R.id.collectors);
+        trophyGrid = findViewById(R.id.trophy_images_grid);
 
         trophyName = findViewById(R.id.trophy_name_evaluate);
         //trophyName.setText(trophyTitle);
@@ -79,23 +73,9 @@ public class trophy_details extends AppCompatActivity {
                 startActivity(collecTrophyIntent);
             }
         });
-        //dummy images
-    /*    trophyImage1 = findViewById(R.id.trophy_image1);
-        trophyImage2 = findViewById(R.id.trophy_image2);
-        trophyImage3 = findViewById(R.id.trophy_image3);
-        trophyImage4 = findViewById(R.id.trophy_image4);
-        trophyImage5 = findViewById(R.id.trophy_image5);
-        trophyImage6 = findViewById(R.id.trophy_image6);
 
-        trophyImage1.setImageResource(R.drawable.t1);
-        trophyImage2.setImageResource(R.drawable.t2);
-        trophyImage3.setImageResource(R.drawable.t3);
-        trophyImage4.setImageResource(R.drawable.t3);
-        trophyImage5.setImageResource(R.drawable.t1);
-        trophyImage6.setImageResource(R.drawable.t2);*/
-/*
-        for (int i =0; i< BUTTONS.length; i++){
-            ImageButton button = findViewById (BUTTONS[i]);
+        for (int i =0; i< trophyGrid.getChildCount(); i++){
+            ImageButton button = (ImageButton) trophyGrid.getChildAt(i);
             button.setOnClickListener
                     (new View.OnClickListener()
                      {
@@ -104,19 +84,19 @@ public class trophy_details extends AppCompatActivity {
                              Drawable drawable = button.getDrawable();
                              Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
                              Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                             //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                             //startActivity(evaluate_photo_intent);
-                             test.setImageBitmap(bitmap);
+                             evaluate_photo_intent.putExtra("Bitmap", bitmap);
+                             startActivity(evaluate_photo_intent);
                          }
                      }
                     );
 
         }
-*/
+
         TrophyDetailsViewModel viewModel =
                 new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
 
         viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
+        viewModel.getPhotos().observe(this, this::onNewPhotos);
 
         viewModel.fetchTrophy(viewModel.getTrophyDetails().getValue().getId());
         sortPhotos.setOnClickListener(v -> {
@@ -136,59 +116,19 @@ public class trophy_details extends AppCompatActivity {
 
     }
 
-    
-
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.trophy_image1:
-                ImageButton button1 = findViewById (R.id.trophy_image1);
-                Drawable drawable1 = button1.getDrawable();
-                Bitmap bitmap1 = ((BitmapDrawable)drawable1).getBitmap();
-                Intent evaluate_photo_intent1 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent1.putExtra("Bitmap", bitmap1);
-                startActivity(evaluate_photo_intent1);
-                break;
-            case R.id.trophy_image2:
-                ImageButton button2 = findViewById (R.id.trophy_image2);
-                Drawable drawable2 = button2.getDrawable();
-                Bitmap bitmap2 = ((BitmapDrawable)drawable2).getBitmap();
-                Intent evaluate_photo_intent2 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent2.putExtra("Bitmap", bitmap2);
-                startActivity(evaluate_photo_intent2);
-                break;
-            case R.id.trophy_image3:
-                ImageButton button3 = findViewById (R.id.trophy_image3);
-                Drawable drawable3 = button3.getDrawable();
-                Bitmap bitmap3 = ((BitmapDrawable)drawable3).getBitmap();
-                Intent evaluate_photo_intent3 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent3.putExtra("Bitmap", bitmap3);
-                startActivity(evaluate_photo_intent3);
-                break;
-            case R.id.trophy_image4:
-                ImageButton button4 = findViewById (R.id.trophy_image4);
-                Drawable drawable4 = button4.getDrawable();
-                Bitmap bitmap4 = ((BitmapDrawable)drawable4).getBitmap();
-                Intent evaluate_photo_intent4 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent4.putExtra("Bitmap", bitmap4);
-                startActivity(evaluate_photo_intent4);
-                break;
-            case R.id.trophy_image5:
-                ImageButton button5 = findViewById (R.id.trophy_image5);
-                Drawable drawable5 = button5.getDrawable();
-                Bitmap bitmap5 = ((BitmapDrawable)drawable5).getBitmap();
-                Intent evaluate_photo_intent5 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent5.putExtra("Bitmap", bitmap5);
-                startActivity(evaluate_photo_intent5);
-                break;
-            case R.id.trophy_image6:
-                ImageButton button6 = findViewById (R.id.trophy_image6);
-                Drawable drawable6 = button6.getDrawable();
-                Bitmap bitmap6 = ((BitmapDrawable)drawable6).getBitmap();
-                Intent evaluate_photo_intent6 = new Intent(trophy_details.this, evaluate_photo.class);
-                evaluate_photo_intent6.putExtra("Bitmap", bitmap6);
-                startActivity(evaluate_photo_intent6);
-                break;
+    private void onNewPhotos(List<Photo> photos) {
+        for (int i = 0; i < trophyGrid.getChildCount(); i++) {
+            ImageView imageView = (ImageView) trophyGrid.getChildAt(i);
+            if (i < photos.size()) {
+                Glide.with(this)
+                        .load(photos.get(i).getPhotoUrl())
+                        .placeholder(R.drawable.ic_default_avatar_35dp)
+                        .into(imageView);
+            } else {
+                Glide.with(this)
+                        .clear(imageView);
+            }
         }
     }
+
 }
