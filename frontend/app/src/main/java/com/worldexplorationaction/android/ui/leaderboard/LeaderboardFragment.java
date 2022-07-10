@@ -64,6 +64,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
+        leaderboardViewModel.fetchLeaderboard();
         leaderboardViewModel.subscribeLeaderboardUpdate();
     }
 

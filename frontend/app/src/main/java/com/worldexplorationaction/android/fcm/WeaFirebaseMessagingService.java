@@ -41,6 +41,17 @@ public class WeaFirebaseMessagingService extends FirebaseMessagingService {
         return friendUpdate;
     }
 
+    public static void subscribeTopics() {
+        FirebaseMessaging.getInstance().subscribeToTopic("new_champion")
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.i(TAG, "Subscribe new_champion success");
+                    } else {
+                        Log.e(TAG, "Subscribe new_champion failed");
+                    }
+                });
+    }
+
     @Override
     public void onNewToken(@NonNull String newToken) {
         super.onNewToken(newToken);
