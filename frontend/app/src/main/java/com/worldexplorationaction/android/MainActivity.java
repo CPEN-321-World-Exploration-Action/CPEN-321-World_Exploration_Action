@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void logOut() {
+        mGoogleSignInClient.signOut();
+        finish();
+        startActivity(getIntent());
+    }
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(

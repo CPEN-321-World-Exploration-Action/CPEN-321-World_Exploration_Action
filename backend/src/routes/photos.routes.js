@@ -7,29 +7,19 @@ import * as photoControllers from "../controllers/photos.controllers.js";
 
 const photosRouter = express.Router();
 
-photosRouter.put(
-  "/photo/photoIDs",
-  [nocache(), auth],
-  photoControllers.userLikePhoto
-);
+/* Managing */
+
+photosRouter.put("/managing/likes", [nocache(), auth], photoControllers.userLikePhoto); 
 
 /* Sorting */
 
-photosRouter.get(
-  "/photo/photoIDs",
-  [nocache(), auth],
-  photoControllers.getPhotoIDsByUserID
-);
+photosRouter.get("/sorting/user/:userId", nocache(), photoControllers.getPhotoIDsByUserID);
 
 /* Storing */
-photosRouter.get(
-  "/photo/photoIDs",
-  [nocache(), auth],
-  photoControllers.getImage
-);
+photosRouter.get("/photo/photoIDs", [nocache(), auth], photoControllers.getImage); // not going to use?
 
-photosRouter.post("/storing/:trophyId/:userId", [auth, upload.single("photo")], photoControllers.uploadPhoto);
-photosRouter.get("/storing/:photoId", photoControllers.getPhoto);
+photosRouter.post("/storing/:trophyId/:userId", [auth, upload.single("photo")], photoControllers.uploadPhoto); //Good
+photosRouter.get("/storing/:photoId", photoControllers.getPhoto); //Good
 
 photosRouter.get("/sorting/photo-ids", nocache(), photoControllers.getPhotoIDsByTrophyID);
 

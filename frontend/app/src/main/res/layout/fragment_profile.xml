@@ -4,143 +4,231 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/image_6__3_"
     tools:context=".ui.profile.ProfileFragment">
 
 
     <ImageView
-        android:id="@+id/imageView22"
-        style="@style/circle_image_view"
-        android:layout_width="481dp"
-        android:layout_height="714dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="493dp"
-        android:layout_height="741dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/image_6__3_" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="416dp"
+        android:id="@+id/profile_stat_background"
+        android:layout_width="120dp"
         android:layout_height="418dp"
-        android:layout_marginEnd="116dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/image_8" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="186dp"
-        android:layout_height="54dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginBottom="352dp"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="Your Images"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="300dp"
-        android:layout_marginBottom="268dp"
-        android:fontFamily="@font/ubuntu"
-        android:text="Rank"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ubuntu"
-        android:text="Trophies"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.099"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.491" />
+        app:srcCompat="@drawable/image_8"
+        tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="##"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_profile_image"
+        style="@style/circle_image_view"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ubuntu_bold"
-        android:text="##"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.08"
+        app:shapeAppearanceOverlay="@style/circle_image_view"
+        app:srcCompat="@drawable/ic_default_avatar_35dp"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="-"
+        android:textColor="@color/black"
+        android:textFontWeight="800"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_profile_image"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="-@-"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_rank_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu"
+        android:text="@string/profile_rank_title"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@+id/profile_rank_number" />
+
+    <TextView
+        android:id="@+id/profile_rank_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu_bold"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.532"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView22"
-        app:layout_constraintVertical_bias="0.934" />
+        android:text="##"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@+id/profile_stat_background"
+        app:layout_constraintVertical_bias="0.25"
+        tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/profile_trophies_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="500dp"
         android:fontFamily="@font/ubuntu"
-        android:text="TextView"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/profile_trophies_title"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@id/profile_trophies_number" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="112dp"
-        android:layout_height="103dp"
-        android:src="@drawable/t1"
-        app:civ_border_color="#D9D9D9"
-        app:civ_border_width="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/name"
+    <TextView
+        android:id="@+id/profile_trophies_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="##"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/profile_stat_background"
+        app:layout_constraintEnd_toEndOf="@id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@id/profile_stat_background"
+        app:layout_constraintVertical_bias="0.65"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_your_images_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="@string/profile_your_images_title"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@+id/profile_stat_background" />
+
+    <ImageButton
+        android:id="@+id/profile_logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        android:padding="16dp"
+        android:src="@mipmap/ic_profile_logout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView22"
-        app:layout_constraintVertical_bias="0.879" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/profile_images_grid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="24dp"
+        app:columnCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@+id/profile_your_images_title"
+        app:rowCount="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+    </androidx.gridlayout.widget.GridLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
