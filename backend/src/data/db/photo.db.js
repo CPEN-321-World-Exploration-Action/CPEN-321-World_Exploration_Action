@@ -145,4 +145,4 @@ const photoSchema = new Schema(
 
 export const Photo = mongoose.model("Photo", photoSchema);
 
-Photo.getRandom("1", 5);
+//Photo.getRandom("1", 5);
