@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserService;
+import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.function.BiConsumer;
@@ -120,16 +121,34 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
 
         userService.login(idToken).enqueue(new CustomCallback<>(responseBody -> {
             if (responseBody != null) {
-                Log.e(TAG, "userService.login null body");
+                Log.e(TAG, "userService.login success");
                 signedInUserId = responseBody;
                 onSignInResultListener.accept(true, null);
+                uploadFcmToken();
             } else {
-                Log.i(TAG, "userService.login success ");
+                Log.i(TAG, "userService.login null body ");
                 onSignInResultListener.accept(false, "userService.login failed: null response body");
             }
         }, null, errorMessage -> {
             Log.e(TAG, "userService.login failed " + errorMessage);
             onSignInResultListener.accept(false, errorMessage);
         }));
+    }
+
+    private void uploadFcmToken() {
+        WeaFirebaseMessagingService.getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e(TAG, "Cannot get FCM registration token: ", task.getException());
+                return;
+            }
+            String token = task.getResult();
+            Log.d(TAG, "FCM token: " + token);
+
+            userService.uploadFcmToken(token).enqueue(new CustomCallback<>(responseBody -> {
+                Log.i(TAG, "userService.uploadFcmToken success ");
+            }, null, errorMessage -> {
+                Log.e(TAG, "userService.uploadFcmToken failed " + errorMessage);
+            }));
+        });
     }
 }
