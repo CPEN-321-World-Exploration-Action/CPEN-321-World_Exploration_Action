@@ -116,6 +116,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/sort_photos"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintVertical_bias="0.565"
         app:srcCompat="@drawable/ellipse" />
 
     <androidx.gridlayout.widget.GridLayout

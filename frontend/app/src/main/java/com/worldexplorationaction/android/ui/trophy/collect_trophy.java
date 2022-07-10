@@ -93,32 +93,21 @@ public class collect_trophy extends AppCompatActivity {
         for (int i = 0; i < trophyGrid.getChildCount(); i++) {
             ImageView imageView = (ImageView) trophyGrid.getChildAt(i);
             if (i < photos.size()) {
+                String url = photos.get(i).getPhotoUrl();
                 Glide.with(this)
-                        .load(photos.get(i).getPhotoUrl())
+                        .load(url)
                         .placeholder(R.drawable.ic_default_avatar_35dp)
                         .into(imageView);
+                imageView.setOnClickListener(v -> {
+                    Intent evaluate_photo_intent = new Intent(collect_trophy.this, evaluate_photo.class);
+                    evaluate_photo_intent.putExtra("photoUrl", url);
+                    startActivity(evaluate_photo_intent);
+                });
             } else {
                 Glide.with(this)
                         .clear(imageView);
+                imageView.setClickable(false);
             }
-            //navigating to evaluatePhotosActivity if pressing any photo
-            ImageButton button = (ImageButton) trophyGrid.getChildAt(i);
-            Uri photoUri = Uri.parse(photos.get(i).getPhotoUrl());
-            String photoId = photos.get(i).getPhotoId();
-            int numberLikes = photos.get(i).getNumberOfLikes();
-            button.setOnClickListener
-                    (new View.OnClickListener()
-                     {
-                         public void onClick (View v)
-                         {
-                             Intent evaluate_photo_intent = new Intent(collect_trophy.this, evaluate_photo.class);
-                             evaluate_photo_intent.putExtra("photoUrl", photoUri);
-                             evaluate_photo_intent.putExtra("photoId", photoId);
-                             evaluate_photo_intent.putExtra("numberLikes", numberLikes);
-                             startActivity(evaluate_photo_intent);
-                         }
-                     }
-                    );
         }
     }
 
