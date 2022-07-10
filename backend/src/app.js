@@ -9,7 +9,7 @@ import usersRouter from "./routes/users.routes.js";
 import trophiesRouter from "./routes/trophies.routes.js";
 import photosRouter from "./routes/photos.routes.js";
 
-const defaultDbUri = "mongodb://localhost:27017";
+const defaultDbUri = "mongodb+srv://ivserver:Ab8ebSnxIZsz3yh0@cluster0.mparo.mongodb.net/WorldExplorationAction?retryWrites=true&w=majority";
 
 const app = express();
 
