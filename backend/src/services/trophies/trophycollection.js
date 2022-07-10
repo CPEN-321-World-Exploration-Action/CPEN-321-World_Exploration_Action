@@ -3,6 +3,9 @@ import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
 import { User } from "../../data/db/user.db.js";
 
 export async function collectTrophy(userId, trophyId) {
+
+  //issue: it does not check duplication
+
   TrophyUser.removeUncollectedTrophy(userId, trophyId);
 
   TrophyUser.addCollectedTrophy(userId, trophyId);
@@ -10,9 +13,10 @@ export async function collectTrophy(userId, trophyId) {
   // // issue: what is newTags
   // // TrophyTrophy.updateUserTags(newTags);
 
-  TrophyTrophy.incrementNumberOfCollector(trophyId);
+  TrophyTrophy.incrementNumberOfCollector(trophyId, userId);
 
-  const trophyScore = await TrophyTrophy.getTrophyScore(message.trophyId);
+  const trophyScore = await TrophyTrophy.getTrophyScore(trophyId);
+
   //const trophyScore = 1;
 
   //User.incrementTrophyScore(userId, trophyScore);
