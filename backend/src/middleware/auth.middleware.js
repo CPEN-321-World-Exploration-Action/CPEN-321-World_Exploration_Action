@@ -4,9 +4,11 @@ const CLIENT_ID=process.env.CLIENT_ID
 const client = new OAuth2Client.OAuth2Client(CLIENT_ID);
 
 export default async (req, res, next) => {
+  /*
   req.userId = "id7";
   next();
-  return; 
+  return;
+  */ 
 
   // Don't need to authenticate tokenID if user is in authenticated session
   if (req.session.userId){

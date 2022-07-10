@@ -25,14 +25,29 @@ const trophySchemaTrophy = new Schema(
   },
   {
     statics: {
-      async incrementNumberOfCollector(trophyID) {
+      async incrementNumberOfCollector(trophyID, userID) {
         let trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        trophy.number_of_collectors += 1; // initialized to be 0
+        if (trophy.number_of_collectors == null){
+          trophy.number_of_collectors = 1;
+        }
+        else{
+          trophy.number_of_collectors += 1; // initialized to be 0
+        }
+        trophy.save();
+
+        this.updateOne(
+          { trophy_id: trophyID },
+          { $push: { list_of_collectors: userID } },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            }
+          }
+        );
       },
       async getTrophyText(id) {
         var trophyInfo = await this.findOne({ trophy_id: id }).exec();
         delete trophyInfo.list_of_photos;
-
         return trophyInfo;
       },
       async addUserToTrophy(userID, trophyID) {
@@ -41,7 +56,9 @@ const trophySchemaTrophy = new Schema(
         trophy.save();
       },
       async getTrophyScore(collectedTrophyId) {
-        var trophy = await this.findOne({ trophy_id: collectedTrophyId }).exec();
+        var trophy = await this.findOne({
+          trophy_id: collectedTrophyId,
+        }).exec();
         // issue: score value?
         let quality = trophy.quality;
 
@@ -61,10 +78,11 @@ const trophySchemaTrophy = new Schema(
 const trophySchemaUser = new Schema(
   {
     user_id: { type: String, index: true, unique: true },
-    uncollectedTrophies: { type: Array, default: [] },
-    collectedTrophies: { type: Array, default: [] },
-    list_of_photos: { type: Array, default: [] },
-    trophyTags: { type: Array, default: [] },
+
+    uncollectedTrophies: { type: Array, default: [" "] },
+    collectedTrophies: { type: Array, default: [" "] },
+    list_of_photos: { type: Array, default: [" "] },
+    trophyTags: { type: Array, default: [" "] }, //issue: assign a space for testing
     /*
     photo_id: { type: String, index: true, unique: true },
     number_of_likes: { type: Number, index: true },
@@ -76,6 +94,7 @@ const trophySchemaUser = new Schema(
   {
     statics: {
       async removeUncollectedTrophy(userId, trophyId) {
+        /*
         var user = await this.findOne({ user_id: userId }).exec();
         user.uncollectedTrophies = user.uncollectedTrophies.filter(function (
           value,
@@ -85,11 +104,37 @@ const trophySchemaUser = new Schema(
           return value !== trophyId;
         });
         user.save();
+        */
+        this.updateOne(
+          { user_id: userId },
+          {
+            $pullAll: {
+              uncollectedTrophies: [trophyId, [trophyId]],
+            },
+          },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+            }
+          }
+        );
       },
       async addCollectedTrophy(userId, trophyId) {
+        /*
         var user = await this.findOne({ user_id: userId }).exec();
-        user.collectedTrophies.push(trophyId).sort();
+        user.collectedTrophies.push(trophyId);
         user.save();
+        */
+        this.updateOne(
+          { user_id: userId },
+          { $push: { collectedTrophies: trophyId } },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            }
+          }
+        );
       },
       async storeTrophies(userID, trophies) {
         var user = await this.findOne({ user_id: userID }).exec();
