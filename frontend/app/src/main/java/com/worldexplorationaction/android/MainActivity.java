@@ -9,6 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,12 +29,16 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.worldexplorationaction.android.data.user.UserProfile;
+import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.databinding.ActivityMainBinding;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private UserService userService;
+    private UserProfile user;
     private ActivityMainBinding binding;
     private GoogleSignInClient mGoogleSignInClient;
     public static String loggedName = "";
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(String.valueOf(R.string.client_server_id))
                 .requestEmail()
                 .build();
 
@@ -74,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onActivityResult(ActivityResult result) {
+        Log.d(TAG, String.valueOf(result.getResultCode()));
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (result.getResultCode() == Activity.RESULT_OK) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
@@ -121,7 +131,21 @@ public class MainActivity extends AppCompatActivity {
             Log.d (TAG, "Display URI: " + photoURI);
 
             // Send to backend
-            // account.getIdToken();
+            String tokenID =  account.getIdToken();
+            Log.d(TAG, tokenID);
+            userService.login(tokenID).enqueue(new Callback<UserProfile>(){
+                @Override
+                public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+                    user = response.body();
+                    Log.d(TAG, String.valueOf(user));
+                }
+
+                @Override
+                public void onFailure(Call<UserProfile> call, Throwable t) {
+                    Log.d(TAG, String.valueOf(t));
+//                    Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                }
+            });
 
             //Move to main view.
             binding = ActivityMainBinding.inflate(getLayoutInflater());
