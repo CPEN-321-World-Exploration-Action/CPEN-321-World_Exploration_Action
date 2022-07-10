@@ -4,23 +4,44 @@ package com.worldexplorationaction.android.ui.trophy;
 
 import static com.worldexplorationaction.android.ui.map.MapFragment.trophyTitle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.photo.Photo;
+import com.worldexplorationaction.android.data.trophy.Trophy;
+import com.worldexplorationaction.android.data.user.UserProfile;
+import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
+import com.worldexplorationaction.android.ui.profile.ProfileActivity;
+import com.worldexplorationaction.android.ui.profile.ProfileFragment;
+import com.worldexplorationaction.android.ui.profile.ProfileViewModel;
+
+import java.util.List;
 
 public class trophy_details extends AppCompatActivity {
-
+    private FragmentProfileBinding binding;
+    private static final String TAG = trophy_details.class.getSimpleName();
     TextView trophyName;
+    TextView collectorsNumber;
     private Button collectTrophyButton;
+    ImageButton sortPhotos;
     ImageButton trophyImage1;
     ImageButton trophyImage2;
     ImageButton trophyImage3;
@@ -43,8 +64,12 @@ public class trophy_details extends AppCompatActivity {
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trophy_details);
+
+        sortPhotos = findViewById(R.id.sort_photos);
+        collectorsNumber = findViewById(R.id.collectors);
+
         trophyName = findViewById(R.id.trophy_name_evaluate);
-        trophyName.setText(trophyTitle);
+        //trophyName.setText(trophyTitle);
 
         collectTrophyButton = findViewById(R.id.collect_trophy_button);
         collectTrophyButton.setOnClickListener(new View.OnClickListener() {
@@ -88,99 +113,30 @@ public class trophy_details extends AppCompatActivity {
 
         }
 */
+        TrophyDetailsViewModel viewModel =
+                new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
+
+        viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
+
+        viewModel.fetchTrophy(viewModel.getTrophyDetails().getValue().getId());
+        sortPhotos.setOnClickListener(v -> {
+                viewModel.fetchTrophyPhotos(viewModel.getTrophyDetails().getValue().getId(),
+                        "time");
+            });
+        }
 
 
-   /*     trophyImage1.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage1.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );
+    private void onNewTrophy(Trophy trophy) {
 
-        trophyImage2.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage2.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );
-
-       trophyImage3.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage3.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );
-
-         trophyImage4.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage4.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );
-
-        trophyImage5.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage5.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );
-        trophyImage6.setOnClickListener
-                (new View.OnClickListener()
-                 {
-                     public void onClick (View v)
-                     {
-                         Drawable drawable = trophyImage6.getDrawable();
-                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                         Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                         //evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                         //startActivity(evaluate_photo_intent);
-                         test.setImageBitmap(bitmap);
-                     }
-                 }
-                );*/
-
+        if (trophy == null) {
+            return;
+        }
+        trophyName.setText(trophy.getTitle());
+        collectorsNumber.setText(trophy.getNumberOfCollectors());
 
     }
+
+    
 
     public void onClick(View v) {
         switch (v.getId())

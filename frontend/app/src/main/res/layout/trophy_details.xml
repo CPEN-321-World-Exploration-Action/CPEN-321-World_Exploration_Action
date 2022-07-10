@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.421" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/collectors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/collectors"
         app:layout_constraintVertical_bias="0.08" />
 
     <Button
@@ -158,5 +158,44 @@
                 android:background="#0000"/>
         </LinearLayout>
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/sort_photos"
+        android:layout_width="150dp"
+        android:layout_height="61dp"
+        android:background="#0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.343"
+        app:srcCompat="@drawable/frame_15__2_" />
+
+    <TextView
+        android:id="@+id/sortBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Sort By"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sort_photos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.737"
+        app:layout_constraintStart_toStartOf="@+id/sort_photos"
+        app:layout_constraintTop_toTopOf="@+id/sort_photos"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="47dp"
+        android:layout_height="33dp"
+        app:layout_constraintBottom_toBottomOf="@+id/sort_photos"
+        app:layout_constraintEnd_toStartOf="@+id/sortBy"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/sort_photos"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:srcCompat="@drawable/ellipse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

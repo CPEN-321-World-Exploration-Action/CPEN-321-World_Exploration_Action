@@ -56,6 +56,14 @@ public class Trophy implements Serializable {
                 '}';
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     public Quality getQuality() {
         return Quality.parse(quality);
     }

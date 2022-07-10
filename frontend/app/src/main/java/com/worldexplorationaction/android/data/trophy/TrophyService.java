@@ -1,5 +1,6 @@
 package com.worldexplorationaction.android.data.trophy;
 
+import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
 
 import java.util.List;
@@ -15,11 +16,14 @@ public interface TrophyService {
         return Holder.instance;
     }
 
-    @POST("{trophyId}/collect")
+    @POST("{userId}{trophyId}")
     Call<Boolean> collectTrophy(@Path("userId") String userId, @Path("trophyId") String trophyId);
 
     @GET("user-trophies")
     Call<List<Trophy>> getTrophiesUser(@Query("user_latitude") double latitude, @Query("user_longitude") double longitude);
+
+    @GET("{trophyId}")
+    Call<Trophy> getTrophyDetails(@Path("trophyId") String trophyId);
 
     class Holder {
         private static final TrophyService instance = RetrofitUtility.getRetrofit("trophies/").create(TrophyService.class);

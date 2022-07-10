@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.421" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/collectors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/collectors"
         app:layout_constraintVertical_bias="0.08" />
 
 
@@ -90,5 +90,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.812"
         app:srcCompat="@drawable/camera__2__2" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
