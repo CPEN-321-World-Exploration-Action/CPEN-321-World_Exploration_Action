@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.maps.MapsInitializer;
 import com.worldexplorationaction.android.databinding.ActivityMainBinding;
+import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.signin.SignInManager;
 
 import java.util.Objects;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         optInNewGoogleMapsRenderer();
 
         signInManager.signIn(this, true);
+
+        WeaFirebaseMessagingService.subscribeTopics();
     }
 
     public void logOut() {

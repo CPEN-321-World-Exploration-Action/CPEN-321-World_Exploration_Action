@@ -1,6 +1,5 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
-import { User } from "../../data/db/user.db.js";
 
 export async function collectTrophy(userId, trophyId) {
 
@@ -18,8 +17,6 @@ export async function collectTrophy(userId, trophyId) {
   const trophyScore = await TrophyTrophy.getTrophyScore(trophyId);
 
   //const trophyScore = 1;
-
-  //User.incrementTrophyScore(userId, trophyScore);
 
   const message = buildTrophyCollectedMessage(userId, trophyId, trophyScore);
   messageManager.publishNewMessage(message);
