@@ -1,7 +1,4 @@
-import OAuth2Client from "google-auth-library";
-
-const CLIENT_ID=process.env.CLIENT_ID
-const client = new OAuth2Client.OAuth2Client(CLIENT_ID);
+import * as googleSignIn from "../data/external/googlesignin.external.js";
 
 export default async (req, res, next) => {
   // Don't need to authenticate tokenID if user is in authenticated session
@@ -18,7 +15,7 @@ export default async (req, res, next) => {
     // if (!token) return res.status(401).send("Missing Authorization");
     console.log('Authorizing...')
     try {
-      const {userId, payload} = await verifyUser(token);
+      const {userId, payload} = await googleSignIn.verifyUser(token);
 
       req.session.userId = userId
       // Store payload to create new User.
@@ -34,13 +31,3 @@ export default async (req, res, next) => {
     }
   }
 };
-
-async function verifyUser(token) {
-  const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: CLIENT_ID, 
-  });
-  const payload = ticket.getPayload();
-  const userId = payload['sub'];
-  return {userId, payload};
-}
