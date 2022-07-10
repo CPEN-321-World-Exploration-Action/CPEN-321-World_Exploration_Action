@@ -119,7 +119,7 @@
         app:srcCompat="@drawable/ellipse" />
 
     <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/trophy_images_grid"
+        android:id="@+id/images_grid"
         android:layout_width="268dp"
         android:layout_height="255dp"
 

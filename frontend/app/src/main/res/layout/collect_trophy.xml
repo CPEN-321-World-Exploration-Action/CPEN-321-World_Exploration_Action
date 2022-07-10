@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/trophy_name_evaluate"
+        android:id="@+id/trophy_name_collect"
         android:layout_width="350dp"
         android:layout_height="78dp"
         android:fontFamily="@font/ubuntu_bold"
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.421" />
 
     <TextView
-        android:id="@+id/collectors"
+        android:id="@+id/collectors1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
@@ -47,27 +47,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="468dp"
         android:fontFamily="@font/ubuntu_bold"
         android:text="Pictures by others"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/collectors"
         app:layout_constraintVertical_bias="0.08" />
 
-
     <Button
-        android:id="@+id/button"
+        android:id="@+id/collect_inactive_button"
         android:layout_width="256dp"
         android:layout_height="56dp"
         android:layout_marginStart="44dp"
         android:backgroundTint="#B8B8B8"
+        android:enabled="false"
         android:fontFamily="sans-serif-medium"
         android:text="Collect Trophy"
         android:textColor="@android:color/white"
@@ -75,8 +77,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintVertical_bias="0.811"
-        android:enabled="false" />
+        app:layout_constraintVertical_bias="0.811" />
 
     <ImageButton
         android:id="@+id/button_capture"
@@ -86,10 +87,135 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.354"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/collect_inactive_button"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintVertical_bias="0.812"
         app:srcCompat="@drawable/camera__2__2" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/collect_images_grid"
+        android:layout_width="268dp"
+        android:layout_height="255dp"
+
+        app:columnCount="2"
+        app:layout_constraintBottom_toTopOf="@+id/collect_inactive_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:rowCount="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+    </androidx.gridlayout.widget.GridLayout>
+
+    <ImageButton
+        android:id="@+id/sort_photos_collect"
+        android:layout_width="150dp"
+        android:layout_height="61dp"
+        android:background="#0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.343"
+        app:srcCompat="@drawable/frame_15__2_" />
+
+    <TextView
+        android:id="@+id/sortBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Sort By"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_capture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        app:layout_constraintVertical_bias="0.026" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="47dp"
+        android:layout_height="33dp"
+        app:srcCompat="@drawable/ellipse"
+        tools:layout_editor_absoluteX="270dp"
+        tools:layout_editor_absoluteY="236dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

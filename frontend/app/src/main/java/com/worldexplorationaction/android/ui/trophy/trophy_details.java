@@ -2,9 +2,6 @@ package com.worldexplorationaction.android.ui.trophy;
 
 
 
-import static com.worldexplorationaction.android.ui.map.MapFragment.trophyTitle;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,11 +9,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -24,15 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.trophy.Trophy;
-import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentProfileBinding;
-import com.worldexplorationaction.android.ui.profile.ProfileActivity;
-import com.worldexplorationaction.android.ui.profile.ProfileFragment;
-import com.worldexplorationaction.android.ui.profile.ProfileViewModel;
 
 import java.util.List;
 
@@ -44,23 +34,15 @@ public class trophy_details extends AppCompatActivity {
     GridLayout trophyGrid;
     private Button collectTrophyButton;
     ImageButton sortPhotos;
-    ImageButton trophyImage1;
-    ImageButton trophyImage2;
-    ImageButton trophyImage3;
-    ImageButton trophyImage4;
-    ImageButton trophyImage5;
-    ImageButton trophyImage6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trophy_details);
 
         sortPhotos = findViewById(R.id.sort_photos);
         collectorsNumber = findViewById(R.id.collectors);
-        trophyGrid = findViewById(R.id.trophy_images_grid);
+        trophyGrid = findViewById(R.id.images_grid);
 
         trophyName = findViewById(R.id.trophy_name_evaluate);
         //trophyName.setText(trophyTitle);
@@ -73,24 +55,6 @@ public class trophy_details extends AppCompatActivity {
                 startActivity(collecTrophyIntent);
             }
         });
-
-        for (int i =0; i< trophyGrid.getChildCount(); i++){
-            ImageButton button = (ImageButton) trophyGrid.getChildAt(i);
-            button.setOnClickListener
-                    (new View.OnClickListener()
-                     {
-                         public void onClick (View v)
-                         {
-                             Drawable drawable = button.getDrawable();
-                             Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-                             Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                             evaluate_photo_intent.putExtra("Bitmap", bitmap);
-                             startActivity(evaluate_photo_intent);
-                         }
-                     }
-                    );
-
-        }
 
         TrophyDetailsViewModel viewModel =
                 new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
@@ -105,7 +69,6 @@ public class trophy_details extends AppCompatActivity {
             });
         }
 
-
     private void onNewTrophy(Trophy trophy) {
 
         if (trophy == null) {
@@ -115,6 +78,7 @@ public class trophy_details extends AppCompatActivity {
         collectorsNumber.setText(trophy.getNumberOfCollectors());
 
     }
+
 
     private void onNewPhotos(List<Photo> photos) {
         for (int i = 0; i < trophyGrid.getChildCount(); i++) {
@@ -128,6 +92,20 @@ public class trophy_details extends AppCompatActivity {
                 Glide.with(this)
                         .clear(imageView);
             }
+            //navigating to evaluatePhotosActivity if pressing any photo
+            ImageButton button = (ImageButton) trophyGrid.getChildAt(i);
+            Uri photoUri = Uri.parse(photos.get(i).getPhotoUrl());
+            button.setOnClickListener
+                    (new View.OnClickListener()
+                     {
+                         public void onClick (View v)
+                         {
+                             Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
+                             evaluate_photo_intent.putExtra("photoUrl", photoUri);
+                             startActivity(evaluate_photo_intent);
+                         }
+                     }
+                    );
         }
     }
 

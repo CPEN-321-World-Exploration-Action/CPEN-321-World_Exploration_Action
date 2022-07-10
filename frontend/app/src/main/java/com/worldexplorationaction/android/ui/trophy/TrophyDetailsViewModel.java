@@ -70,6 +70,6 @@ public class TrophyDetailsViewModel extends ViewModel {
         trophy.setValue(trophyd);
         photos.setValue(Collections.emptyList());
         fetchTrophy(trophyd.getId());
-        fetchTrophyPhotos(trophyd.getId(), "random"); //can I add order in Trophy?
+        fetchTrophyPhotos(trophyd.getId(), "random");
     }
 }

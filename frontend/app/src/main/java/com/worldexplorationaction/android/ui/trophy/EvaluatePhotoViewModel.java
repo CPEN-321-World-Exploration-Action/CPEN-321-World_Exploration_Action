@@ -2,6 +2,7 @@ package com.worldexplorationaction.android.ui.trophy;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -37,7 +38,15 @@ public class EvaluatePhotoViewModel extends ViewModel {
         this.trophyService = TrophyService.getService();
     }
 
-    private void likePhoto(String userId, String photoId) {
+    public LiveData<UserProfile> getUserProfile() {
+        return userProfile;
+    }
+
+    public LiveData<Trophy> getTrophyDetails() {
+        return trophy;
+    }
+
+    public void likePhoto(String userId, String photoId) {
         photoService.userLikePhoto(userId, photoId).enqueue(new CustomCallback<>(responseBody -> {
             if (responseBody == null) {
                 Log.e(TAG, "photoService.userLikePhoto has null body");

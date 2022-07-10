@@ -10,13 +10,14 @@ import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.photo.PhotoService;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyService;
+import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CollectTrophyViewModel extends ViewModel {
+public class CollectTrophyViewModel extends TrophyDetailsViewModel {
 
     private static final String TAG = CollectTrophyViewModel.class.getSimpleName();
     private final UserService userService;
@@ -24,10 +25,11 @@ public class CollectTrophyViewModel extends ViewModel {
     private final MutableLiveData<Trophy> trophy;
     private final TrophyService trophyService;
     private final MutableLiveData<List<Photo>> photos;
-
+    private final MutableLiveData<UserProfile> userProfile;
     private final MutableLiveData<String> toastMessage;
 
     public CollectTrophyViewModel() {
+        this.userProfile = new MutableLiveData<>();
         this.toastMessage = new MutableLiveData<>();
         this.trophy = new MutableLiveData<>();
         this.photos = new MutableLiveData<>(Collections.emptyList());
@@ -40,9 +42,14 @@ public class CollectTrophyViewModel extends ViewModel {
         return trophy;
     }
 
+    public LiveData<UserProfile> getUserProfile() {
+        return userProfile;
+    }
+
     public MutableLiveData<List<Photo>> getPhotos() {
         return photos;
     }
+
 
     public void uploadPhoto(String userId, String trophyId, String photoId) {
         photoService.uploadPhoto(userId, trophyId, photoId).enqueue(new CustomCallback<>(unused -> {

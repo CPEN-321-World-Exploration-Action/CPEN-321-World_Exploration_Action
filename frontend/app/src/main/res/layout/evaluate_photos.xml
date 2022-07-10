@@ -64,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="@+id/imageView4"
         app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintStart_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image_evaluate"
         app:layout_constraintVertical_bias="0.987"
         app:srcCompat="@drawable/inactive_like" />
 
@@ -83,7 +83,7 @@
         app:layout_constraintVertical_bias="0.072" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/name_evaluate"
         android:layout_width="128dp"
         android:layout_height="33dp"
         android:fontFamily="@font/poppins_bold"
@@ -92,12 +92,12 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintStart_toEndOf="@+id/profile_image_evaluate"
         app:layout_constraintTop_toTopOf="@+id/imageView3"
         app:layout_constraintVertical_bias="0.071" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_image_evaluate"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
