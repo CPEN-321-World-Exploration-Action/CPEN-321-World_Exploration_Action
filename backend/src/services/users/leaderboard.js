@@ -1,7 +1,7 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
 
-const numberOfUsersOnLeaderboard = 2;
+const numberOfUsersOnLeaderboard = 10;
 
 let subscribers = new Map();
 const validDuration = 1000 * 60 * 60; /* 1 hour */
