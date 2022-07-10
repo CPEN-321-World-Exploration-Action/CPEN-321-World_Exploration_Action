@@ -4,18 +4,16 @@ const { Schema } = mongoose;
 
 const trophySchemaTrophy = new Schema(
   {
-    trophy_id: { type: String, index: true, unique: true },
-    latitude: { type: Number, required: [true, "Trophy must have Latitude"] },
-    longitude: { type: Number, required: [true, "Trophy must have Longitude"] },
-    number_of_collectors: { type: Number, default: 0 },
-    quality: {
-      type: String,
-      enum: ["Gold", "gold", "Silver", "silver", "Bronze", "bronze"],
-      default: "Bronze",
-    },
-    list_of_photos: { type: Array, default: [" "] },
-    list_of_collectors: { type: Array, default: [" "] },
-    /*
+      trophy_id: { type: String, index: true, unique: true },
+      name: {type:String},
+      latitude: {type: Number, required:[true, "Trophy must have Latitude"]},
+      longitude: {type: Number, required:[true, "Trophy must have Longitude"]},
+      number_of_collectors: { type: Number, default: 0},
+      quality: { type: String, enum: ["Gold", "gold", "Silver", "silver", "Bronze", "bronze"], default: "Bronze"},
+      list_of_photos: { type: Array, default: [" "] },
+      list_of_collectors: {type: Array, default: [" "] },
+      tags: {type: Array, default:[" "]}
+      /*
     photo_id: { type: String, index: true, unique: true },
     number_of_likes: { type: Number, index: true },
     user_id: { type: String, index: true },
@@ -115,7 +113,6 @@ const trophySchemaUser = new Schema(
           function (error, success) {
             if (error) {
               console.log(error);
-            } else {
             }
           }
         );

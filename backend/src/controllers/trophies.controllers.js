@@ -30,8 +30,8 @@ export async function getTrophiesUser(req, res) {
         .json({ message: "User latitude and longitude are required." });
     }
 
-    const user = await trophyDetail.getUser(user_id);
-    if (!user) {
+    const trophyUser = await trophyDetail.getUser(user_id);
+    if (!trophyUser) {
       return res
         .status(401)
         .json({
@@ -54,6 +54,21 @@ export async function getTrophiesUser(req, res) {
     res.status(200).json(trophies);
   } catch (error) {
     res.status(500).json({ message: error });
+  }
+}
+
+
+export async function getTrophyDetails(req, res){
+
+  try{
+    const {trophyId} = req.params;
+    const trophy = await trophyDetail.getTrophyDetails(trophyId);
+    if (!trophy){
+      return res.status(404).json({message: `Trophy with id ${trophyId} not found.`})
+    }
+    res.status(200).json({trophy})
+  }catch (error){
+    res.status(500).json({message:error})
   }
 }
 
