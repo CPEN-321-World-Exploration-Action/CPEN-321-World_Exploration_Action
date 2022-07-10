@@ -28,16 +28,16 @@ export async function getTrophiesUser(req, res) {
       return res.status(400).json({message: "User latitude and longitude are required."})
     }
 
-    const user = await trophyDetail.getUser(user_id);
-    if (!user){
+    const trophyUser = await trophyDetail.getTrophyUser(user_id);
+    if (!trophyUser){
       return res.status(401).json({message:  `User with id ${user_id} not found in TrophyUser database`})
     }
 
     const trophies = await trophyDetail.getTrophiesUser(user_id, user_latitude, user_longitude);
-      if (!trophies){
-        // trophies should only be null if Places API call is erroneous or empty
-        return res.status(404).json({message: `No Trophies found near user ${user_id}`});
-      }
+    if (!trophies){
+      // trophies should only be null if Places API call is erroneous or empty
+      return res.status(404).json({message: `No Trophies found near user ${user_id}`});
+    }
 
       res.status(200).json(trophies);
   } catch (error){

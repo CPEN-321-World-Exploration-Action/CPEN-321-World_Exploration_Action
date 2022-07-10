@@ -1,21 +1,28 @@
+import * as Places from "../../data/external/googleplaces.external";
 import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
-export async function getUser(user_id){
-    return await TrophyUser.findOne({user_id:user_id});
-}
-
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
-    const uncollectedTrophyIds = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
-    console.log(uncollectedTrophyIds)
+    let uncollectedTrophyIds = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
+
     if (uncollectedTrophyIds.length < 10){
-        // Get trophies from Google Places API.
-        console.log('Need more Trophies')
-        // Check if possible or not
 
-        // Add Trophies to TrophyTrophy collection
+        try{
+            const numberOfNewTrophies = 10 - uncollectedTrophyIds.length
+            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies )
+            
+            if (!locations){
+                console.log('No Locations found near User')
+                return null // Handle null trophies in controllers.
+            }
+            // Convert locations into New Trophies, added into the TrophyTrophy Database
+            const newTrophies = await createManyTrophies(locations)
+            
+            // Add TrophyIds to the Users list of Uncollected Trophy Ids
 
-        // Add TrophyIDs to TrophyUser Uncollected Tropy
+        }catch (error){
+            console.log(error)
+        }
     }
 
     // Need to get info from all trophies. 
@@ -45,6 +52,10 @@ export async function getAllTrophies(){
 
 export async function createTrophy(req){
     return await TrophyTrophy.create(req.body)
+}
+
+export async function createManyTrophies(trophies){
+    return await TrophyTrophy.insertMany(trophies)
 }
 
 export async function deleteTrophy(trophyID){
