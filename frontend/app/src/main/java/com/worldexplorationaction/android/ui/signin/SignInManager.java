@@ -104,7 +104,11 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
 
     public void logOut() {
         googleSignInClient.signOut();
-        userService.logout();
+        userService.logout().enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "userService.logout succeeded ");
+        }, null, errorMessage -> {
+            Log.e(TAG, "userService.logout failed " + errorMessage);
+        }));
     }
 
     private void onSignInSuccess(@NonNull GoogleSignInAccount account) {
@@ -116,13 +120,15 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
 
         userService.login(idToken).enqueue(new CustomCallback<>(responseBody -> {
             if (responseBody != null) {
+                Log.e(TAG, "userService.login null body");
                 signedInUserId = responseBody;
                 onSignInResultListener.accept(true, null);
             } else {
+                Log.i(TAG, "userService.login success ");
                 onSignInResultListener.accept(false, "userService.login failed: null response body");
             }
         }, null, errorMessage -> {
-            Log.d(TAG, "userService.login failed " + errorMessage);
+            Log.e(TAG, "userService.login failed " + errorMessage);
             onSignInResultListener.accept(false, errorMessage);
         }));
     }
