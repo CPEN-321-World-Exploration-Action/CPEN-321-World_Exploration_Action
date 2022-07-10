@@ -8,19 +8,18 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface TrophyService {
-
     static TrophyService getService() {
-        return TrophyService.Holder.instance;
+        return Holder.instance;
     }
 
-    @POST("/{trophyId}/collect")
-    Call<Boolean> collectTrophy(@Path("userId")String userId, @Path("trophyId")String trophyId);
+    @POST("{trophyId}/collect")
+    Call<Boolean> collectTrophy(@Path("userId") String userId, @Path("trophyId") String trophyId);
 
-    @GET("/{userId}/trophies")
-    Call<List<Trophy>> getTrophiesUser(@Path("userId")String userId, @Path("user_latitude")double user_latitude,
-                                       @Path("user_longitude")double user_longitude);
+    @GET("user-trophies")
+    Call<List<Trophy>> getTrophiesUser(@Query("user_latitude") double latitude, @Query("user_longitude") double longitude);
 
     class Holder {
         private static final TrophyService instance = RetrofitUtility.getRetrofit("trophies/").create(TrophyService.class);

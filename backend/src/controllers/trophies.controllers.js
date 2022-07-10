@@ -17,8 +17,8 @@ export async function collectTrophy(req, res) {
 
 export async function getTrophiesUser(req, res) {
   try {
-    const { user_id } = req.params;
-    const { user_latitude, user_longitude } = req.body;
+    const user_id = req.userId;
+    const { user_latitude, user_longitude } = req.query;
 
     if (!user_id) {
       // This should never happen
@@ -54,6 +54,7 @@ export async function getTrophiesUser(req, res) {
 
     res.status(200).json(trophies);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error });
   }
 }

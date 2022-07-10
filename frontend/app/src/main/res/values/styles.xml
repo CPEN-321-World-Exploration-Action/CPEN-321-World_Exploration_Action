@@ -15,7 +15,6 @@
         <item name="android:layout_marginHorizontal">6dp</item>
         <item name="cornerRadius">12dp</item>
         <item name="rippleColor">@android:color/transparent</item>
-        <item name="android:src">@drawable/huge_icon__1_ </item>
     </style>
 
     <style name="LikeButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
