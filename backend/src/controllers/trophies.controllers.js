@@ -72,6 +72,23 @@ export async function getTrophyDetails(req, res){
   }
 }
 
+export async function getTrophyUser(req, res){
+  try{
+    const {user_id} = req.params;
+    return await trophyDetail.getTrophyUser(user_id)
+  }catch (error){
+    return Error('Internal Server Error')
+  }
+}
+
+export async function createTrophyUser(req, res) {
+  try {
+    const {user_id} = req.params;
+    return await trophyDetail.createTrophyUser({user_id});
+  } catch (error) {
+   return Error('Internal Server Error')
+  }
+}
 // Dev Functions
 export async function getAllTrophies(req, res) {
   try {
@@ -106,14 +123,6 @@ export async function createTrophy(req, res) {
   }
 }
 
-export async function createTrophyUser(req, res) {
-  try {
-    const trophy = await trophyDetail.createTrophyUser(req);
-    res.status(201).json({ trophy });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-}
 
 export async function deleteTrophy(req, res) {
   try {

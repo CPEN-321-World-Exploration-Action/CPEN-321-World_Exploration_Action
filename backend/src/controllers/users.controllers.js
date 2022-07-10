@@ -1,27 +1,29 @@
 import * as userAccounts from "../services/users/useraccounts.js";
-import * as trophyDetail from "../services/trophies/trophydetails.js";
+import * as trophyControllers from "../controllers/trophies.controllers.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
 export async function login(req, res){
   // After auth middleware, we have a session with userId. 
-  const userId = req.session.userId
+  const user_id = req.session.userId
+  req.params.user_id = user_id // Required to interface with trophyControllers.
   req.session.save()
 
   try{
-    let user = await userAccounts.getUserProfile(userId)
-    let trophyUser = await trophyDetail.getTrophyUser(userId) 
-
+    let user = await userAccounts.getUserProfile(user_id)
+    // let trophyUser = await trophyDetail.getTrophyUser(userId) 
+    let trophyUser = await trophyControllers.getTrophyUser(req, res)
+    console.log(trophyUser)
     if (!user){
-      req.payload.user_id = userId // Add to payload so payload can be used to create profile with one object
-      console.log(`User does not exist. Creating User with id: ${userId}`)
+      req.payload.user_id = user_id // Add to payload so payload can be used to create profile with one object
+      console.log(`User does not exist. Creating User with id: ${user_id}`)
       user = await userAccounts.createUserProfile(req.payload)
       //Using newly created account, we also need to create a TrophyUser document
-      trophyUser = await trophyDetail.createTrophyUser(req.payload)
+      trophyUser = await trophyControllers.createTrophyUser(req, res)
     }
     if (!trophyUser){
       // If user!=null then trophyUser should never be null either.
-      return res.status(500).json({message:`User with id ${userId} exists in the user database but not in the Trophy database`})
+      return res.status(500).json({message:`User with id ${user_id} exists in the user database but not in the Trophy database`})
     }
     res.status(201).json(user.user_id)
   } catch (error){

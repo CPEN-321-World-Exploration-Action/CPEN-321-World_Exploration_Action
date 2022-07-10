@@ -3,7 +3,7 @@ import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
 const MAX_TROPHIES = 10;
-const MIN_DISTANCE_METERS = 30000; // Enfore that the closest trophy must be closer than 30km
+const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be closer than 30km
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
@@ -48,8 +48,8 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     return getTrophyDetails(uncollectedTrophies)
 }
 
-export async function createTrophyUser(req){
-   return await TrophyUser.create(req.body)
+export async function createTrophyUser(body){
+   return await TrophyUser.create(body)
 }
 
 export async function getTrophyUser(user_id){
