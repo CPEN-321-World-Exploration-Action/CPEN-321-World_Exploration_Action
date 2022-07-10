@@ -35,13 +35,20 @@ public class ProfileFragment extends Fragment {
         viewModel.getUserProfile().observe(getViewLifecycleOwner(), this::onNewUserProfile);
         viewModel.getPhotos().observe(getViewLifecycleOwner(), this::onNewPhotos);
 
-        binding.profileLogoutButton.setOnClickListener(v -> {
-            viewModel.logOut();
-            MainActivity activity = (MainActivity) requireActivity();
-            activity.logOut();
-        });
-
-        viewModel.fetchProfileAndPhotos("id7");
+        if (getActivity() instanceof ProfileActivity) {
+            /* Showing a friend's profile */
+            ProfileActivity activity = (ProfileActivity) requireActivity();
+            viewModel.setDisplayingUser(activity.getUser());
+            binding.profileLogoutButton.setVisibility(View.GONE);
+            binding.profileYourImagesTitle.setText(R.string.profile_friend_images_title);
+        } else {
+            viewModel.fetchProfileAndPhotos("id7");
+            binding.profileLogoutButton.setOnClickListener(v -> {
+                viewModel.logOut();
+                MainActivity activity = (MainActivity) requireActivity();
+                activity.logOut();
+            });
+        }
 
         return binding.getRoot();
     }

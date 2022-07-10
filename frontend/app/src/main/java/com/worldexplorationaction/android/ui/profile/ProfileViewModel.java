@@ -57,6 +57,12 @@ public class ProfileViewModel extends ViewModel {
         }));
     }
 
+    public void setDisplayingUser(UserProfile user) {
+        userProfile.setValue(user);
+        photos.setValue(Collections.emptyList());
+        fetchProfileAndPhotos(user.getId());
+    }
+
     public void logOut() {
         userService.logout();
     }
