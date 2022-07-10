@@ -34,21 +34,27 @@ const photoSchema = new Schema(
           { upsert: true }
         ).exec();
       },
-      getRandom(trophyID, limit) {
+      async getRandom(trophyID, limit) {
         //wrong
-        return this.aggregate([{ $sample: { size: limit } }]);
+        let photos = await this.find({ trophy_id: trophyID })
+          .select("photo_id")
+          .exec(); //returns an array
+
+        const shuffled = photos.sort(() => 0.5 - Math.random());
+        let selected = shuffled.slice(0, limit);
+        return selected;
       },
       getSortedByTime(trophyID, limit) {
         return this.find({ trophy_id: trophyID })
           .sort({ time: -1 })
           .limit(limit)
-          .select("imageUrl");
+          .select("photo_id");
       },
       getSortedByLike(trophyID, limit) {
         return this.find({ trophy_id: trophyID })
           .sort({ like: -1 })
           .limit(limit)
-          .select("imageUrl");
+          .select("photo_id");
       },
       userLikePhoto: async function (userID, picID) {
         // issue: if pic not exist...
@@ -138,3 +144,5 @@ const photoSchema = new Schema(
 );
 
 export const Photo = mongoose.model("Photo", photoSchema);
+
+Photo.getRandom("1", 5);
