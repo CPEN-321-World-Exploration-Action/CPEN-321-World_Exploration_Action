@@ -4,9 +4,10 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class UserProfile {
+public class UserProfile implements Serializable {
     @SerializedName("user_id")
     private final String id;
     private final String imageUrl;
