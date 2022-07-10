@@ -9,10 +9,13 @@
     <string name="title_map">Map</string>
     <string name="title_leaderboard">Leaderboard</string>
     <string name="title_friends">Friends</string>
+
     <string name="leaderboard_content_description">Leaderboard Content</string>
     <string name="leaderboard_global_button_title">Global</string>
     <string name="leaderboard_friends_button_title">Friends</string>
     <string name="leaderboard_fetch_error">Could not retrieve the leaderboard: %1$s</string>
+    <string name="leaderboard_live_updating_text">Live-updating…</string>
+
     <string name="location_request_rationale_title">Need Location Permissions</string>
     <string name="location_request_rationale_message">We need your precise location to show trophies around you and check whether you can collect a trophy</string>
     <string name="location_permissions_denied">Location permissions denied</string>
