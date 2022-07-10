@@ -195,7 +195,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     new MarkerOptions()
                             .position(new LatLng(trophy.latitude, trophy.longitude))
                             .anchor(0.5f, 0.7f)
-                            .icon(trophyBitmaps.getBitmapDescriptorForTrophy(trophy.quality))
+                            .icon(trophyBitmaps.getBitmapDescriptorForTrophy(trophy.getQuality()))
             );
             if (newMarker == null) {
                 Log.e(TAG, "Could not add marker for trophy: " + trophy);
