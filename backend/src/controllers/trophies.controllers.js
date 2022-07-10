@@ -45,6 +45,21 @@ export async function getTrophiesUser(req, res) {
   }
 }
 
+
+export async function getTrophyDetails(req, res){
+
+  try{
+    const {trophyId} = req.params;
+    const trophy = await trophyDetail.getTrophyDetails(trophyId);
+    if (!trophy){
+      return res.status(404).json({message: `Trophy with id ${trophyId} not found.`})
+    }
+    res.status(200).json({trophy})
+  }catch (error){
+    res.status(500).json({message:error})
+  }
+}
+
 // Dev Functions
 export async function getAllTrophies(req, res){
   try{

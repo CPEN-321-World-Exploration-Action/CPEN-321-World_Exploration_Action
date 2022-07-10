@@ -36,7 +36,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     // Update User's list of uncollected trophies
     await updateTrophyUser(user_id, {uncollectedTrophies})
 
-    return getTrophiesById(uncollectedTrophies)
+    return getTrophyDetails(uncollectedTrophies)
 }
 
 export async function createTrophyUser(body){
@@ -61,7 +61,7 @@ export async function updateTrophyUser(user_id, body){
         })
 }
 
-export async function getTrophiesById(ids){
+export async function getTrophyDetails(ids){
     return await TrophyTrophy.find({trophy_id:{$in: ids}})
 }
 
