@@ -1,14 +1,16 @@
 import { Photo } from "../../data/db/photo.db.js";
 
 export async function userLikePhoto(userID, picID) {
-  let photo = Photo.findPhotos(picID, "photoID");
+
+  const photo = await Photo.findPhoto(picID);
 
   // in likedUsers field
-  if (userID in photo.likedUsers) {
-    Photo.userLikePhoto(userID, picID);
-  } else {
+  if (photo[0].likedUsers.includes(userID)) {
     Photo.userUnlikePhoto(userID, picID);
+  } else {
+    Photo.userLikePhoto(userID, picID);
   }
+  
 }
 
 //userLikePhoto("userID", "picID");

@@ -3,6 +3,7 @@
     <string name="common_ok">OK</string>
     <string name="common_yes">Yes</string>
     <string name="common_retry">Retry</string>
+    <string name="common_close">Close</string>
 
     <string name="app_name">World Exploration Action</string>
     <string name="title_profile">Profile</string>
@@ -17,8 +18,9 @@
     <string name="location_request_rationale_message">We need your precise location to show trophies around you and check whether you can collect a trophy</string>
     <string name="location_permissions_denied">Location permissions denied</string>
     <string name="location_retrieval_error">Could not retrieve current location</string>
+
     <string name="sign_in_failed_title">Sign-In Failed</string>
-    <string name="sign_in_failed_body">%1$s requires a valid Google Account to create your profile.</string>
+    <string name="sign_in_failed_body">%1$s requires a valid Google Account to create your profile. Sign-In failed reason: %2$s</string>
 
     <string name="friends_search_placeholder">Search new friends…</string>
     <string name="friends_action_send_request">Send Request</string>
@@ -32,4 +34,10 @@
     <string name="friends_already_friend">%1$s is already your friend! (or you\'ve received a friend request from %1$s)</string>
     <string name="friends_view_profile">View Profile</string>
     <string name="friends_delete">Delete</string>
+
+    <string name="profile_logout_button_title">Logout</string>
+    <string name="profile_rank_title">Rank</string>
+    <string name="profile_trophies_title">Trophies</string>
+    <string name="profile_your_images_title">Your Images</string>
+    <string name="profile_friend_images_title">Friend\'s Images</string>
 </resources>

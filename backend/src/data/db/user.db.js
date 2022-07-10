@@ -21,15 +21,11 @@ const userSchema = new Schema(
   },
   {
     statics: {
-      addUser(userId) {
-        return this.create({user_id: userId});
+      updateFcmToken(userId, fcmToken) {
+        return this.updateOne({ user_id: userId }, { fcm_token: fcmToken }).exec();
       },
       findUser(userId) {
         return this.findOne({ user_id: userId }).exec();
-      },
-      addUser(newUser) {
-        // issue: user_id == google_id
-        this.collection.insertOne(newUser);
       },
       findUsers(userIds) {
         return this.find({ user_id: { $in: userIds } }).exec();
@@ -37,9 +33,10 @@ const userSchema = new Schema(
       findTopUsers(limit) {
         return this.find().sort({ score: -1 }).limit(limit);
       },
-      computeUserRank(userID) {
-        var user = this.findOne({ user_id: userID });
-        return this.find({ score: { $gt: user.score } }).count();
+      async computeUserRank(userId) {
+        const user = await this.findUser(userId);
+        const gtCount = await this.count({ score: { $gt: user.score } }).count();
+        return gtCount + 1;
       },
       async incrementTrophyScore(userId, score) {
         const user = await this.findUser(userId);

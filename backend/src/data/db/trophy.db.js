@@ -23,22 +23,40 @@ const trophySchemaTrophy = new Schema(
   },
   {
     statics: {
-      incrementNumberOfCollector(trophyID) {
-        this.findOne({ trophy_id: trophyID }).number_of_collectors += 1; // initialized to be 0
-      },
-      getTrophyText(id) {
-        var trophyInfo = this.findOne({ trophy_id: id });
-        delete trophyInfo.list_of_photos;
+      async incrementNumberOfCollector(trophyID, userID) {
+        let trophy = await this.findOne({ trophy_id: trophyID }).exec();
+        if (trophy.number_of_collectors == null){
+          trophy.number_of_collectors = 1;
+        }
+        else{
+          trophy.number_of_collectors += 1; // initialized to be 0
+        }
+        trophy.save();
 
+        this.updateOne(
+          { trophy_id: trophyID },
+          { $push: { list_of_collectors: userID } },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            }
+          }
+        );
+      },
+      async getTrophyText(id) {
+        var trophyInfo = await this.findOne({ trophy_id: id }).exec();
+        delete trophyInfo.list_of_photos;
         return trophyInfo;
       },
-      addUserToTrophy(userID, trophyID) {
-        var trophy = this.find({ trophy_id: trophyID });
+      async addUserToTrophy(userID, trophyID) {
+        var trophy = await this.findOne({ trophy_id: trophyID }).exec();
         trophy.list_of_collectors.push(userID).sort();
         trophy.save();
       },
-      getTrophyScore(collectedTrophyId) {
-        var trophy = this.findOne({ trophy_id: collectedTrophyId });
+      async getTrophyScore(collectedTrophyId) {
+        var trophy = await this.findOne({
+          trophy_id: collectedTrophyId,
+        }).exec();
         // issue: score value?
         let quality = trophy.quality;
 
@@ -56,56 +74,83 @@ const trophySchemaTrophy = new Schema(
 );
 
 const trophySchemaUser = new Schema(
-    {
-        user_id: { type: String, index: true, unique: true },
-        uncollectedTrophies: { type: Array, default: []},
-        collectedTrophies: { type: Array, default: []},
-        list_of_photos: { type: Array, default: []},
-        trophyTags: { type: Array, default: []}
-      /*
+  {
+    user_id: { type: String, index: true, unique: true },
+
+    uncollectedTrophies: { type: Array, default: [" "] },
+    collectedTrophies: { type: Array, default: [" "] },
+    list_of_photos: { type: Array, default: [" "] },
+    trophyTags: { type: Array, default: [" "] }, //issue: assign a space for testing
+    /*
     photo_id: { type: String, index: true, unique: true },
     number_of_likes: { type: Number, index: true },
     user_id: { type: String, index: true },
     google_id: { type: String, index: true },
     imageUrl: String, //issue we use imageData?
        */
-    },
-    {
-      statics: {
-          removeUncollectedTrophy(userId, trophyId){
-              var user = this.findOne({user_id: userId});
-              user.uncollectedTrophies = user.uncollectedTrophies.filter(function(value, index, arr){
-                  return value !== trophyId;
-              });
-              user.save();
+  },
+  {
+    statics: {
+      async removeUncollectedTrophy(userId, trophyId) {
+        /*
+        var user = await this.findOne({ user_id: userId }).exec();
+        user.uncollectedTrophies = user.uncollectedTrophies.filter(function (
+          value,
+          index,
+          arr
+        ) {
+          return value !== trophyId;
+        });
+        user.save();
+        */
+        this.updateOne(
+          { user_id: userId },
+          {
+            $pullAll: {
+              uncollectedTrophies: [trophyId, [trophyId]],
+            },
           },
-          addCollectedTrophy(userId, trophyId){
-              var user = this.find({user_id: userId});
-              user.collectedTrophies.push(trophyId).sort();
-              user.save();
-          },
-          storeTrophies(userID, trophies){
-              var user = this.find({user_id: userID});
-              for (let value of trophies){
-                  user.collectedTrophies.push(value);
-              }
-              user.save();
-          },
-          getUsersTags(userID){
-              return this.find({user_id: userID}).trophyTags;
-          },
-          async getUserUncollectedTrophies(user_id){
-            const user = this.findOne({user_id})
-            return (await user).uncollectedTrophies;
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            }
           }
-
+        );
       },
-      methods: {
-
+      async addCollectedTrophy(userId, trophyId) {
+        /*
+        var user = await this.findOne({ user_id: userId }).exec();
+        user.collectedTrophies.push(trophyId);
+        user.save();
+        */
+        this.updateOne(
+          { user_id: userId },
+          { $push: { collectedTrophies: trophyId } },
+          function (error, success) {
+            if (error) {
+              console.log(error);
+            }
+          }
+        );
       },
-    }
+      async storeTrophies(userID, trophies) {
+        var user = await this.findOne({ user_id: userID }).exec();
+        for (let value of trophies) {
+          user.collectedTrophies.push(value);
+        }
+        user.save();
+      },
+      async getUsersTags(userID) {
+        return await this.findOne({ user_id: userID }).exec().trophyTags;
+      },
+      async getUserUncollectedTrophyIDs(userID) {
+        return await this.findOne({ user_id: userID }).exec()
+          .uncollectedTrophies;
+      },
+    },
+    methods: {},
+  }
 );
 
 export const TrophyUser = mongoose.model("TrophyUser", trophySchemaUser);
 export const TrophyTrophy = mongoose.model("TrophyTrophy", trophySchemaTrophy);
-

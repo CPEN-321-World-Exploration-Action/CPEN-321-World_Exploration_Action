@@ -11,7 +11,17 @@ export async function onReceiveTrophyCollectedMessage(message) {
 }
 
 export async function getUserProfile(userId) {
-  return await User.findUser(userId);
+  const userDocument = await User.findUser(userId);
+  if (!userDocument) {
+    return null;
+  }
+  const user = userDocument.toObject();
+  user.rank = await User.computeUserRank(userId);
+  return user;
+}
+
+export async function uploadFcmToken(userId, fcmToken) {
+  await User.updateFcmToken(userId, fcmToken);
 }
 
 export async function loginWithGoogle(idToken) {
