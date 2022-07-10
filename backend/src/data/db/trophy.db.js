@@ -94,8 +94,9 @@ const trophySchemaUser = new Schema(
           getUsersTags(userID){
               return this.find({user_id: userID}).trophyTags;
           },
-          getUserUncollectedTrophies(userID){
-            return this.findOne({user_id: userID}).uncollectedTrophies;
+          async getUserUncollectedTrophies(user_id){
+            const user = this.findOne({user_id})
+            return (await user).uncollectedTrophies;
           }
 
       },

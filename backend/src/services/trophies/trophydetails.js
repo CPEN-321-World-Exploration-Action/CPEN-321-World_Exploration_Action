@@ -2,18 +2,19 @@ import * as Places from "../../data/external/googleplaces.external.js";
 import { TrophyUser } from "../../data/db/trophy.db.js";
 import { TrophyTrophy } from "../../data/db/trophy.db.js";
 
+const MAX_TROPHIES = 10;
+
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
     let uncollectedTrophies = await TrophyUser.getUserUncollectedTrophies(user_id);
-    
     if (!uncollectedTrophies){
         uncollectedTrophies = [];
     }
 
-    if ( uncollectedTrophies.length < 10){
+    if ( uncollectedTrophies.length < MAX_TROPHIES){
 
         try{
-            const numberOfNewTrophies = 10 - uncollectedTrophies.length
+            const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophies.length
             console.log(`Getting ${numberOfNewTrophies} new Trophies`)
             const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies)
             
@@ -104,6 +105,7 @@ export async function createManyTrophies(locations){
                         break;
                 }
             }
+            console.log(tags)
             trophies.push({trophy_id, name, latitude, longitude, quality, tags})
         }
     }

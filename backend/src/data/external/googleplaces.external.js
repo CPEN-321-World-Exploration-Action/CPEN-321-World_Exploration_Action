@@ -5,7 +5,7 @@ const key=process.env.GOOGLE_MAPS_API_KEY
 export async function getPlaces(latitude, longitude, number){
     var config = {
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=30000&key=${key}`,
+      url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=30000&type=point_of_interest&key=${key}`,
       headers: { }
     };
     console.log(config)
