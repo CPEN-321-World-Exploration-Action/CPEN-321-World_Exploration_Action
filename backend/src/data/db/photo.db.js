@@ -56,87 +56,17 @@ const photoSchema = new Schema(
           .limit(limit)
           .select("photo_id");
       },
-      userLikePhoto: async function (userID, picID) {
-        // issue: if pic not exist...
-        /*
-        let pic = this.findOne({ photo_id: picID });
-        pic.likedUsers.push(userID);
-        pic.like += 1;
-        pic.save();
-        */
-        this.updateOne(
+      userLikePhoto(userID, picID) {
+        return this.updateOne(
           { photo_id: picID },
-          { $push: { likedUsers: userID } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(success);
-            }
-          }
-        );
-        let pic = await this.findOne({ photo_id: picID }).exec();
-        this.updateOne(
-          { photo_id: picID },
-          {
-            $set: {
-              like: pic.like + 1,
-            },
-          },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(success);
-            }
-          }
-        );
+          { $addToSet: { likedUsers: userID }, $inc: { like: 1 } }
+        ).exec();
       },
-      async userUnlikePhoto(userID, picID) {
-        // check user liked photo before?
-        let pic = await this.findOne({ photo_id: picID }).exec();
-
-        /*
-          pic.likedUsers = pic.likedUsers.filter(function (value, index, arr) {
-            return value !== userID;
-          });
-          */
-        // issue: referring to the same query?
-
-        this.updateOne(
+      userUnlikePhoto(userID, picID) {
+        return this.updateOne(
           { photo_id: picID },
-          {
-            $pullAll: {
-              likedUsers: [userID, [userID]],
-            },
-          },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(success);
-            }
-          }
-        );
-        this.updateOne(
-          { photo_id: picID },
-          {
-            $set: {
-              like: pic.like - 1,
-            },
-          },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(success);
-            }
-          }
-        );
-        /*
-          pic.like -= 1;
-          pic.save();
-          */
+          { $pullAll: { likedUsers: [userID] }, $inc: { like: -1 } }
+        ).exec();
       },
     },
     methods: {},
