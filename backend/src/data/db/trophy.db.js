@@ -148,9 +148,13 @@ const trophySchemaUser = new Schema(
         return await this.findOne({ user_id: userID }).exec().trophyTags;
       },
       async getUserUncollectedTrophyIDs(userID) {
-        var user = await this.findOne({ user_id: userID }).exec()
+        var user = await this.findOne({ user_id: userID }).exec();
         return (await user).uncollectedTrophies;
       },
+      async getTrophyCollected(userID) {
+        var user = await this.findOne({ user_id: userID }).exec();
+        return user.collectedTrophies;
+      }
     },
     methods: {},
   }
