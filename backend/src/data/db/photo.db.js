@@ -34,15 +34,11 @@ const photoSchema = new Schema(
           { upsert: true }
         ).exec();
       },
-      async getRandom(trophyID, limit) {
-        //wrong
-        let photos = await this.find({ trophy_id: trophyID })
-          .select("photo_id")
-          .exec(); //returns an array
-
-        const shuffled = photos.sort(() => 0.5 - Math.random());
-        let selected = shuffled.slice(0, limit);
-        return selected;
+      getRandom(trophyID, limit) {
+        return this.aggregate([
+          { $match: { trophy_id: trophyID } },
+          { $sample: { size: limit } },
+        ]).exec();
       },
       getSortedByTime(trophyID, limit) {
         return this.find({ trophy_id: trophyID })

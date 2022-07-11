@@ -12,7 +12,7 @@ export async function getPhotoIDsByTrophyID(trophyID, order) {
 
   // issue: need to handle other situatons
   if (order == "random") {
-    photos = Photo.getRandom(trophyID, 9);
+    photos = await Photo.getRandom(trophyID, 9);
   } else if (order == "time") {
     photos = await Photo.getSortedByTime(trophyID, 9).exec();
   } else if (order == "like") {
