@@ -129,7 +129,7 @@ const trophySchemaUser = new Schema(
         */
         this.updateOne(
           { user_id: userId },
-          { $push: { collectedTrophies: trophyId } },
+          { $push: { collectedTrophies: trophyId} },
           function (error, success) {
             if (error) {
               console.log(error);
@@ -150,6 +150,10 @@ const trophySchemaUser = new Schema(
       async getUserUncollectedTrophyIDs(userID) {
         var user = await this.findOne({ user_id: userID }).exec();
         return (await user).uncollectedTrophies;
+      },
+      async getUserCollectedTrophyIDs(userID){
+        var user = await this.findOne({ user_id: userID }).exec();
+        return (await user).collectedTrophies;
       },
       async getTrophyCollected(userID) {
         var user = await this.findOne({ user_id: userID }).exec();

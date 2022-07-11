@@ -7,22 +7,22 @@ const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be cl
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
-    let uncollectedTrophies = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
-    console.log(uncollectedTrophies)
-    if (!uncollectedTrophies){
-        uncollectedTrophies = [];
+    let uncollectedTrophyIDs = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
+    console.log(uncollectedTrophyIDs)
+    if (!uncollectedTrophyIDs){
+        uncollectedTrophyIDs = [];
     }else{
-        const minTrophyDistance = await computeMinTrophyDistance(user_latitude, user_longitude, uncollectedTrophies);
+        const minTrophyDistance = await computeMinTrophyDistance(user_latitude, user_longitude, uncollectedTrophyIDs);
         if (minTrophyDistance > MIN_DISTANCE_METERS){
             console.log(`All User Uncollected Trophies exceed ${MIN_DISTANCE_METERS} meters from the User. Regenerating Trophies for new Location`)
-            uncollectedTrophies = []; // Collect an entire new set of trophies
+            uncollectedTrophyIDs= []; // Collect an entire new set of trophies
         }
     }
 
-    if ( uncollectedTrophies.length < MAX_TROPHIES){
+    if ( uncollectedTrophyIDs.length < MAX_TROPHIES){
 
         try{
-            const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophies.length
+            const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
             console.log(`Getting ${numberOfNewTrophies} new Trophies`)
             const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies)
             
@@ -35,7 +35,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
             if (! newTrophyIds){
                 return Error("Adding newly generated trophies to TrophyDB returned null.")
             }
-            uncollectedTrophies.push(...newTrophyIds);
+            uncollectedTrophyIDs.push(...newTrophyIds);
         
         }catch (error){
             console.log(error)
@@ -43,9 +43,23 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
         }
     }
     // Update User's list of uncollected trophies
-    await updateTrophyUser(user_id, {uncollectedTrophies})
+    await updateTrophyUser(user_id, {uncollectedTrophyIDs})
+    
+    let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs);
+    console.log(uncollectedTrophies)
+    //  Add parameter describing if trophy is collected or not
+    uncollectedTrophies = uncollectedTrophies.map((trophy) => ( {...trophy._doc, collected: false}));
+    console.log(uncollectedTrophies)
+    // Get User's list of collected trophies
+    let collectedTrophyIDs = await TrophyUser.getUserCollectedTrophyIDs(user_id);
+    let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
 
-    return getTrophyDetails(uncollectedTrophies)
+    if (!collectedTrophies){
+        return uncollectedTrophies
+    }else{
+        collectedTrophies = collectedTrophies.map((trophy) => ( {...trophy._doc, collected: true}));
+        return uncollectedTrophies.concat(collectedTrophies);
+    }
 }
 
 export async function createTrophyUser(body){
