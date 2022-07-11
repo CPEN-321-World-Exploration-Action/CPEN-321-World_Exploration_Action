@@ -15,10 +15,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.user.UserProfile;
+import com.worldexplorationaction.android.databinding.EvaluatePhotosBinding;
 import com.worldexplorationaction.android.databinding.TrophyDetailsBinding;
 import com.worldexplorationaction.android.ui.signin.SignInManager;
 
@@ -42,12 +44,12 @@ public class evaluate_photo extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.binding = TrophyDetailsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        //this.binding = EvaluatePhotosBinding.inflate(getLayoutInflater());
+        setContentView(R.layout.evaluate_photos);
         userId = Objects.requireNonNull(SignInManager.signedInUserId);
         photo = (Photo) getIntent().getSerializableExtra(PHOTO_DETAILS_KEY);
 
-        onNewTrophy(trophy);
+        //onNewTrophy(trophy);
 
         EvaluatePhotoViewModel viewModel =
                 new ViewModelProvider(this).get(EvaluatePhotoViewModel.class);
@@ -59,15 +61,16 @@ public class evaluate_photo extends AppCompatActivity {
         trophyName1=findViewById(R.id.trophy_name_evaluate);
         evaluatePhoto = (ImageView) findViewById(R.id.evaluated_photo);
 
-        //trophyName1.setText(viewModel.getTrophyDetails().getValue().getTitle());
 
-        //Intent intent = getIntent();
-        //Uri photoUri = (Uri) intent.getParcelableExtra("photoUrl");
-        //String photoId = intent.getExtras().getString("photoId");
+        Intent intent = getIntent();
+        String title = intent.getExtras().getString("title");
+        trophyName1.setText(title);
+
         //int likes = intent.getIntExtra("numberLikes", 0);
-        evaluatePhoto.setImageURI(Uri.parse(photo.getPhotoUrl()));
+        //evaluatePhoto.setImageURI(Uri.parse(photo.getPhotoUrl()));
 
-        photoUserDetails (viewModel.getUserProfile().getValue());
+        //photoUserDetails (viewModel.getUserProfile().getValue());
+        //viewModel.getUserProfile().observe(this, this::onNewUser);
 
         score = photo.getNumberOfLikes();
 
@@ -100,11 +103,7 @@ public class evaluate_photo extends AppCompatActivity {
                      }
                  }
                 );
-    }
 
-    private void photoUserDetails (UserProfile user){
-        username.setText(user.getName());
-        profilePic.setImageURI(Uri.parse(user.getImageUrl()));
     }
 
     private void onNewTrophy(Trophy trophy) {
@@ -113,6 +112,16 @@ public class evaluate_photo extends AppCompatActivity {
             return;
         }
         trophyName1.setText(trophy.getTitle());
+    }
+
+    private void onNewUser(UserProfile user) {
+        if (user == null) {
+            return;
+        }
+       // binding.profileName.setText(user.getName());
+       // binding.profileEmail.setText(user.getEmail());
+        username.setText(user.getName());
+        profilePic.setImageURI(Uri.parse(user.getImageUrl()));
     }
 
 }

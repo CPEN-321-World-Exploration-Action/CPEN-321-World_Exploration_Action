@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.trophy.Trophy;
+import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.TrophyDetailsBinding;
 
 import java.util.List;
@@ -36,6 +38,8 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private TrophyDetailsViewModel viewModel;
     private boolean userAtLocation;
     private Photo photo;
+    public String user_name;
+    public String user_photo;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
         Intent intent = new Intent(packageContext, TrophyDetailsActivity.class);
@@ -170,8 +174,9 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                         .into(imageView);
                 imageView.setOnClickListener(v -> {
                     Intent evaluate_photo_intent = new Intent(TrophyDetailsActivity.this, evaluate_photo.class);
-                    //evaluate_photo_intent.putExtra("photoUrl", url);
+                    evaluate_photo_intent.putExtra("photoUrl", url);
                     evaluate_photo_intent.putExtra(PHOTO_DETAILS_KEY, photos.get(index));
+                    evaluate_photo_intent.putExtra("title", getTrophy().getTitle());
                     startActivity(evaluate_photo_intent);
                 });
             } else {
