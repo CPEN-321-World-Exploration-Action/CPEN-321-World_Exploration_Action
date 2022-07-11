@@ -21,6 +21,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.ui.signin.SignInManager;
+import com.worldexplorationaction.android.databinding.TrophyDetailsBinding;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,7 @@ public class trophy_details extends AppCompatActivity {
     private static final String TAG = trophy_details.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
+    private TrophyDetailsBinding binding;
     TextView trophyName;
     TextView collectorsNumber;
     GridLayout trophyGrid;
@@ -49,7 +51,8 @@ public class trophy_details extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.trophy_details);
+        this.binding = TrophyDetailsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         userId = Objects.requireNonNull(SignInManager.signedInUserId);
         trophy = (Trophy) getIntent().getSerializableExtra(TROPHY_DETAILS_KEY);
@@ -77,6 +80,12 @@ public class trophy_details extends AppCompatActivity {
         sortPhotos.setOnClickListener(this::onSortPhotoClicked);
 
         collectTrophyButton.setOnClickListener(this::onCollectTrophyButtonClicked);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.binding = null;
     }
 
     private void onToastMessage(String s) {
@@ -125,6 +134,24 @@ public class trophy_details extends AppCompatActivity {
 
     private void onNewPhotos(List<Photo> photos) {
         Log.i(TAG, "onNewPhotos " + photos);
+        if (photos.isEmpty()) {
+            binding.imageView.setVisibility(View.GONE);
+            binding.sortBy.setVisibility(View.GONE);
+            binding.sortPhotos.setVisibility(View.GONE);
+            binding.trophyDetailsNoPhotoText.setVisibility(View.VISIBLE);
+
+            if (userAtLocation) {
+                binding.trophyDetailsNoPhotoText.setText("Take a picture now to be the first one!");
+            } else {
+                binding.trophyDetailsNoPhotoText.setText("Seems nobody else has come to this place yet");
+            }
+        } else {
+            binding.imageView.setVisibility(View.VISIBLE);
+            binding.sortBy.setVisibility(View.VISIBLE);
+            binding.sortPhotos.setVisibility(View.VISIBLE);
+            binding.trophyDetailsNoPhotoText.setVisibility(View.GONE);
+        }
+
         for (int i = 0; i < trophyGrid.getChildCount(); i++) {
             ImageView imageView = (ImageView) trophyGrid.getChildAt(i);
             if (i < photos.size()) {
