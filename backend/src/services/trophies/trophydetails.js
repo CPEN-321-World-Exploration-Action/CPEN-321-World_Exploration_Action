@@ -176,3 +176,11 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     console.log(d)
     return d
 }
+
+export async function getUserCollectedTrophy(userID) {
+    return TrophyUser.getTrophyCollected(userID);
+}
+
+export async function getUserUncollectedTrophy(userID) {
+    return TrophyUser.getUserUncollectedTrophyIDs(userID);
+}

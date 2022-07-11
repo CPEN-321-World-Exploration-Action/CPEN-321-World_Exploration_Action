@@ -160,3 +160,35 @@ export async function updateTrophy(req, res) {
     res.status(500).json({ message: error });
   }
 }
+
+export async function getUserCollectedTrophy(req, res) {
+  const userID = req.query.userID;
+
+  const trophy = await trophyDetail.getUserCollectedTrophy(userID);
+
+  if (trophy) {
+    res.status(200).json({
+      trophy,
+    });
+  } else {
+    res.status(404).json({
+      message: "Could not find collected trophies",
+    });
+  }
+}
+
+export async function getUserUncollectedTrophy(req, res) {
+  const userID = req.query.userID;
+
+  const trophy = await trophyDetail.getUserUncollectedTrophy(userID);
+
+  if (trophy) {
+    res.status(200).json({
+      trophy,
+    });
+  } else {
+    res.status(404).json({
+      message: "Could not find uncollected trophies",
+    });
+  }
+}
