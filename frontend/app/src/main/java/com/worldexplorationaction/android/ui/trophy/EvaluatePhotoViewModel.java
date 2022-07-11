@@ -4,61 +4,48 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.data.photo.PhotoService;
-import com.worldexplorationaction.android.data.trophy.Trophy;
-import com.worldexplorationaction.android.data.trophy.TrophyService;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.data.user.UserService;
+import com.worldexplorationaction.android.ui.common.CommonViewModel;
+import com.worldexplorationaction.android.ui.signin.SignInManager;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
-public class EvaluatePhotoViewModel extends ViewModel {
+public class EvaluatePhotoViewModel extends CommonViewModel {
 
     private static final String TAG = EvaluatePhotoViewModel.class.getSimpleName();
     private final UserService userService;
     private final PhotoService photoService;
-    private final MutableLiveData<Trophy> trophy;
-    private final TrophyService trophyService;
-    private final MutableLiveData<List<Photo>> photos;
     private final MutableLiveData<UserProfile> userProfile;
-    private final MutableLiveData<String> toastMessage;
 
     public EvaluatePhotoViewModel() {
         this.userProfile = new MutableLiveData<>();
-        this.toastMessage = new MutableLiveData<>();
-        this.trophy = new MutableLiveData<>();
-        this.photos = new MutableLiveData<>(Collections.emptyList());
         this.userService = UserService.getService();
         this.photoService = PhotoService.getService();
-        this.trophyService = TrophyService.getService();
     }
 
     public LiveData<UserProfile> getUserProfile() {
         return userProfile;
     }
 
-    public LiveData<Trophy> getTrophyDetails() {
-        return trophy;
-    }
+    public void fetchUserProfile(String userId) {
+        userService.getUserProfile(userId).enqueue(new CustomCallback<>(responseBody -> {
 
-    public void likePhoto(String userId, String photoId) {
-        photoService.userLikePhoto(userId, photoId).enqueue(new CustomCallback<>(responseBody -> {
-            if (responseBody == null) {
-                Log.e(TAG, "photoService.userLikePhoto has null body");
-                return;
-            }
         }, null, errorMessage -> {
-            Log.e(TAG, "photoService.userLikePhoto has an error" + errorMessage);
+
         }));
     }
 
-    public void displayingPhotoInfo(UserProfile user, Photo photo) {
-        userProfile.setValue(user);
-        likePhoto(user.getId(), photo.getPhotoId());
+    public void likePhoto(String photoId) {
+        String userId = Objects.requireNonNull(SignInManager.signedInUserId);
+        photoService.userLikePhoto(userId, photoId).enqueue(new CustomCallback<>(responseBody -> {
+            Log.i(TAG, "photoService.userLikePhoto success");
+        }, null, errorMessage -> {
+            Log.e(TAG, "photoService.userLikePhoto has an error" + errorMessage);
+            showToastMessage("Could not like this photo: " + errorMessage);
+        }));
     }
 }

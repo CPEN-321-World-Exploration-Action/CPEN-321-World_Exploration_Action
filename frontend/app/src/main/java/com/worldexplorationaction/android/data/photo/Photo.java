@@ -20,13 +20,16 @@ public class Photo implements Serializable {
     private final int numberOfLikes;
     @SerializedName("time")
     private final Date time;
+    @SerializedName("user_liked")
+    private final Boolean userLiked;
 
-    public Photo(String photoId, String userId, String trophyId, int numberOfLikes, Date time) {
+    public Photo(String photoId, String userId, String trophyId, int numberOfLikes, Date time, Boolean userLiked) {
         this.photoId = photoId;
         this.userId = userId;
         this.trophyId = trophyId;
         this.numberOfLikes = numberOfLikes;
         this.time = time;
+        this.userLiked = userLiked;
     }
 
     @Override
@@ -34,12 +37,12 @@ public class Photo implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Photo)) return false;
         Photo photo = (Photo) o;
-        return numberOfLikes == photo.numberOfLikes && Objects.equals(photoId, photo.photoId) && Objects.equals(userId, photo.userId) && Objects.equals(trophyId, photo.trophyId) && Objects.equals(time, photo.time);
+        return numberOfLikes == photo.numberOfLikes && Objects.equals(photoId, photo.photoId) && Objects.equals(userId, photo.userId) && Objects.equals(trophyId, photo.trophyId) && Objects.equals(time, photo.time) && Objects.equals(userLiked, photo.userLiked);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(photoId, userId, trophyId, numberOfLikes, time);
+        return Objects.hash(photoId, userId, trophyId, numberOfLikes, time, userLiked);
     }
 
     @NonNull
@@ -51,6 +54,7 @@ public class Photo implements Serializable {
                 ", trophyId='" + trophyId + '\'' +
                 ", numberOfLikes=" + numberOfLikes +
                 ", time=" + time +
+                ", userLiked=" + userLiked +
                 '}';
     }
 
@@ -76,5 +80,9 @@ public class Photo implements Serializable {
 
     public String getPhotoUrl() {
         return RetrofitUtility.BASE_URL + "photos/storing/" + photoId;
+    }
+
+    public Boolean getUserLiked() {
+        return userLiked;
     }
 }
