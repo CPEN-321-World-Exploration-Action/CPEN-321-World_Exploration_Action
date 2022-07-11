@@ -14,14 +14,13 @@ photosRouter.put("/managing/likes", [nocache(), auth], photoControllers.userLike
 /* Sorting */
 
 photosRouter.get("/sorting/user/:userId", nocache(), photoControllers.getPhotoIDsByUserID);
+photosRouter.get("/sorting/photo-ids", [nocache(), auth], photoControllers.getPhotoIDsByTrophyID);
 
 /* Storing */
 photosRouter.get("/photo/photoIDs", [nocache(), auth], photoControllers.getImage); // not going to use?
 
 photosRouter.post("/storing/:trophyId/:userId", [auth, upload.single("photo")], photoControllers.uploadPhoto); //Good
 photosRouter.get("/storing/:photoId", photoControllers.getPhoto); //Good
-
-photosRouter.get("/sorting/photo-ids", nocache(), photoControllers.getPhotoIDsByTrophyID);
 
 
 export default photosRouter;
