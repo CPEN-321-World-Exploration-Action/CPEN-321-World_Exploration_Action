@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class trophy_details extends AppCompatActivity {
     private Trophy trophy;
     private String userId;
     private Button collectTrophyButton;
+    private boolean userAtLocation;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
         Intent intent = new Intent(packageContext, trophy_details.class);
@@ -51,7 +53,7 @@ public class trophy_details extends AppCompatActivity {
 
         userId = Objects.requireNonNull(SignInManager.signedInUserId);
         trophy = (Trophy) getIntent().getSerializableExtra(TROPHY_DETAILS_KEY);
-        boolean userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
+        userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
 
         sortPhotos = findViewById(R.id.sort_photos);
         collectorsNumber = findViewById(R.id.collectors);
@@ -61,21 +63,27 @@ public class trophy_details extends AppCompatActivity {
 
         collectTrophyButton = findViewById(R.id.collect_trophy_button);
 
+        onNewTrophy(trophy);
+
         viewModel = new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
 
+        viewModel.getToastMessage().observe(this, this::onToastMessage);
         viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
+        viewModel.getTrophyCollected().observe(this, this::onCollectedUpdate);
         viewModel.getPhotos().observe(this, this::onNewPhotos);
 
+        viewModel.fetchTrophy(trophy.getId());
         viewModel.fetchTrophyPhotos(trophy.getId(), "random");
         sortPhotos.setOnClickListener(this::onSortPhotoClicked);
 
-        collectTrophyButton.setOnClickListener(view -> {
-            viewModel.collectTrophy(userId, trophy.getId());
-            Intent collecTrophyIntent = new Intent(trophy_details.this, collect_trophy.class);
-            startActivity(collecTrophyIntent);
-        });
+        collectTrophyButton.setOnClickListener(this::onCollectTrophyButtonClicked);
+    }
 
-        onNewTrophy(trophy);
+    private void onToastMessage(String s) {
+        if (s == null) {
+            return;
+        }
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     private void onSortPhotoClicked(View v) {
@@ -89,6 +97,21 @@ public class trophy_details extends AppCompatActivity {
                     viewModel.fetchTrophyPhotos(trophy.getId(), order);
                 })
                 .create().show();
+    }
+
+    private void onCollectTrophyButtonClicked(View v) {
+        if (userAtLocation) {
+            viewModel.collectTrophy(userId, trophy.getId());
+        } else {
+            Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onCollectedUpdate(boolean collected) {
+        if (collected) {
+            Intent intent = new Intent(trophy_details.this, collect_trophy.class);
+            startActivity(intent);
+        }
     }
 
     private void onNewTrophy(Trophy trophy) {
