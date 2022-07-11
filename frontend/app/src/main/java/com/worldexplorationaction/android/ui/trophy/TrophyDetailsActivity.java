@@ -83,6 +83,12 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.reloadPhotos();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         this.binding = null;
