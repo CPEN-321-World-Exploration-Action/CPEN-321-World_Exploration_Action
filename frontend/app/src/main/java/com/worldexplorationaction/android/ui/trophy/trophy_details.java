@@ -3,6 +3,7 @@ package com.worldexplorationaction.android.ui.trophy;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -51,7 +52,8 @@ public class trophy_details extends AppCompatActivity {
 
         Trophy trophy = (Trophy) getIntent().getSerializableExtra(TROPHY_DETAILS_KEY);
 
-        userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
+//        userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
+        userAtLocation = true;
 
         trophyGrid = findViewById(R.id.images_grid);
 
@@ -187,8 +189,10 @@ public class trophy_details extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Image is taken successfully", Toast.LENGTH_LONG).show();
-//            viewModel.uploadPhoto(viewModel.getTrophyDetails().getValue().getId(), "");
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            viewModel.uploadPhoto(photo);
+        } else {
+            Toast.makeText(this, "resultCode=" + resultCode, Toast.LENGTH_LONG).show();
         }
     }
 

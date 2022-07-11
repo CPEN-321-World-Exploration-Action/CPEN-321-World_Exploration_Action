@@ -7,11 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -38,7 +37,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
@@ -51,21 +50,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.profile.ProfileActivity"
-            />
+        <activity android:name=".ui.profile.ProfileActivity" />
 
-        <activity
-            android:name=".ui.trophy.trophy_details"
-            />
+        <activity android:name=".ui.trophy.trophy_details" />
 
-        <activity
-            android:name=".ui.trophy.collect_trophy"
-            />
+        <activity android:name=".ui.trophy.collect_trophy" />
 
-        <activity
-            android:name=".ui.trophy.evaluate_photo"
-            />
+        <activity android:name=".ui.trophy.evaluate_photo" />
 
         <service
             android:name=".fcm.WeaFirebaseMessagingService"

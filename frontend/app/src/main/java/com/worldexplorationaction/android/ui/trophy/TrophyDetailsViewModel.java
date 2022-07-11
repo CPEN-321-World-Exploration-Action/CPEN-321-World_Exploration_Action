@@ -14,9 +14,16 @@ import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.ui.signin.SignInManager;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 
 public class TrophyDetailsViewModel extends ViewModel {
@@ -103,14 +110,35 @@ public class TrophyDetailsViewModel extends ViewModel {
         toastMessage.setValue(null);
     }
 
-    public void uploadPhoto(String trophyId, String photoId) {
-        photoService.uploadPhoto(getUserId(), trophyId, photoId).enqueue(new CustomCallback<>(unused -> {
+    public void uploadPhoto(Bitmap photo) {
+        File file = saveBitmap(photo);
+
+        MultipartBody.Part part = MultipartBody.Part.createFormData(
+                "photo",
+                file.getName(),
+                RequestBody.create(MediaType.parse("image/png"), file)
+        );
+
+        photoService.uploadPhoto(getUserId(), getTrophyId(), part).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "photo is uploaded successfully");
-            showToastMessage("photo is uploaded successfully");
+            showToastMessage("The photo was uploaded successfully");
         }, null, errorMessage -> {
             Log.e(TAG, "uploading photo is failed " + errorMessage);
             showToastMessage("Could not upload photo");
         }));
+    }
+
+    private File saveBitmap(Bitmap bitmap) {
+        try {
+            File file = File.createTempFile("trophy_photo", ".png");
+            OutputStream outStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+            return file;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getUserId() {
