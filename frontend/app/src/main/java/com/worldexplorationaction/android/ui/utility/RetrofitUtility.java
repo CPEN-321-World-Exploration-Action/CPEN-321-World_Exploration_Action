@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtility {
-    public static final String BASE_URL = "http://10.0.2.2:8081/";
+    public static final String BASE_URL = "http://20.214.147.25:8081/";
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .cookieJar(new InMemoryCookieJar())
             .connectTimeout(3, TimeUnit.SECONDS)

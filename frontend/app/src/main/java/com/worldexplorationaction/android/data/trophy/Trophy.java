@@ -19,7 +19,7 @@ public class Trophy implements Serializable {
     private final String quality;
     private final int hashCode;
     @SerializedName("collected")
-    public boolean isCollected;
+    private final boolean isCollected;
 
     public Trophy(String id, String title, Quality quality, double latitude, double longitude, boolean isCollected) {
         this.id = id;
