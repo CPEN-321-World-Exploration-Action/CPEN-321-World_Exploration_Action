@@ -5,10 +5,11 @@ import androidx.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Photo {
+public class Photo implements Serializable {
     @SerializedName("photo_id")
     private final String photoId;
     @SerializedName("user_id")

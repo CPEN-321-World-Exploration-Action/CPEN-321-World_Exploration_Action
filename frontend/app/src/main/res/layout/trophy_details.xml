@@ -34,16 +34,29 @@
         app:layout_constraintVertical_bias="0.421" />
 
     <TextView
+        android:id="@+id/trophy_details_no_photo_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="Take a picture now to be the first one!"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <TextView
         android:id="@+id/collectors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
+        android:layout_marginTop="160dp"
         android:fontFamily="@font/ubuntu_bold"
         android:text="##"
         android:textColor="#6441A5"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.305"
+        app:layout_constraintHorizontal_bias="0.287"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,10 +75,10 @@
         app:layout_constraintVertical_bias="0.08" />
 
     <Button
-        android:id="@+id/collect_trophy_button"
+        android:id="@+id/trophy_action_button"
         android:layout_width="256dp"
         android:layout_height="56dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginBottom="64dp"
         android:backgroundTint="#6441A5"
         android:fontFamily="@font/ubuntu_bold"
         android:text="Collect Trophy"
@@ -74,10 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/sort_photos"
@@ -90,7 +100,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.343"
-        app:srcCompat="@drawable/frame_15__2_" />
+        app:srcCompat="@drawable/frame_15__2_"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/sortBy"
@@ -105,7 +116,7 @@
         app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="@+id/sort_photos"
         app:layout_constraintTop_toTopOf="@+id/sort_photos"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -117,15 +128,20 @@
         app:layout_constraintStart_toStartOf="@+id/sort_photos"
         app:layout_constraintTop_toBottomOf="@+id/textView7"
         app:layout_constraintVertical_bias="0.565"
-        app:srcCompat="@drawable/ellipse" />
+        app:srcCompat="@drawable/ellipse"
+        tools:ignore="ContentDescription" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/images_grid"
-        android:layout_width="268dp"
-        android:layout_height="255dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
 
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:columnCount="2"
-        app:layout_constraintBottom_toTopOf="@+id/collect_trophy_button"
+        app:layout_constraintBottom_toTopOf="@+id/trophy_action_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
