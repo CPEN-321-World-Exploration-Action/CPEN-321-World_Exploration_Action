@@ -21,5 +21,8 @@ trophiesRouter.post("/createUser", trophyControllers.createTrophyUser);
 trophiesRouter.put("/:id", trophyControllers.updateTrophy);
 trophiesRouter.delete("/:id", trophyControllers.deleteTrophy);
 
+// collected/uncollected trophy
+trophiesRouter.get("/collected", trophyControllers.getUserCollectedTrophy);
+trophiesRouter.get("/uncollected", trophyControllers.getUserUncollectedTrophy);
 
 export default trophiesRouter;
