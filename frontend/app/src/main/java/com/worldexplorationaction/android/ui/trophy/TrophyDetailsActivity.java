@@ -174,6 +174,8 @@ public class TrophyDetailsActivity extends AppCompatActivity {
             int index = i;
             if (i < photos.size()) {
                 String url = photos.get(i).getPhotoUrl();
+                String id = photos.get(i).getPhotoId();
+                int likes = photos.get(i).getNumberOfLikes();
                 Glide.with(this)
                         .load(url)
                         .placeholder(R.drawable.ic_default_avatar_35dp)
@@ -181,8 +183,10 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                 imageView.setOnClickListener(v -> {
                     Intent evaluate_photo_intent = new Intent(TrophyDetailsActivity.this, evaluate_photo.class);
                     evaluate_photo_intent.putExtra("photoUrl", url);
+                    evaluate_photo_intent.putExtra("photoId", id);
                     evaluate_photo_intent.putExtra(PHOTO_DETAILS_KEY, photos.get(index));
                     evaluate_photo_intent.putExtra("title", getTrophy().getTitle());
+                    evaluate_photo_intent.putExtra("likes", likes);
                     startActivity(evaluate_photo_intent);
                 });
             } else {
