@@ -66,6 +66,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (googleMap != null) {
+            // FIXME: A temporary fix to the issue of not updating the map after a trophy is collected
+            googleMap.clear();
+            onCameraIdle();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         lastCameraPosition = googleMap.getCameraPosition();
@@ -179,21 +189,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         long startTime = System.nanoTime(); /* Time this operation */
 
-        // FIXME: this is a temporary fix to the issue with multiple markers for than same trophy
+        // FIXME: this is a temporary fix to the issue of multiple markers for the same trophy
         googleMap.clear();
 
         /* Skip trophies that are already on the map, */
         /* and remove markers that are not included in the new list */
         Set<Trophy> newTrophiesSet = new HashSet<>(newTrophies);
-        Iterator<Marker> markersIterator = markers.iterator();
-        while (markersIterator.hasNext()) {
-            Marker oldMarker = markersIterator.next();
-            Trophy markerTrophy = (Trophy) oldMarker.getTag();
-            if (!newTrophiesSet.remove(markerTrophy)) {
-                oldMarker.remove();
-                markersIterator.remove();
-            }
-        }
+//        Iterator<Marker> markersIterator = markers.iterator();
+//        while (markersIterator.hasNext()) {
+//            Marker oldMarker = markersIterator.next();
+//            Trophy markerTrophy = (Trophy) oldMarker.getTag();
+//            if (!newTrophiesSet.remove(markerTrophy)) {
+//                oldMarker.remove();
+//                markersIterator.remove();
+//            }
+//        }
 
         /* Add the rest of new trophies to the map */
         for (Trophy trophy : newTrophiesSet) {
@@ -208,7 +218,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 continue;
             }
             newMarker.setTag(trophy);
-            markers.add(newMarker);
+//            markers.add(newMarker);
         }
 
         Log.i(TAG, "onDisplayTrophiesUpdate took " + (System.nanoTime() - startTime) / 1e6 + "ms");
