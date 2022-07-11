@@ -49,7 +49,8 @@ class UserListViewAdapter extends RecyclerView.Adapter<UserListRowViewHolder> {
 
     @Override
     public int getItemCount() {
-        return displayingUsers.size();
+        // FIXME: temporary fix to IndexOutOfBound
+        return Math.min(displayingUsers.size(), modes.size());
     }
 
     /**
