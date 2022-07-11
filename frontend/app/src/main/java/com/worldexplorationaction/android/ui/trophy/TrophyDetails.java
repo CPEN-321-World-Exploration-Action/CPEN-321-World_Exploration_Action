@@ -25,8 +25,8 @@ import com.worldexplorationaction.android.databinding.TrophyDetailsBinding;
 import java.util.List;
 import java.util.Objects;
 
-public class trophy_details extends AppCompatActivity {
-    private static final String TAG = trophy_details.class.getSimpleName();
+public class TrophyDetails extends AppCompatActivity {
+    private static final String TAG = TrophyDetails.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
     private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
@@ -38,7 +38,7 @@ public class trophy_details extends AppCompatActivity {
     private Photo photo;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
-        Intent intent = new Intent(packageContext, trophy_details.class);
+        Intent intent = new Intent(packageContext, TrophyDetails.class);
         intent.putExtra(TROPHY_DETAILS_KEY, trophy);
         intent.putExtra(USER_AT_LOCATION_KEY, userAtLocation);
         packageContext.startActivity(intent);
@@ -52,8 +52,7 @@ public class trophy_details extends AppCompatActivity {
 
         Trophy trophy = (Trophy) getIntent().getSerializableExtra(TROPHY_DETAILS_KEY);
 
-//        userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
-        userAtLocation = true;
+        userAtLocation = getIntent().getBooleanExtra(USER_AT_LOCATION_KEY, false);
 
         trophyGrid = findViewById(R.id.images_grid);
 
@@ -63,16 +62,16 @@ public class trophy_details extends AppCompatActivity {
 
         viewModel.getToastMessage().observe(this, this::onToastMessage);
         viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
-//        viewModel.getTrophyCollected().observe(this, this::onCollectedUpdate);
+        viewModel.getTrophyCollected().observe(this, this::onCollectedUpdate);
         viewModel.getPhotos().observe(this, this::onNewPhotos);
+
+        viewModel.setTrophyFromMap(trophy);
 
         viewModel.fetchTrophy(trophy.getId());
         viewModel.fetchTrophyPhotos(trophy.getId(), "random");
         binding.sortPhotos.setOnClickListener(this::onSortPhotoClicked);
 
-        binding.trophyActionButton.setOnClickListener(this::onCollectTrophyButtonClicked);
-
-        viewModel.setTrophy(trophy);
+        binding.trophyActionButton.setOnClickListener(this::onTrophyActionButtonClicked);
 
         if (!userAtLocation) {
             binding.trophyActionButton.setBackgroundColor(0xFFAAAAAA);
@@ -105,12 +104,12 @@ public class trophy_details extends AppCompatActivity {
                 .create().show();
     }
 
-    private void onCollectTrophyButtonClicked(View v) {
+    private void onTrophyActionButtonClicked(View v) {
         if (!userAtLocation) {
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (getTrophy().getIsCollected()) {
+        if (Boolean.TRUE.equals(viewModel.getTrophyCollected().getValue())) {
             dispatchTakePictureIntent();
         } else {
             viewModel.collectTrophy();
@@ -130,7 +129,6 @@ public class trophy_details extends AppCompatActivity {
         }
         binding.trophyNameEvaluate.setText(trophy.getTitle());
         binding.collectors.setText(String.valueOf(trophy.getNumberOfCollectors()));
-        onCollectedUpdate(trophy.getIsCollected());
     }
 
     private void onNewPhotos(List<Photo> photos) {
@@ -163,7 +161,7 @@ public class trophy_details extends AppCompatActivity {
                         .placeholder(R.drawable.ic_default_avatar_35dp)
                         .into(imageView);
                 imageView.setOnClickListener(v -> {
-                    Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
+                    Intent evaluate_photo_intent = new Intent(TrophyDetails.this, evaluate_photo.class);
                     //evaluate_photo_intent.putExtra("photoUrl", url);
                     evaluate_photo_intent.putExtra(PHOTO_DETAILS_KEY, photos.get(index));
                     startActivity(evaluate_photo_intent);
@@ -188,11 +186,17 @@ public class trophy_details extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            viewModel.uploadPhoto(photo);
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                viewModel.uploadPhoto(photo);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "No photo taken", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Error: resultCode=" + resultCode, Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, "resultCode=" + resultCode, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Unknown requestCode=" + requestCode, Toast.LENGTH_LONG).show();
         }
     }
 

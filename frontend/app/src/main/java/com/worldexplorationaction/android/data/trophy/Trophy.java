@@ -18,7 +18,7 @@ public class Trophy implements Serializable {
     private final int numberOfCollectors;
     private final String quality;
     private final int hashCode;
-    @SerializedName("collect")
+    @SerializedName("collected")
     public boolean isCollected;
 
     public Trophy(String id, String title, Quality quality, double latitude, double longitude, boolean isCollected) {

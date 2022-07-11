@@ -63,11 +63,11 @@ export async function getTrophiesUser(req, res) {
 export async function getTrophyDetails(req, res){
   try{
     const {trophyId} = req.params;
-    const trophy = await trophyDetail.getTrophyDetails(trophyId);
-    if (!trophy){
+    const trophies = await trophyDetail.getTrophyDetails(trophyId);
+    if (!trophies || trophies.length === 0){
       return res.status(404).json({message: `Trophy with id ${trophyId} not found.`})
     }
-    res.status(200).json(trophy)
+    res.status(200).json(trophies[0])
   }catch (error){
     res.status(500).json({message:error})
   }
