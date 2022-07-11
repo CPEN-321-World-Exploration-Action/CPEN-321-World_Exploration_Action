@@ -26,14 +26,12 @@ export async function userLikePhoto(req, res) {
 /* Sorting */
 
 export async function getPhotoIDsByTrophyID(req, res) {
-  const trophyID = req.query.trophyID;
+  const trophyId = req.query.trophyId;
   const order = req.query.order;
 
-  const photos = await photoSorting.getPhotoIDsByTrophyID(trophyID, order);
+  const photos = await photoSorting.getPhotoIDsByTrophyID(trophyId, order);
   if (photos) {
-    res.status(200).json({
-      photos,
-    });
+    res.status(200).json(photos);
   } else {
     res.status(404).json({
       message: "Could not find the photos",
