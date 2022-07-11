@@ -2,6 +2,7 @@ package com.worldexplorationaction.android.ui.trophy;
 
 import static com.worldexplorationaction.android.ui.map.MapFragment.trophyTitle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -42,6 +43,12 @@ public class evaluate_photo extends AppCompatActivity {
     private String userId;
     int score = 0;
 
+    public static void start(Context packageContext, Photo photo) {
+        Intent intent = new Intent(packageContext, evaluate_photo.class);
+        intent.putExtra(PHOTO_DETAILS_KEY, photo);
+        packageContext.startActivity(intent);
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.evaluate_photos);
@@ -67,7 +74,7 @@ public class evaluate_photo extends AppCompatActivity {
 
         int likes = intent.getIntExtra("likes", 0);
         Log.i(TAG, "uri:" + uri);
-        evaluatePhoto.setImageURI(Uri.parse(uri));
+        Glide.with(this).load(uri).into(evaluatePhoto);
 
         score = likes;
 
