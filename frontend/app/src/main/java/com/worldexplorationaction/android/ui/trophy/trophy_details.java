@@ -28,11 +28,13 @@ public class trophy_details extends AppCompatActivity {
     private static final String TAG = trophy_details.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
+    private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     GridLayout trophyGrid;
     private TrophyDetailsBinding binding;
     private TrophyDetailsViewModel viewModel;
     private boolean userAtLocation;
+    private Photo photo;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
         Intent intent = new Intent(packageContext, trophy_details.class);
@@ -151,6 +153,7 @@ public class trophy_details extends AppCompatActivity {
 
         for (int i = 0; i < trophyGrid.getChildCount(); i++) {
             ImageView imageView = (ImageView) trophyGrid.getChildAt(i);
+            int index = i;
             if (i < photos.size()) {
                 String url = photos.get(i).getPhotoUrl();
                 Glide.with(this)
@@ -159,7 +162,8 @@ public class trophy_details extends AppCompatActivity {
                         .into(imageView);
                 imageView.setOnClickListener(v -> {
                     Intent evaluate_photo_intent = new Intent(trophy_details.this, evaluate_photo.class);
-                    evaluate_photo_intent.putExtra("photoUrl", url);
+                    //evaluate_photo_intent.putExtra("photoUrl", url);
+                    evaluate_photo_intent.putExtra(PHOTO_DETAILS_KEY, photos.get(index));
                     startActivity(evaluate_photo_intent);
                 });
             } else {
