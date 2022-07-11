@@ -11,11 +11,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.photo.Photo;
-import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.EvaluatePhotosBinding;
 
-public class evaluate_photo extends AppCompatActivity {
-    private static final String TAG = evaluate_photo.class.getSimpleName();
+public class EvaluatePhotoActivity extends AppCompatActivity {
+    private static final String TAG = EvaluatePhotoActivity.class.getSimpleName();
     private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
     private static final String TITLE_KEY = "TITLE_KEY";
     int score = 0;
@@ -25,7 +24,7 @@ public class evaluate_photo extends AppCompatActivity {
     private boolean userLiked;
 
     public static void start(Context packageContext, Photo photo, String title) {
-        Intent intent = new Intent(packageContext, evaluate_photo.class);
+        Intent intent = new Intent(packageContext, EvaluatePhotoActivity.class);
         intent.putExtra(PHOTO_DETAILS_KEY, photo);
         intent.putExtra(TITLE_KEY, title);
         packageContext.startActivity(intent);

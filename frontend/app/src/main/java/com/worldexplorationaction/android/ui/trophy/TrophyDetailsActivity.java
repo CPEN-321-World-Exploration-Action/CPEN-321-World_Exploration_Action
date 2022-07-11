@@ -176,7 +176,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                         .placeholder(R.drawable.ic_default_avatar_35dp)
                         .into(imageView);
                 imageView.setOnClickListener(v -> {
-                    evaluate_photo.start(this, photos.get(index), getTrophy().getTitle());
+                    EvaluatePhotoActivity.start(this, photos.get(index), getTrophy().getTitle());
                 });
             } else {
                 Glide.with(this)

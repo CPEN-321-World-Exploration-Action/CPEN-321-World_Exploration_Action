@@ -54,7 +54,7 @@
 
         <activity android:name=".ui.trophy.TrophyDetailsActivity" />
 
-        <activity android:name=".ui.trophy.evaluate_photo" />
+        <activity android:name=".ui.trophy.EvaluatePhotoActivity" />
 
         <service
             android:name=".fcm.WeaFirebaseMessagingService"
