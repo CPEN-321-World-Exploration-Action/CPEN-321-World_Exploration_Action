@@ -2,6 +2,7 @@ package com.worldexplorationaction.android.ui.trophy;
 
 import static com.worldexplorationaction.android.ui.map.MapFragment.trophyTitle;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -34,30 +35,31 @@ public class evaluate_photo extends AppCompatActivity {
     TextView trophyName1;
     ImageButton like;
     TextView like_number;
-    TextView username;
-    ImageView profilePic;
+    //TextView username;
+    //ImageView profilePic;
     private Photo photo;
     private Trophy trophy;
     private TrophyDetailsBinding binding;
     private String userId;
     int score = 0;
 
+    public static void start(Context packageContext, Photo photo) {
+        Intent intent = new Intent(packageContext, evaluate_photo.class);
+        intent.putExtra(PHOTO_DETAILS_KEY, photo);
+        packageContext.startActivity(intent);
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //this.binding = EvaluatePhotosBinding.inflate(getLayoutInflater());
         setContentView(R.layout.evaluate_photos);
         userId = Objects.requireNonNull(SignInManager.signedInUserId);
         photo = (Photo) getIntent().getSerializableExtra(PHOTO_DETAILS_KEY);
-
-        //onNewTrophy(trophy);
 
         EvaluatePhotoViewModel viewModel =
                 new ViewModelProvider(this).get(EvaluatePhotoViewModel.class);
 
         like = findViewById(R.id.like_button);
         like_number = findViewById(R.id.number);
-        username = findViewById(R.id.name_evaluate);
-        profilePic = findViewById(R.id.profile_image_evaluate);
         trophyName1=findViewById(R.id.trophy_name_evaluate);
         evaluatePhoto = (ImageView) findViewById(R.id.evaluated_photo);
 
@@ -66,20 +68,22 @@ public class evaluate_photo extends AppCompatActivity {
         String title = intent.getExtras().getString("title");
         trophyName1.setText(title);
 
-        //int likes = intent.getIntExtra("numberLikes", 0);
-        //evaluatePhoto.setImageURI(Uri.parse(photo.getPhotoUrl()));
+        String uri = intent.getExtras().getString("photoUrl");
+        String id = intent.getExtras().getString("photoId");
 
-        //photoUserDetails (viewModel.getUserProfile().getValue());
-        //viewModel.getUserProfile().observe(this, this::onNewUser);
 
-        score = photo.getNumberOfLikes();
+        int likes = intent.getIntExtra("likes", 0);
+        Log.i(TAG, "uri:" + uri);
+        Glide.with(this).load(uri).into(evaluatePhoto);
+
+        score = likes;
 
         like.setOnClickListener
                 (new View.OnClickListener()
                  {
                      public void onClick (View v)
                      {
-                         viewModel.likePhoto(userId,photo.getPhotoId());
+                         viewModel.likePhoto(userId,id);
                          Integer integer = (Integer) like.getTag();
                          integer = integer == null ? 0 : integer;
 
@@ -120,8 +124,8 @@ public class evaluate_photo extends AppCompatActivity {
         }
        // binding.profileName.setText(user.getName());
        // binding.profileEmail.setText(user.getEmail());
-        username.setText(user.getName());
-        profilePic.setImageURI(Uri.parse(user.getImageUrl()));
+        //username.setText(user.getName());
+        //profilePic.setImageURI(Uri.parse(user.getImageUrl()));
     }
 
 }

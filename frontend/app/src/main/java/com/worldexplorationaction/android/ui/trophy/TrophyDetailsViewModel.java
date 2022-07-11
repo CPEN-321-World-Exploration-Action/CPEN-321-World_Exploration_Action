@@ -135,6 +135,10 @@ public class TrophyDetailsViewModel extends ViewModel {
         toastMessage.setValue(null);
     }
 
+    public void reloadPhotos() {
+        fetchTrophyPhotos(getTrophyId());
+    }
+
     public void uploadPhoto(Bitmap photo) {
         File file = saveBitmap(photo);
 
@@ -147,7 +151,7 @@ public class TrophyDetailsViewModel extends ViewModel {
         photoService.uploadPhoto(getUserId(), getTrophyId(), part).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "photo is uploaded successfully");
             showToastMessage("The photo was uploaded successfully");
-            fetchTrophyPhotos(getTrophyId());
+            reloadPhotos();
             userHasTakenPhoto = true;
         }, null, errorMessage -> {
             Log.e(TAG, "uploading photo is failed " + errorMessage);

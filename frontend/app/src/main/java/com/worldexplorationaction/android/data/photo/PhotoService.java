@@ -24,7 +24,7 @@ public interface PhotoService {
     Call<List<Photo>> getPhotoIdsByUserId(@Path("userId") String userId);
 
     @PUT("managing/likes")
-    Call<Void> userLikePhoto(@Path("userId") String userId, @Path("picID") String photoId);
+    Call<Void> userLikePhoto(@Query("userID") String userId, @Query("picID") String photoId);
 
     @GET("sorting/photo-ids")
     Call<List<Photo>> getPhotoIDsByTrophyID(@Query("trophyId") String trophyId, @Query("order") String order);
