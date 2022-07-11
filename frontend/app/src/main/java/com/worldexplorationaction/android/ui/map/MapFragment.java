@@ -179,6 +179,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         long startTime = System.nanoTime(); /* Time this operation */
 
+        // FIXME: this is a temporary fix to the issue with multiple markers for than same trophy
+        googleMap.clear();
+
         /* Skip trophies that are already on the map, */
         /* and remove markers that are not included in the new list */
         Set<Trophy> newTrophiesSet = new HashSet<>(newTrophies);
