@@ -37,6 +37,7 @@ public class TrophyDetailsViewModel extends ViewModel {
     private final MutableLiveData<String> toastMessage;
     private final MutableLiveData<Boolean> trophyCollected;
     private String lastOrder;
+    private boolean userHasTakenPhoto;
 
     public TrophyDetailsViewModel() {
         this.userProfile = new MutableLiveData<>();
@@ -68,9 +69,26 @@ public class TrophyDetailsViewModel extends ViewModel {
         return trophyCollected;
     }
 
+    public boolean getUserHasTakenPhoto() {
+        return userHasTakenPhoto;
+    }
+
     public void setTrophyFromMap(Trophy trophy) {
         this.trophy.setValue(trophy);
         this.trophyCollected.setValue(trophy.getIsCollected());
+
+        userHasTakenPhoto = false;
+        photoService.getPhotoIdsByUserId(getUserId()).enqueue(new CustomCallback<>(responseBody -> {
+            Log.i(TAG, "photoService.getPhotoIdsByUserId succeeded");
+            for (Photo p : responseBody) {
+                if (p.getTrophyId().equals(trophy.getId())) {
+                    userHasTakenPhoto = true;
+                    break;
+                }
+            }
+        }, null, errorMessage -> {
+            Log.e(TAG, "photoService.getPhotoIdsByUserId failed: " + errorMessage);
+        }));
     }
 
     public void fetchTrophy(String trophyId) {
@@ -130,6 +148,7 @@ public class TrophyDetailsViewModel extends ViewModel {
             Log.i(TAG, "photo is uploaded successfully");
             showToastMessage("The photo was uploaded successfully");
             fetchTrophyPhotos(getTrophyId());
+            userHasTakenPhoto = true;
         }, null, errorMessage -> {
             Log.e(TAG, "uploading photo is failed " + errorMessage);
             showToastMessage("Could not upload photo");

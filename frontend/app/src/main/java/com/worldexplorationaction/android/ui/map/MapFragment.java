@@ -24,7 +24,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
-import com.worldexplorationaction.android.ui.trophy.trophy_details;
+import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 import com.worldexplorationaction.android.ui.utility.Utility;
 
 import java.util.Collection;
@@ -123,11 +123,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         userLocation.getCurrentLocation(location -> {
             if (location == null) {
                 Toast.makeText(requireContext(), "Cannot get the current location.", Toast.LENGTH_LONG).show();
-                trophy_details.start(requireContext(), trophy, false);
+                TrophyDetailsActivity.start(requireContext(), trophy, false);
             } else {
                 double distance = Utility.getDistance(location, marker.getPosition());
                 boolean canCollect = distance < 500.0f;
-                trophy_details.start(requireContext(), trophy, canCollect);
+                TrophyDetailsActivity.start(requireContext(), trophy, canCollect);
             }
         });
         return false;

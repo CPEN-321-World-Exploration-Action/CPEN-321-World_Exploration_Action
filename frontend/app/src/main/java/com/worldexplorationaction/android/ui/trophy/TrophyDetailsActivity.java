@@ -25,8 +25,8 @@ import com.worldexplorationaction.android.databinding.TrophyDetailsBinding;
 import java.util.List;
 import java.util.Objects;
 
-public class TrophyDetails extends AppCompatActivity {
-    private static final String TAG = TrophyDetails.class.getSimpleName();
+public class TrophyDetailsActivity extends AppCompatActivity {
+    private static final String TAG = TrophyDetailsActivity.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
     private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
@@ -38,7 +38,7 @@ public class TrophyDetails extends AppCompatActivity {
     private Photo photo;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
-        Intent intent = new Intent(packageContext, TrophyDetails.class);
+        Intent intent = new Intent(packageContext, TrophyDetailsActivity.class);
         intent.putExtra(TROPHY_DETAILS_KEY, trophy);
         intent.putExtra(USER_AT_LOCATION_KEY, userAtLocation);
         packageContext.startActivity(intent);
@@ -110,7 +110,15 @@ public class TrophyDetails extends AppCompatActivity {
             return;
         }
         if (Boolean.TRUE.equals(viewModel.getTrophyCollected().getValue())) {
-            dispatchTakePictureIntent();
+            if (!viewModel.getUserHasTakenPhoto()) {
+                dispatchTakePictureIntent();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setMessage("You have already taken a photo for this trophy. Do you want to replace the old one?")
+                        .setPositiveButton("Replace", (d, w) -> dispatchTakePictureIntent())
+                        .setNegativeButton("Cancel", null)
+                        .create().show();
+            }
         } else {
             viewModel.collectTrophy();
         }
@@ -161,7 +169,7 @@ public class TrophyDetails extends AppCompatActivity {
                         .placeholder(R.drawable.ic_default_avatar_35dp)
                         .into(imageView);
                 imageView.setOnClickListener(v -> {
-                    Intent evaluate_photo_intent = new Intent(TrophyDetails.this, evaluate_photo.class);
+                    Intent evaluate_photo_intent = new Intent(TrophyDetailsActivity.this, evaluate_photo.class);
                     //evaluate_photo_intent.putExtra("photoUrl", url);
                     evaluate_photo_intent.putExtra(PHOTO_DETAILS_KEY, photos.get(index));
                     startActivity(evaluate_photo_intent);

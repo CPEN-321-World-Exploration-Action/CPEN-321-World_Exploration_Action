@@ -52,7 +52,7 @@
 
         <activity android:name=".ui.profile.ProfileActivity" />
 
-        <activity android:name=".ui.trophy.trophy_details" />
+        <activity android:name=".ui.trophy.TrophyDetailsActivity" />
 
         <activity android:name=".ui.trophy.collect_trophy" />
 
