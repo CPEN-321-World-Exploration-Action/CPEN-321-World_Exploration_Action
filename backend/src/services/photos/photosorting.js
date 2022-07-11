@@ -1,7 +1,5 @@
 import { Photo } from "../../data/db/photo.db.js";
-
-// probably should not store anything, so to keep consistency
-//let photoSorting = new Map();
+import { BadRequestError } from "../../utils/errors.js";
 
 export async function getPhotoIDsByUserID(userId) {
   return await Photo.getPhotosByUser(userId);
@@ -17,6 +15,8 @@ export async function getPhotoIDsByTrophyID(trophyID, order) {
     photos = await Photo.getSortedByTime(trophyID, 9);
   } else if (order == "like") {
     photos = await Photo.getSortedByLike(trophyID, 9);
+  } else {
+    throw new BadRequestError(`Invalid order: ${order}`);
   }
 
   return photos;
