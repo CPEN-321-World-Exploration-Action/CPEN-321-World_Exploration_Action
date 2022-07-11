@@ -36,9 +36,9 @@ const trophySchemaTrophy = new Schema(
         }
         trophy.save();
 
-        this.updateOne(
+        this.update(
           { trophy_id: trophyID },
-          { $push: { list_of_collectors: userID } },
+          { $addToSet: { list_of_collectors: userID } },
           function (error, success) {
             if (error) {
               console.log(error);

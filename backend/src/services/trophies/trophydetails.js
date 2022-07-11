@@ -8,7 +8,10 @@ const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be cl
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
     let uncollectedTrophyIDs = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
-    console.log(uncollectedTrophyIDs)
+    // Require list of collected trophies to ensure we don't serve already collected trophies in Places.
+    let collectedTrophyIDs = await TrophyUser.getUserCollectedTrophyIDs(user_id);  
+    console.log(uncollectedTrophyIDs, collectedTrophyIDs)
+
     if (!uncollectedTrophyIDs){
         uncollectedTrophyIDs = [];
     }else{
@@ -24,7 +27,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
         try{
             const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
             console.log(`Getting ${numberOfNewTrophies} new Trophies`)
-            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies)
+            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
             
             if (!locations){
                 console.log('No Locations found near User')
@@ -51,7 +54,6 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     uncollectedTrophies = uncollectedTrophies.map((trophy) => ( {...trophy._doc, collected: false}));
     console.log(uncollectedTrophies)
     // Get User's list of collected trophies
-    let collectedTrophyIDs = await TrophyUser.getUserCollectedTrophyIDs(user_id);
     let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
 
     if (!collectedTrophies){

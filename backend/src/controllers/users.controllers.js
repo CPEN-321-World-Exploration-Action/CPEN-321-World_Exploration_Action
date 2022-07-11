@@ -22,8 +22,10 @@ export async function login(req, res){
       trophyUser = await trophyControllers.createTrophyUser(req, res)
     }
     if (!trophyUser){
-      // If user!=null then trophyUser should never be null either.
-      return res.status(500).json({message:`User with id ${user_id} exists in the user database but not in the Trophy database`})
+      // If user!=null then trophyUser should never be null either unless table has been dropped.
+      console.log(`User with id ${user_id} exists in the user database but not in the Trophy database. Creating New Entry`)
+      trophyUser = await trophyControllers.createTrophyUser(req, res)
+      // return res.status(500).json({message:`User with id ${user_id} exists in the user database but not in the Trophy database`})
     }
     res.status(201).json(user.user_id)
   } catch (error){
