@@ -5,10 +5,9 @@ export async function getPhotoIDsByUserID(userId) {
   return await Photo.getPhotosByUser(userId);
 }
 
-export async function getPhotoIDsByTrophyID(trophyID, order) {
+export async function getPhotoIDsByTrophyID(trophyID, order, userId) {
   let photos;
 
-  // issue: need to handle other situatons
   if (order == "random") {
     photos = await Photo.getRandom(trophyID, 9);
   } else if (order == "time") {
@@ -19,5 +18,14 @@ export async function getPhotoIDsByTrophyID(trophyID, order) {
     throw new BadRequestError(`Invalid order: ${order}`);
   }
 
+  photos = setUserLiked(photos, userId);
+
   return photos;
+}
+
+function setUserLiked(photos, userId) {
+  return photos.map(({ likedUsers, ...attrs }) => ({
+    ...attrs,
+    user_liked: likedUsers.includes(userId),
+  }));
 }

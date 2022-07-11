@@ -29,7 +29,7 @@ export async function getPhotoIDsByTrophyID(req, res) {
   const trophyId = req.query.trophyId;
   const order = req.query.order;
 
-  const photos = await photoSorting.getPhotoIDsByTrophyID(trophyId, order);
+  const photos = await photoSorting.getPhotoIDsByTrophyID(trophyId, order, req.userId);
   if (photos) {
     res.status(200).json(photos);
   } else {
