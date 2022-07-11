@@ -2,10 +2,8 @@ import * as trophyCollection from "../services/trophies/trophycollection.js";
 import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 export async function collectTrophy(req, res) {
-  const result = await trophyCollection.collectTrophy(
-    req.userId,
-    req.params["trophyId"]
-  );
+  const {userId:user_id, trophyId} = req.params
+  const result = await trophyCollection.collectTrophy(user_id, trophyId);
   if (result.success) {
     res.status(200).send();
   } else {

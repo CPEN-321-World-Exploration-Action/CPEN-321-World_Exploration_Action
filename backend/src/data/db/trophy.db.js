@@ -106,11 +106,11 @@ const trophySchemaUser = new Schema(
         });
         user.save();
         */
-        this.updateOne(
+        this.findOneAndUpdate(
           { user_id: userId },
           {
             $pullAll: {
-              uncollectedTrophies: [trophyId, [trophyId]],
+              uncollectedTrophies: trophyId
             },
           },
           function (error, success) {
@@ -127,9 +127,9 @@ const trophySchemaUser = new Schema(
         user.collectedTrophies.push(trophyId);
         user.save();
         */
-        this.updateOne(
+        this.update(
           { user_id: userId },
-          { $push: { collectedTrophies: trophyId} },
+          { $addToSet: { collectedTrophies: trophyId} },
           function (error, success) {
             if (error) {
               console.log(error);
