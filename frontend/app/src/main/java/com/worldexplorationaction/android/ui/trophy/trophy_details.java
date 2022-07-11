@@ -1,6 +1,5 @@
 package com.worldexplorationaction.android.ui.trophy;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +32,7 @@ public class trophy_details extends AppCompatActivity {
     TextView collectorsNumber;
     GridLayout trophyGrid;
     ImageButton sortPhotos;
+    private TrophyDetailsViewModel viewModel;
     private Trophy trophy;
     private String userId;
     private Button collectTrophyButton;
@@ -60,16 +61,13 @@ public class trophy_details extends AppCompatActivity {
 
         collectTrophyButton = findViewById(R.id.collect_trophy_button);
 
-        TrophyDetailsViewModel viewModel =
-                new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(TrophyDetailsViewModel.class);
 
         viewModel.getTrophyDetails().observe(this, this::onNewTrophy);
         viewModel.getPhotos().observe(this, this::onNewPhotos);
 
         viewModel.fetchTrophyPhotos(trophy.getId(), "random");
-        sortPhotos.setOnClickListener(v -> {
-            viewModel.fetchTrophyPhotos(trophy.getId(), "time");
-        });
+        sortPhotos.setOnClickListener(this::onSortPhotoClicked);
 
         collectTrophyButton.setOnClickListener(view -> {
             viewModel.collectTrophy(userId, trophy.getId());
@@ -77,6 +75,20 @@ public class trophy_details extends AppCompatActivity {
             startActivity(collecTrophyIntent);
         });
 
+        onNewTrophy(trophy);
+    }
+
+    private void onSortPhotoClicked(View v) {
+        new AlertDialog.Builder(this)
+                .setTitle("Sort By")
+                .setItems(new CharSequence[]{
+                        "Time",
+                        "Like Number"
+                }, (dialog, which) -> {
+                    String order = which == 0 ? "time" : "like";
+                    viewModel.fetchTrophyPhotos(trophy.getId(), order);
+                })
+                .create().show();
     }
 
     private void onNewTrophy(Trophy trophy) {
@@ -89,6 +101,7 @@ public class trophy_details extends AppCompatActivity {
     }
 
     private void onNewPhotos(List<Photo> photos) {
+        Log.i(TAG, "onNewPhotos " + photos);
         for (int i = 0; i < trophyGrid.getChildCount(); i++) {
             ImageView imageView = (ImageView) trophyGrid.getChildAt(i);
             if (i < photos.size()) {
