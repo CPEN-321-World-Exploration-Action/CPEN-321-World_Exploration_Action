@@ -18,14 +18,17 @@ public class Trophy implements Serializable {
     private final int numberOfCollectors;
     private final String quality;
     private final int hashCode;
+    @SerializedName("collect")
+    public boolean isCollected;
 
-    public Trophy(String id, String title, Quality quality, double latitude, double longitude) {
+    public Trophy(String id, String title, Quality quality, double latitude, double longitude, boolean isCollected) {
         this.id = id;
         this.title = title;
         this.quality = quality.toString();
         this.latitude = latitude;
         this.longitude = longitude;
         this.hashCode = id.hashCode();
+        this.isCollected = isCollected;
         this.numberOfCollectors = 0;
     }
 
@@ -34,12 +37,12 @@ public class Trophy implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Trophy)) return false;
         Trophy trophy = (Trophy) o;
-        return Double.compare(trophy.latitude, latitude) == 0 && Double.compare(trophy.longitude, longitude) == 0 && hashCode == trophy.hashCode && Objects.equals(id, trophy.id) && Objects.equals(title, trophy.title) && quality == trophy.quality;
+        return Double.compare(trophy.latitude, latitude) == 0 && Double.compare(trophy.longitude, longitude) == 0 && numberOfCollectors == trophy.numberOfCollectors && hashCode == trophy.hashCode && isCollected == trophy.isCollected && Objects.equals(id, trophy.id) && Objects.equals(title, trophy.title) && Objects.equals(quality, trophy.quality);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, quality, latitude, longitude, hashCode);
+        return Objects.hash(id, title, latitude, longitude, numberOfCollectors, quality, hashCode, isCollected);
     }
 
     @NonNull
@@ -53,6 +56,7 @@ public class Trophy implements Serializable {
                 ", numberOfCollectors=" + numberOfCollectors +
                 ", quality='" + quality + '\'' +
                 ", hashCode=" + hashCode +
+                ", isCollected=" + isCollected +
                 '}';
     }
 
@@ -70,6 +74,10 @@ public class Trophy implements Serializable {
 
     public int getNumberOfCollectors() {
         return numberOfCollectors;
+    }
+
+    public boolean getIsCollected() {
+        return isCollected;
     }
 
     public enum Quality {

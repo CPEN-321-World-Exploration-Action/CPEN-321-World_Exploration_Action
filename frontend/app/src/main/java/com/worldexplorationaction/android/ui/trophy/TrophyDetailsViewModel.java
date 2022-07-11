@@ -11,10 +11,12 @@ import com.worldexplorationaction.android.data.photo.PhotoService;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyService;
 import com.worldexplorationaction.android.data.user.UserProfile;
+import com.worldexplorationaction.android.ui.signin.SignInManager;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class TrophyDetailsViewModel extends ViewModel {
@@ -26,13 +28,13 @@ public class TrophyDetailsViewModel extends ViewModel {
     private final MutableLiveData<List<Photo>> photos;
     private final MutableLiveData<UserProfile> userProfile;
     private final MutableLiveData<String> toastMessage;
-    private final MutableLiveData<Boolean> trophyCollected;
+//    private final MutableLiveData<Boolean> trophyCollected;
 
     public TrophyDetailsViewModel() {
         this.userProfile = new MutableLiveData<>();
         this.toastMessage = new MutableLiveData<>();
         this.trophy = new MutableLiveData<>();
-        this.trophyCollected = new MutableLiveData<>(false);
+//        this.trophyCollected = new MutableLiveData<>(false);
         this.photos = new MutableLiveData<>(Collections.emptyList());
 //        this.userService = UserService.getService();
         this.photoService = PhotoService.getService();
@@ -55,8 +57,11 @@ public class TrophyDetailsViewModel extends ViewModel {
         return toastMessage;
     }
 
-    public MutableLiveData<Boolean> getTrophyCollected() {
-        return trophyCollected;
+    //    public MutableLiveData<Boolean> getTrophyCollected() {
+//        return trophyCollected;
+//    }
+    public void setTrophy(Trophy trophy) {
+        this.trophy.setValue(trophy);
     }
 
     public void fetchTrophy(String trophyId) {
@@ -81,12 +86,12 @@ public class TrophyDetailsViewModel extends ViewModel {
         }));
     }
 
-    public void collectTrophy(String userId, String trophyId) {
-        trophyService.collectTrophy(userId, trophyId).enqueue(new CustomCallback<>(unused -> {
+    public void collectTrophy() {
+        trophyService.collectTrophy(getUserId(), getTrophyId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "trophy is collected successfully");
             showToastMessage("You have collected this trophy");
-            trophyCollected.setValue(true);
-            fetchTrophy(trophyId);
+//            trophyCollected.setValue(true);
+            fetchTrophy(getTrophyId());
         }, null, errorMessage -> {
             Log.e(TAG, "collecting trophy is failed " + errorMessage);
             showToastMessage("Could not collect trophy");
@@ -98,10 +103,21 @@ public class TrophyDetailsViewModel extends ViewModel {
         toastMessage.setValue(null);
     }
 
-//    public void displayingTrophy(Trophy trophyd) {
-//        trophy.setValue(trophyd);
-//        photos.setValue(Collections.emptyList());
-//        fetchTrophy(trophyd.getId());
-//        fetchTrophyPhotos(trophyd.getId(), "random");
-//    }
+    public void uploadPhoto(String trophyId, String photoId) {
+        photoService.uploadPhoto(getUserId(), trophyId, photoId).enqueue(new CustomCallback<>(unused -> {
+            Log.i(TAG, "photo is uploaded successfully");
+            showToastMessage("photo is uploaded successfully");
+        }, null, errorMessage -> {
+            Log.e(TAG, "uploading photo is failed " + errorMessage);
+            showToastMessage("Could not upload photo");
+        }));
+    }
+
+    private String getUserId() {
+        return Objects.requireNonNull(SignInManager.signedInUserId);
+    }
+
+    private String getTrophyId() {
+        return Objects.requireNonNull(trophy.getValue()).getId();
+    }
 }

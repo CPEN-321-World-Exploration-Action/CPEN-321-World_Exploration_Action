@@ -75,7 +75,7 @@
         app:layout_constraintVertical_bias="0.08" />
 
     <Button
-        android:id="@+id/collect_trophy_button"
+        android:id="@+id/trophy_action_button"
         android:layout_width="256dp"
         android:layout_height="56dp"
         android:layout_marginTop="128dp"
@@ -138,7 +138,7 @@
         android:layout_height="255dp"
 
         app:columnCount="2"
-        app:layout_constraintBottom_toTopOf="@+id/collect_trophy_button"
+        app:layout_constraintBottom_toTopOf="@+id/trophy_action_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
