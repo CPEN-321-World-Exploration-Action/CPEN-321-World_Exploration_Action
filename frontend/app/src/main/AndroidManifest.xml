@@ -54,8 +54,6 @@
 
         <activity android:name=".ui.trophy.TrophyDetailsActivity" />
 
-        <activity android:name=".ui.trophy.collect_trophy" />
-
         <activity android:name=".ui.trophy.evaluate_photo" />
 
         <service
