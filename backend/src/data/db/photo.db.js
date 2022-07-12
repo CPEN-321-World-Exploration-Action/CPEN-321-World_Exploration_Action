@@ -44,12 +44,14 @@ const photoSchema = new Schema(
         return this.find({ trophy_id: trophyID })
           .sort({ time: -1 })
           .limit(limit)
+          .lean()
           .exec();
       },
       getSortedByLike(trophyID, limit) {
         return this.find({ trophy_id: trophyID })
           .sort({ like: -1 })
           .limit(limit)
+          .lean()
           .exec();
       },
       userLikePhoto(userID, picID) {
