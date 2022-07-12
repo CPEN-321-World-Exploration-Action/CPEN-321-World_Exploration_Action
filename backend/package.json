@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon .",
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.27.2",
