@@ -64,6 +64,10 @@ public class Trophy implements Serializable {
         return id;
     }
 
+    public String getGooglePlaceId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
