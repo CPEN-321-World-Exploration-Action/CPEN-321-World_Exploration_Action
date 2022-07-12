@@ -7,17 +7,19 @@
 
     <TextView
         android:id="@+id/trophy_name_evaluate"
-        android:layout_width="350dp"
-        android:layout_height="78dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/ubuntu_bold"
-        android:text="TextView"
+        android:text="Trophy Title"
         android:textSize="27sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintEnd_toStartOf="@+id/trophy_details_maps_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.059" />
+        app:layout_constraintVertical_bias="0.059"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView7"
@@ -101,7 +103,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.343"
         app:srcCompat="@drawable/frame_15__2_"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/sortBy"
@@ -224,5 +226,18 @@
             app:layout_rowWeight="1"
             tools:ignore="ContentDescription" />
     </androidx.gridlayout.widget.GridLayout>
+
+    <ImageButton
+        android:id="@+id/trophy_details_maps_button"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="24dp"
+        android:tintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="@+id/trophy_name_evaluate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/trophy_name_evaluate"
+        app:srcCompat="@drawable/ic_baseline_map_black_24dp"
+        app:tint="#6441A5"
+        tools:ignore="SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

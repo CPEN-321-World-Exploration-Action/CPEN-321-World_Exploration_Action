@@ -1,9 +1,11 @@
 package com.worldexplorationaction.android.ui.trophy;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -71,6 +73,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         binding.sortPhotos.setOnClickListener(this::onSortPhotoClicked);
 
         binding.trophyActionButton.setOnClickListener(this::onTrophyActionButtonClicked);
+        binding.trophyDetailsMapsButton.setOnClickListener(this::onMapsButtonClicked);
 
         if (!userAtLocation) {
             binding.trophyActionButton.setBackgroundColor(0xFFAAAAAA);
@@ -107,6 +110,20 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                     viewModel.fetchTrophyPhotos(getTrophy().getId(), order);
                 })
                 .create().show();
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void onMapsButtonClicked(View v) {
+        Log.d(TAG, "onMapsButtonClicked");
+        Uri uri = Uri.parse("https://www.google.com/maps/search/")
+                .buildUpon()
+                .appendQueryParameter("api", "1")
+                .appendQueryParameter("query", getTrophy().getTitle())
+                .appendQueryParameter("query_place_id", getTrophy().getGooglePlaceId())
+                .build();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     private void onTrophyActionButtonClicked(View v) {
