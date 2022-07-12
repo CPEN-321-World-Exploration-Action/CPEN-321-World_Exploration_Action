@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image_6__3_"
+    tools:context=".ui.profile.ProfileFragment">
+
+
+    <ImageView
+        android:id="@+id/profile_stat_background"
+        android:layout_width="120dp"
+        android:layout_height="418dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/image_8"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_profile_image"
+        style="@style/circle_image_view"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.08"
+        app:shapeAppearanceOverlay="@style/circle_image_view"
+        app:srcCompat="@drawable/ic_default_avatar_35dp"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="-"
+        android:textColor="@color/black"
+        android:textFontWeight="800"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_profile_image"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="-@-"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_rank_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu"
+        android:text="@string/profile_rank_title"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@+id/profile_rank_number" />
+
+    <TextView
+        android:id="@+id/profile_rank_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="##"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@+id/profile_stat_background"
+        app:layout_constraintVertical_bias="0.25"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_trophies_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu"
+        android:text="@string/profile_trophies_title"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@id/profile_trophies_number" />
+
+    <TextView
+        android:id="@+id/profile_trophies_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="##"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/profile_stat_background"
+        app:layout_constraintEnd_toEndOf="@id/profile_stat_background"
+        app:layout_constraintStart_toStartOf="@id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@id/profile_stat_background"
+        app:layout_constraintVertical_bias="0.65"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/profile_your_images_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="@string/profile_your_images_title"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toTopOf="@+id/profile_stat_background" />
+
+    <ImageButton
+        android:id="@+id/profile_logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        android:padding="16dp"
+        android:src="@mipmap/ic_profile_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/profile_images_grid"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="24dp"
+        app:columnCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_stat_background"
+        app:layout_constraintTop_toBottomOf="@+id/profile_your_images_title"
+        app:rowCount="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:gravity="center"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="3dp"
+            android:scaleType="centerCrop"
+            app:layout_columnWeight="1"
+            app:layout_gravity="fill"
+            app:layout_rowWeight="1"
+            tools:ignore="ContentDescription" />
+    </androidx.gridlayout.widget.GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
