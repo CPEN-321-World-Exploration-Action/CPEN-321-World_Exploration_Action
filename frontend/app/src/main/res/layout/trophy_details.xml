@@ -42,7 +42,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:fontFamily="@font/ubuntu"
-        android:text="Take a picture now to be the first one!"
+        android:text="@string/trophy_details_no_picture_at_location_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView9"

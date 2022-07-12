@@ -170,9 +170,9 @@ public class TrophyDetailsActivity extends AppCompatActivity {
             binding.trophyDetailsNoPhotoText.setVisibility(View.VISIBLE);
 
             if (userAtLocation) {
-                binding.trophyDetailsNoPhotoText.setText("Take a picture now to be the first one!");
+                binding.trophyDetailsNoPhotoText.setText(R.string.trophy_details_no_picture_at_location_text);
             } else {
-                binding.trophyDetailsNoPhotoText.setText("Seems nobody else has come to this place yet");
+                binding.trophyDetailsNoPhotoText.setText(R.string.trophy_details_no_picture_not_at_location_text);
             }
         } else {
             binding.imageView.setVisibility(View.VISIBLE);

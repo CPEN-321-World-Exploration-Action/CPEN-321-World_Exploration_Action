@@ -37,7 +37,10 @@
 
     <string name="profile_logout_button_title">Logout</string>
     <string name="profile_rank_title">Rank</string>
-    <string name="profile_trophies_title">Trophies</string>
+    <string name="profile_trophies_title">Score</string>
     <string name="profile_your_images_title">Your Images</string>
     <string name="profile_friend_images_title">Friend\'s Images</string>
+
+    <string name="trophy_details_no_picture_at_location_text">Take a picture now to be the first one!</string>
+    <string name="trophy_details_no_picture_not_at_location_text">Seems nobody has added a photo here yet</string>
 </resources>
