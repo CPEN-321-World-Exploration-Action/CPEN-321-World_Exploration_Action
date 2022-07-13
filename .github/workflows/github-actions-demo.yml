@@ -7,12 +7,11 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/backend
     steps:
+      - uses: actions/checkout@v3
       - run: echo "repository is ${{ github.repository }}"
       - run: echo "Triggered by a ${{ github.event_name }}"
       - run: echo "Running on ${{ runner.os }}"
       - run: echo "Branch is ${{ github.ref }}"
-      - name: Check out repository code
-        uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
