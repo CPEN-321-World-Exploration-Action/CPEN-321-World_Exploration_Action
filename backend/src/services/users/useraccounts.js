@@ -1,5 +1,7 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
+import * as googleSignIn from "../data/external/googlesignin.external.js";
+import { BadRequestError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
   await User.incrementTrophyScore(message.userId, message.trophyScore);
@@ -24,9 +26,21 @@ export async function uploadFcmToken(userId, fcmToken) {
 }
 
 export async function loginWithGoogle(idToken) {
-  // TODO: insert logic from controller
-  // Return User
-  // issue: what is token
+  let userId, idTokenPayload;
+  try {
+    ({userId, idTokenPayload} = await googleSignIn.verifyUser(idToken));
+  } catch (err) {
+    throw new BadRequestError(`Unable to verify the ID Token: ${idToken}`);
+  }
+
+  let user = await getUserProfile(userId);
+  if (user) {
+    return user;
+  } else {
+    // Add to payload so payload can be used to create profile with one object
+    idTokenPayload.user_id = userId
+    return await createUserProfile(idTokenPayload);
+  }
 }
 
 export async function searchUser(query) {
