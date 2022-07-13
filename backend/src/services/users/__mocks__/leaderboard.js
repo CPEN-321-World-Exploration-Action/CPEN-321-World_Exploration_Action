@@ -34,18 +34,14 @@ export const mockExpireTime = 1657673071835;
 
 export const leaderboard = () => ({
   onReceiveUserScoreUpdatedMessage: async (message) => {
-    console.log(`onReceiveUserScoreUpdatedMessage mock called with ${message}`);
   },
   getGlobalLeaderboard: async () => {
-    console.log(`getGlobalLeaderboard mock called`);
     return mockGlobalLeaderboard;
   },
   getFriendLeaderboard: async (userId) => {
-    console.log(`getGlobalLeaderboard mock called with userId=${userId}`);
     return mockFriendLeaderboard;
   },
   subscribeUpdate: async (userId, fcmToken) => {
-    console.log(`subscribeUpdate mock called with userId=${userId} fcmToken=${fcmToken}`);
     return mockExpireTime;
   },
 });
