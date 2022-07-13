@@ -32,7 +32,7 @@ export const mockFriendLeaderboard = [
 
 export const mockExpireTime = 1657673071835;
 
-export const leaderboard = () => ({
+export const leaderboardMock = () => ({
   onReceiveUserScoreUpdatedMessage: async (message) => {
   },
   getGlobalLeaderboard: async () => {
@@ -46,4 +46,4 @@ export const leaderboard = () => ({
   },
 });
 
-export default leaderboard;
+export default leaderboardMock;
