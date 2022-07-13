@@ -2,7 +2,6 @@ import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
-  // TODO: Test
   await User.incrementTrophyScore(message.userId, message.trophyScore);
   messageManager.publishNewMessage({
     type: "user_score_updated",
@@ -25,20 +24,24 @@ export async function uploadFcmToken(userId, fcmToken) {
 }
 
 export async function loginWithGoogle(idToken) {
+  // TODO: insert logic from controller
+  // Return User
   // issue: what is token
 }
 
-export async function extractGoogleID(idToken) {
-  // issue: what is token
+export async function searchUser(query) {
+  return await User.searchUser(query);
 }
 
+export async function signOut(userId) {
+  console.log(`User ${userId} has signed out`);
+}
+
+// TODO: internal helper
 export async function createUserProfile(body) {
   return await User.create(body);
 }
 
-export async function getProfileImage(userID){
-  // issue: said to be determined later..
-}
 
 // dev functions
 export async function createUser(req, res){
@@ -56,11 +59,4 @@ export async function getAllUsers(){
 
 export async function deleteUser(user_id){
   return await User.findOneAndDelete({user_id:user_id}, {})
-}
-export async function signOut(){
-    // issue: should not be here?
-}
-
-export async function searchUser(query) {
-  return await User.searchUser(query);
 }
