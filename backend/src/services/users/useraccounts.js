@@ -1,8 +1,9 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
+import * as googleSignIn from "../data/external/googlesignin.external.js";
+import { BadRequestError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
-  // TODO: Test
   await User.incrementTrophyScore(message.userId, message.trophyScore);
   messageManager.publishNewMessage({
     type: "user_score_updated",
@@ -25,20 +26,36 @@ export async function uploadFcmToken(userId, fcmToken) {
 }
 
 export async function loginWithGoogle(idToken) {
-  // issue: what is token
+  let userId, idTokenPayload;
+  try {
+    ({userId, idTokenPayload} = await googleSignIn.verifyUser(idToken));
+  } catch (err) {
+    throw new BadRequestError(`Unable to verify the ID Token: ${idToken}`);
+  }
+
+  let user = await getUserProfile(userId);
+  if (user) {
+    return user;
+  } else {
+    // Add to payload so payload can be used to create profile with one object
+    idTokenPayload.user_id = userId
+    return await createUserProfile(idTokenPayload);
+  }
 }
 
-export async function extractGoogleID(idToken) {
-  // issue: what is token
+export async function searchUser(query) {
+  return await User.searchUser(query);
 }
 
+export async function signOut(userId) {
+  console.log(`User ${userId} has signed out`);
+}
+
+// TODO: internal helper
 export async function createUserProfile(body) {
   return await User.create(body);
 }
 
-export async function getProfileImage(userID){
-  // issue: said to be determined later..
-}
 
 // dev functions
 export async function createUser(req, res){
@@ -56,11 +73,4 @@ export async function getAllUsers(){
 
 export async function deleteUser(user_id){
   return await User.findOneAndDelete({user_id:user_id}, {})
-}
-export async function signOut(){
-    // issue: should not be here?
-}
-
-export async function searchUser(query) {
-  return await User.searchUser(query);
 }

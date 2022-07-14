@@ -7,9 +7,13 @@ const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be cl
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     console.log(user_id, user_latitude, user_longitude)
+
+    // TODO: I think these two db queries should be merged into one
     let uncollectedTrophyIDs = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
     // Require list of collected trophies to ensure we don't serve already collected trophies in Places.
     let collectedTrophyIDs = await TrophyUser.getUserCollectedTrophyIDs(user_id);  
+
+
     console.log(uncollectedTrophyIDs, collectedTrophyIDs)
 
     if (!uncollectedTrophyIDs){

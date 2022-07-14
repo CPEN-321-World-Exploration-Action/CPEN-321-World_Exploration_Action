@@ -35,9 +35,11 @@ export async function login(req, res){
 }
 
 export async function logout(req, res){
+  const userId = req.userId;
   if (req.session.userId){
     req.session.destroy();
   }
+  await userAccounts.signOut(userId);
   res.status(200).json({message: "Logged Out."})
 }
 

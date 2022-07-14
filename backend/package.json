@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon .",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "axios": "^0.27.2",
@@ -25,6 +25,10 @@
   },
   "devDependencies": {
     "eslint": "^8.18.0",
+    "jest": "^28.1.2",
     "nodemon": "^2.0.19"
+  },
+  "jest": {
+    "transform": {}
   }
 }
