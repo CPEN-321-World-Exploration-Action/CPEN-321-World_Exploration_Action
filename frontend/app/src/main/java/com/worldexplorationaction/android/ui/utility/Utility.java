@@ -67,4 +67,13 @@ public class Utility {
         location2.setLongitude(latLng.longitude);
         return location.distanceTo(location2);
     }
+
+    public static boolean isRunningUiTest() {
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }
