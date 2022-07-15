@@ -59,17 +59,21 @@ const userSchema = new Schema(
       async mutuallyAddFriend(user1Id, user2Id) {
         await this.updateOne(
           { user_id: user1Id },
-          { $push: { friends: user2Id } }
+          { $addToSet: { friends: user2Id } }
         ).exec();
         await this.updateOne(
           { user_id: user2Id },
-          { $push: { friends: user1Id } }
+          { $addToSet: { friends: user1Id } }
         ).exec();
       },
-      deleteFriend(userId, friendId) {
-        return this.updateOne(
-          { user_id: userId },
-          { $pull: { friends: friendId } }
+      async mutuallyDeleteFriend(user1Id, user2Id) {
+        await this.updateOne(
+          { user_id: user1Id },
+          { $pullAll: { friends: [user2Id] } }
+        ).exec();
+        await this.updateOne(
+          { user_id: user2Id },
+          { $pullAll: { friends: [user1Id] } }
         ).exec();
       },
     },
