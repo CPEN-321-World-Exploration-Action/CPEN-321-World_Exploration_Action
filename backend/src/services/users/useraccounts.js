@@ -1,6 +1,6 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
-import * as googleSignIn from "../data/external/googlesignin.external.js";
+import * as googleSignIn from "../../data/external/googlesignin.external.js";
 import { BadRequestError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
