@@ -85,6 +85,8 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
                 actionTextView.setVisibility(View.VISIBLE);
                 actionTextView.setText(R.string.friends_action_review_request);
                 break;
+            default:
+                throw new IllegalStateException("Unknown mode: " + mode);
         }
     }
 
