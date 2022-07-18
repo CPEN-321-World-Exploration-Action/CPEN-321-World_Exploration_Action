@@ -31,7 +31,6 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private static final String TAG = TrophyDetailsActivity.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
-    private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     GridLayout trophyGrid;
     private TrophyDetailsBinding binding;

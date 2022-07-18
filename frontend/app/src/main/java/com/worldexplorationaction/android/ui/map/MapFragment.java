@@ -44,13 +44,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private FragmentMapBinding binding;
     private GoogleMapsFragment googleMapsFragment;
     private GoogleMap googleMap;
-    private Collection<Marker> markers;
+//    private Collection<Marker> markers;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userLocation = new UserLocation(this);
-        markers = new LinkedList<>();
+//        markers = new LinkedList<>();
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel.getDisplayTrophies().observe(getViewLifecycleOwner(), this::onDisplayTrophiesUpdate);
 
