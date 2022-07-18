@@ -20,10 +20,6 @@ export async function collectTrophy(userId, trophyId) {
 
   const message = buildTrophyCollectedMessage(userId, trophyId, trophyScore);
   messageManager.publishNewMessage(message);
-
-  return {
-    success: true,
-  };
 }
 
 function buildTrophyCollectedMessage(userId, trophyId, trophyScore) {

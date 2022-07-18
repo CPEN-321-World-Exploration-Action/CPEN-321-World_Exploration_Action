@@ -3,58 +3,47 @@ import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 export async function collectTrophy(req, res) {
   const {userId:user_id, trophyId} = req.params
-  const result = await trophyCollection.collectTrophy(user_id, trophyId);
-  if (result.success) {
-    res.status(200).send();
-  } else {
-    res.status(400).json({
-      message: result.message,
-    });
-  }
+  await trophyCollection.collectTrophy(user_id, trophyId);
+  res.status(200).send();
 }
 
 export async function getTrophiesUser(req, res) {
-  try {
-    const user_id = req.userId;
-    const { user_latitude, user_longitude } = req.query;
+  const user_id = req.userId;
+  const { user_latitude, user_longitude } = req.query;
 
-    if (!user_id) {
-      // This should never happen
-      return res.status(400).json({ message: "No user_id provided." });
-    }
-    if (!user_latitude || !user_longitude) {
-      return res
-        .status(400)
-        .json({ message: "User latitude and longitude are required." });
-    }
-
-    const trophyUser = await trophyDetail.getTrophyUser(user_id);
-
-    if (!trophyUser) {
-      return res
-        .status(401)
-        .json({
-          message: `User with id ${user_id} not found in TrophyUser database`,
-        });
-    }
-
-    const trophies = await trophyDetail.getTrophiesUser(
-      user_id,
-      user_latitude,
-      user_longitude
-    );
-    if (!trophies) {
-      // trophies should only be null if Places API call is erroneous or empty
-      return res
-        .status(404)
-        .json({ message: `No Trophies found near user ${user_id}` });
-    }
-
-    res.status(200).json(trophies);
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: error });
+  if (!user_id) {
+    // This should never happen
+    return res.status(400).json({ message: "No user_id provided." });
   }
+  if (!user_latitude || !user_longitude) {
+    return res
+      .status(400)
+      .json({ message: "User latitude and longitude are required." });
+  }
+
+  const trophyUser = await trophyDetail.getTrophyUser(user_id);
+
+  if (!trophyUser) {
+    return res
+      .status(401)
+      .json({
+        message: `User with id ${user_id} not found in TrophyUser database`,
+      });
+  }
+
+  const trophies = await trophyDetail.getTrophiesUser(
+    user_id,
+    user_latitude,
+    user_longitude
+  );
+  if (!trophies) {
+    // trophies should only be null if Places API call is erroneous or empty
+    return res
+      .status(404)
+      .json({ message: `No Trophies found near user ${user_id}` });
+  }
+
+  res.status(200).json(trophies);
 }
 
 
