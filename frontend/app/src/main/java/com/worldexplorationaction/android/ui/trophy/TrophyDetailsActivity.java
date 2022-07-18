@@ -126,7 +126,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    private void onTrophyActionButtonClicked(View v) {
+    private void onTrophyActionButtonClicked(View unused) {
         if (!userAtLocation) {
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
