@@ -186,8 +186,6 @@ public class TrophyDetailsActivity extends AppCompatActivity {
             int index = i;
             if (i < photos.size()) {
                 String url = photos.get(i).getPhotoUrl();
-                String id = photos.get(i).getPhotoId();
-                int likes = photos.get(i).getNumberOfLikes();
                 Glide.with(this)
                         .load(url)
                         .placeholder(R.drawable.ic_default_avatar_35dp)
