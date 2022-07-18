@@ -97,7 +97,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     }
 
     private void onLeaderboardTypeUpdate(LeaderboardType newType) {
-        Button active, inactive;
+        Button active;
+        Button inactive;
         switch (newType) {
             case GLOBAL:
                 active = globalButton;
