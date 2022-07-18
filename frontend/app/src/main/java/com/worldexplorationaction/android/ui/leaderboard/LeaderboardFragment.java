@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.databinding.FragmentLeaderboardBinding;
 import com.worldexplorationaction.android.ui.userlist.UserListView;
-import com.worldexplorationaction.android.ui.utility.Utils;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Objects;
 
@@ -57,7 +57,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         );
 
         View root = binding.getRoot();
-        root.setPadding(0, Utils.getStatusBarHeight(getResources()), 0, 0);
+        root.setPadding(0, CommonUtils.getStatusBarHeight(getResources()), 0, 0);
         return root;
     }
 

@@ -22,7 +22,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
-import com.worldexplorationaction.android.ui.utility.Utils;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.function.BiConsumer;
 
@@ -88,7 +88,7 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
     }
 
     public void signIn(AppCompatActivity activity, boolean checkLastAccount) {
-        if (Utils.isRunningUiTest()) {
+        if (CommonUtils.isRunningUiTest()) {
             Log.w(TAG, "Skip login in UI tests.");
             signedInUserId = TEST_USER_ID;
             onSignInResultListener.accept(true, null);

@@ -13,9 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Utils {
-    private static final String TAG = Utils.class.getSimpleName();
-
+public class CommonUtils {
     /**
      * Get the height of the status bar in an activity.
      * Source: https://stackoverflow.com/a/3356263

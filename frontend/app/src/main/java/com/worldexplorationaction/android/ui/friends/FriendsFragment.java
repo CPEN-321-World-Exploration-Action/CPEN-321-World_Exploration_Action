@@ -19,7 +19,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentFriendsBinding;
 import com.worldexplorationaction.android.ui.profile.ProfileActivity;
-import com.worldexplorationaction.android.ui.utility.Utils;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Objects;
 
@@ -45,7 +45,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         binding.friendsSearchEditText.addTextChangedListener(this);
 
         View root = binding.getRoot();
-        root.setPadding(0, Utils.getStatusBarHeight(getResources()), 0, 0);
+        root.setPadding(0, CommonUtils.getStatusBarHeight(getResources()), 0, 0);
         return root;
     }
 
