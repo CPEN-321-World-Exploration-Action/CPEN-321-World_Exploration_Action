@@ -99,7 +99,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
-    private void onSortPhotoClicked(View v) {
+    private void onSortPhotoClicked(View unused) {
         new AlertDialog.Builder(this)
                 .setTitle("Sort By")
                 .setItems(new CharSequence[]{
@@ -113,7 +113,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void onMapsButtonClicked(View v) {
+    private void onMapsButtonClicked(View unused) {
         Log.d(TAG, "onMapsButtonClicked");
         Uri uri = Uri.parse("https://www.google.com/maps/search/")
                 .buildUpon()

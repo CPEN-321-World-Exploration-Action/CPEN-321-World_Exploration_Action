@@ -12,7 +12,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.worldexplorationaction.android.R;
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.Utils;
 
 import java.util.Objects;
 
@@ -32,9 +32,9 @@ public class TrophyBitmaps {
         int silver = resources.getColor(R.color.map_trophy_silver, null);
         int bronze = resources.getColor(R.color.map_trophy_bronze, null);
 
-        Bitmap goldBitmap = Utility.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(gold, PorterDuff.Mode.SRC_IN));
-        Bitmap silverBitmap = Utility.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(silver, PorterDuff.Mode.SRC_IN));
-        Bitmap bronzeBitmap = Utility.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(bronze, PorterDuff.Mode.SRC_IN));
+        Bitmap goldBitmap = Utils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(gold, PorterDuff.Mode.SRC_IN));
+        Bitmap silverBitmap = Utils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(silver, PorterDuff.Mode.SRC_IN));
+        Bitmap bronzeBitmap = Utils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(bronze, PorterDuff.Mode.SRC_IN));
 
         goldBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(goldBitmap);
         silverBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(silverBitmap);
