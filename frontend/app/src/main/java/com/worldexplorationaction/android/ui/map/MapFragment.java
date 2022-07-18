@@ -29,14 +29,12 @@ import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener {
     private static final String TAG = MapFragment.class.getSimpleName();
-    public static String trophyTitle = "";
     private static CameraPosition lastCameraPosition;
     private MapViewModel mapViewModel;
     private TrophyBitmaps trophyBitmaps;
