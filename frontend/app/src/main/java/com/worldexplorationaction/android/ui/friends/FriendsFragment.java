@@ -63,10 +63,12 @@ public class FriendsFragment extends Fragment implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // Do nothing
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // Do nothing
     }
 
     @Override
