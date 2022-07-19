@@ -2,7 +2,7 @@ import * as trophyCollection from "../services/trophies/trophycollection.js";
 import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 export async function collectTrophy(req, res) {
-  const {userId, trophyId} = req.params;
+  const { userId, trophyId } = req.params;
   await trophyCollection.collectTrophy(userId, trophyId);
   res.status(200).send();
 }
