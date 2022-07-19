@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
       default:
         cb(new Error("Unknown mimetype: " + file.mimetype), null);
     }
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1000000000);
     cb(
       null,
       req.params["trophyId"] +
