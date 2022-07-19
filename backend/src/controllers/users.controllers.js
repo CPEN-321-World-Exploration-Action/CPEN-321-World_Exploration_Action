@@ -194,7 +194,7 @@ export async function getAllUsers(req, res){
 
 export async function deleteUser(req, res){
 
-  const {userID: user_id} = req.params
+  const {userID: user_id} = req.params;
   try{
     // Return deleted user for testing purposes
     const user = await userAccounts.deleteUser(user_id)
