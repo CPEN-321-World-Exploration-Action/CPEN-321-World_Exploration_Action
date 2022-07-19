@@ -181,7 +181,7 @@ export async function computeMinTrophyDistance(user_latitude, user_longitude, tr
 export function haversineDistance(lat1, lon1, lat2, lon2){
     // The Haversine formula computes the great circle distance between two points
 
-    const R = 6.371e6; // metres - radius of Earth
+    const R = 6371000; // metres - radius of Earth
     const phi_1 = lat1 * Math.PI/180; // φ, λ in radians
     const phi_2 = lat2 * Math.PI/180;
     const dphi = (lat2-lat1) * Math.PI/180;
