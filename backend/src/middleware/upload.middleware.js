@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
       default:
         cb(new Error("Unknown mimetype: " + file.mimetype), null);
     }
-    const billion = 1000000000
+    const billion = BigInt(1e9)
     const unqiueNumber = Math.round(Math.random()*billion);
     const uniqueSuffix = Date.now() + "-" + unqiueNumber;
     cb(
