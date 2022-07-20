@@ -190,7 +190,7 @@ export async function getAllUsers(req, res) {
 }
 
 export async function deleteUser(req, res) {
-  const { user_id } = req.params;
+  const user_id = req.params.user_id;
   try {
     // Return deleted user for testing purposes
     const user = await userAccounts.deleteUser(user_id);

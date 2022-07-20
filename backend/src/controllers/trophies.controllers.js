@@ -2,7 +2,8 @@ import * as trophyCollection from "../services/trophies/trophycollection.js";
 import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 export async function collectTrophy(req, res) {
-  const { userId, trophyId } = req.params;
+  const userId = req.params.userId;
+  const trophyId = req.params.trophyId;
   await trophyCollection.collectTrophy(userId, trophyId);
   res.status(200).send();
 }
@@ -48,7 +49,7 @@ export async function getTrophiesUser(req, res) {
 
 
 export async function getTrophyDetails(req, res) {
-  const { trophyId } = req.params;
+  const trophyId = req.params.trophyId;
   const trophies = await trophyDetail.getTrophyDetails(trophyId);
   if (!trophies || trophies.length === 0) {
     return res
