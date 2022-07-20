@@ -95,31 +95,10 @@ const trophySchemaUser = new Schema(
   {
     statics: {
       async removeUncollectedTrophy(userId, trophyId) {
-        /*
-        var user = await this.findOne({ user_id: userId }).exec();
-        user.uncollectedTrophies = user.uncollectedTrophies.filter(function (
-          value,
-          index,
-          arr
-        ) {
-          return value !== trophyId;
-        });
-        user.save();
-        */
-        this.findOneAndUpdate(
+        await this.findOneAndUpdate(
           { user_id: userId },
-          {
-            $pullAll: {
-              uncollectedTrophies: trophyId
-            },
-          },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-            }
-          }
-        );
+          { $pullAll: { uncollectedTrophies: [trophyId] } }
+        ).exec();
       },
       async addCollectedTrophy(userId, trophyId) {
         /*
@@ -129,7 +108,7 @@ const trophySchemaUser = new Schema(
         */
         this.update(
           { user_id: userId },
-          { $addToSet: { collectedTrophies: trophyId} },
+          { $addToSet: { collectedTrophies: trophyId } },
           function (error, success) {
             if (error) {
               console.log(error);
@@ -160,10 +139,10 @@ const trophySchemaUser = new Schema(
         const user = await this.findOrCreate(userID);
         return user.uncollectedTrophies;
       },
-      async getUserCollectedTrophyIDs(userID){
+      async getUserCollectedTrophyIDs(userID) {
         const user = await this.findOrCreate(userID);
         return user.collectedTrophies;
-      }
+      },
     },
     methods: {},
   }
