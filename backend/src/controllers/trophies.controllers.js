@@ -57,17 +57,13 @@ export async function getTrophyDetails(req, res) {
 }
 
 export async function getTrophyUser(req, res) {
-  const { user_id } = req.params;
+  const user_id = req.params;
   return await trophyDetail.getTrophyUser(user_id);
 }
 
 export async function createTrophyUser(req, res) {
-  try {
-    const { user_id } = req.params;
+    const user_id = req.params;
     return await trophyDetail.createTrophyUser({ user_id });
-  } catch (error) {
-    return Error("Internal Server Error");
-  }
 }
 // Dev Functions
 export async function getAllTrophies(req, res) {
