@@ -7,7 +7,7 @@ import * as userControllers from "../controllers/users.controllers.js";
 const usersRouter = express.Router();
 
 //usersRouter.post('/create', [nocache(), auth], userControllers.createProfile);
-usersRouter.post('/accounts/login', auth, userControllers.login);
+usersRouter.post('/accounts/login', userControllers.login);
 usersRouter.post('/accounts/logout', auth, userControllers.logout);
 usersRouter.put("/accounts/fcm-token/:fcmToken", auth, userControllers.uploadFcmToken);
 
