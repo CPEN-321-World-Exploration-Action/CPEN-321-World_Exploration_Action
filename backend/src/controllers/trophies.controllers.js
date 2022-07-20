@@ -1,5 +1,6 @@
 import * as trophyCollection from "../services/trophies/trophycollection.js";
 import * as trophyDetail from "../services/trophies/trophydetails.js";
+import { BadRequestError } from "../utils/errors.js";
 
 export async function collectTrophy(req, res) {
   const userId = req.params.userId;
@@ -10,7 +11,8 @@ export async function collectTrophy(req, res) {
 
 export async function getTrophiesUser(req, res) {
   const user_id = req.userId;
-  const { user_latitude, user_longitude } = req.query;
+  const user_latitude = req.query.user_latitude;
+  const user_longitude = req.query.user_longitude;
 
   if (!user_id) {
     // This should never happen
@@ -56,38 +58,42 @@ export async function getTrophyDetails(req, res) {
   res.status(200).json(trophies[0]);
 }
 
-export async function getTrophyUser(req, res) {
-  const user_id = req.params.user_id;
-  return await trophyDetail.getTrophyUser(user_id);
+export async function getTrophyUser(req, res){
+  const userId = req.params.user_id;
+  if (!userId) {
+    throw new BadRequestError("Missing query: userId");
+  }
+  return await trophyDetail.getTrophyUser(userId);
 }
 
 export async function createTrophyUser(req, res) {
+<<<<<<< HEAD
     const user_id = req.params.user_id;
     return await trophyDetail.createTrophyUser({ user_id });
+=======
+  const userId = req.params.user_id;
+  if (!userId) {
+    throw new BadRequestError("Missing query: userId");
+  }
+  return await trophyDetail.createTrophyUser({ user_id });
+>>>>>>> 132ac7a67b483f23e1ef42bd3faf0203c5baff29
 }
+
 // Dev Functions
 export async function getAllTrophies(req, res) {
-  try {
-    const trophies = await trophyDetail.getAllTrophies();
-    if (!trophies) {
-      return res.status(404).json({ message: "No Trophies Found" });
-    }
-    res.status(200).json({ trophies });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  const trophies = await trophyDetail.getAllTrophies();
+  if (!trophies) {
+    return res.status(404).json({ message: "No Trophies Found" });
   }
+  res.status(200).json({ trophies });
 }
 
 export async function getAllTrophiesUsers(req, res) {
-  try {
-    const trophies = await trophyDetail.getAllTrophiesUsers();
-    if (!trophies) {
-      return res.status(404).json({ message: "No Trophies Found" });
-    }
-    res.status(200).json({ trophies });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  const trophies = await trophyDetail.getAllTrophiesUsers();
+  if (!trophies) {
+    return res.status(404).json({ message: "No Trophies Found" });
   }
+  res.status(200).json({ trophies });
 }
 
 export async function createTrophy(req, res) {
