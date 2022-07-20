@@ -73,7 +73,7 @@ export async function createTrophyUser(body){
 }
 
 export async function getTrophyUser(user_id){
-    return await TrophyUser.findOne({user_id:user_id})
+    return await TrophyUser.findOrCreate(user_id);
 }
 
 export async function deleteTrophyUser(user_id){
