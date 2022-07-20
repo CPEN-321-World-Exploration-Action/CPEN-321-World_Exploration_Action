@@ -101,39 +101,31 @@ export async function createTrophy(req, res) {
 }
 
 export async function deleteTrophy(req, res) {
-  try {
-    const { id: trophyID } = req.params;
-    const trophy = await trophyDetail.deleteTrophy(trophyID);
-    if (!trophy) {
-      return res
-        .status(404)
-        .json({ message: `Could not find Trophy with id: ${trophyID}` });
-    }
-    // Return info about deleted trophy only for testing.
-    res.status(200).json({ trophy });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  const trophyID = req.params.id;
+  const trophy = await trophyDetail.deleteTrophy(trophyID);
+  if (!trophy) {
+    return res
+      .status(404)
+      .json({ message: `Could not find Trophy with id: ${trophyID}` });
   }
+  // Return info about deleted trophy only for testing.
+  res.status(200).json({ trophy });
 }
 
 export async function updateTrophy(req, res) {
-  try {
-    const { id: trophyID } = req.params;
+  const trophyID = req.params.id;
 
-    // By default this will return the task before being updated
-    // It will update it correctly, just return the old trophy here.
-    // Also validators won't run without passing in the options object
-    const trophy = await trophyDetail.updateTrophy(trophyID, req.body);
+  // By default this will return the task before being updated
+  // It will update it correctly, just return the old trophy here.
+  // Also validators won't run without passing in the options object
+  const trophy = await trophyDetail.updateTrophy(trophyID, req.body);
 
-    if (!trophy) {
-      return res
-        .status(404)
-        .json({ message: `No trophy with id: ${trophyID}` });
-    }
-    res.status(200).json({ trophy });
-  } catch (error) {
-    res.status(500).json({ message: error });
+  if (!trophy) {
+    return res
+      .status(404)
+      .json({ message: `No trophy with id: ${trophyID}` });
   }
+  res.status(200).json({ trophy });
 }
 
 export async function getUserCollectedTrophy(req, res) {
