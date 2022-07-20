@@ -137,26 +137,31 @@ const trophySchemaUser = new Schema(
           }
         );
       },
-      async storeTrophies(userID, trophies) {
-        var user = await this.findOne({ user_id: userID }).exec();
-        for (let value of trophies) {
-          user.collectedTrophies.push(value);
+      async findOrCreate(userID) {
+        let user = await this.findOne({ user_id: userID }).exec();
+        if (!user) {
+          user = await this.create({ user_id: userID });
         }
-        user.save();
+        return user;
       },
+      // not used
+      // async storeTrophies(userID, trophies) {
+      //   var user = await this.findOne({ user_id: userID }).exec();
+      //   for (let value of trophies) {
+      //     user.collectedTrophies.push(value);
+      //   }
+      //   user.save();
+      // },
       async getUsersTags(userID) {
+        // TODO: FIXME: this might crash
         return await this.findOne({ user_id: userID }).exec().trophyTags;
       },
       async getUserUncollectedTrophyIDs(userID) {
-        var user = await this.findOne({ user_id: userID }).exec();
-        return (await user).uncollectedTrophies;
+        const user = await findOrCreate(userID);
+        return user.uncollectedTrophies;
       },
       async getUserCollectedTrophyIDs(userID){
-        var user = await this.findOne({ user_id: userID }).exec();
-        return (await user).collectedTrophies;
-      },
-      async getTrophyCollected(userID) {
-        var user = await this.findOne({ user_id: userID }).exec();
+        const user = await findOrCreate(userID);
         return user.collectedTrophies;
       }
     },
