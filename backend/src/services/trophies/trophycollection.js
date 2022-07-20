@@ -23,10 +23,11 @@ export async function collectTrophy(userId, trophyId) {
 }
 
 function buildTrophyCollectedMessage(userId, trophyId, trophyScore) {
-  return {
+  const message = {
     type: "trophy_collected",
     userId,
     trophyId,
     trophyScore,
   };
+  return message;
 }
