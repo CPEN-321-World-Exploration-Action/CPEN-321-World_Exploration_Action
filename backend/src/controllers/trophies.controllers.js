@@ -92,12 +92,8 @@ export async function getAllTrophiesUsers(req, res) {
 }
 
 export async function createTrophy(req, res) {
-  try {
-    const trophy = await trophyDetail.createTrophy(req);
-    res.status(201).json({ trophy });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
+  const trophy = await trophyDetail.createTrophy(req);
+  res.status(201).json({ trophy });
 }
 
 export async function deleteTrophy(req, res) {
