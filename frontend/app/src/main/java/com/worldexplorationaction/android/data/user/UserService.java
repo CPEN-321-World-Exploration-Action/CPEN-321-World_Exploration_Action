@@ -18,7 +18,7 @@ public interface UserService {
     }
 
     @POST("accounts/login")
-    Call<String> login(@Header("Authorization") String tokenId);
+    Call<UserProfile> login(@Header("Authorization") String tokenId);
 
     @POST("accounts/logout")
     Call<Void> logout();
