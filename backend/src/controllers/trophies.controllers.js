@@ -25,11 +25,9 @@ export async function getTrophiesUser(req, res) {
   const trophyUser = await trophyDetail.getTrophyUser(user_id);
 
   if (!trophyUser) {
-    return res
-      .status(401)
-      .json({
-        message: `User with id ${user_id} not found in TrophyUser database`,
-      });
+    return res.status(401).json({
+      message: `User with id ${user_id} not found in TrophyUser database`,
+    });
   }
 
   const trophies = await trophyDetail.getTrophiesUser(
@@ -47,7 +45,6 @@ export async function getTrophiesUser(req, res) {
   res.status(200).json(trophies);
 }
 
-
 export async function getTrophyDetails(req, res) {
   const trophyId = req.params.trophyId;
   const trophies = await trophyDetail.getTrophyDetails(trophyId);
@@ -59,21 +56,17 @@ export async function getTrophyDetails(req, res) {
   res.status(200).json(trophies[0]);
 }
 
-export async function getTrophyUser(req, res){
-  try{
-    const {user_id} = req.params;
-    return await trophyDetail.getTrophyUser(user_id)
-  }catch (error){
-    return Error('Internal Server Error')
-  }
+export async function getTrophyUser(req, res) {
+  const { user_id } = req.params;
+  return await trophyDetail.getTrophyUser(user_id);
 }
 
 export async function createTrophyUser(req, res) {
   try {
-    const {user_id} = req.params;
-    return await trophyDetail.createTrophyUser({user_id});
+    const { user_id } = req.params;
+    return await trophyDetail.createTrophyUser({ user_id });
   } catch (error) {
-   return Error('Internal Server Error')
+    return Error("Internal Server Error");
   }
 }
 // Dev Functions
@@ -109,7 +102,6 @@ export async function createTrophy(req, res) {
     res.status(500).json({ message: error });
   }
 }
-
 
 export async function deleteTrophy(req, res) {
   try {
