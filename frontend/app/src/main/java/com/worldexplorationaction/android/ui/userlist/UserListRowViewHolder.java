@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Locale;
 
@@ -85,6 +85,8 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
                 actionTextView.setVisibility(View.VISIBLE);
                 actionTextView.setText(R.string.friends_action_review_request);
                 break;
+            default:
+                throw new IllegalStateException("Unknown mode: " + mode);
         }
     }
 
@@ -134,8 +136,8 @@ class UserListRowViewHolder extends RecyclerView.ViewHolder {
     private Drawable getProfileImagePlaceholder() {
         CircularProgressDrawable drawable = new CircularProgressDrawable(context);
         drawable.setColorSchemeColors(context.getColor(R.color.purple_700));
-        drawable.setCenterRadius(Utility.dpToPx(context.getResources(), 9.0f));
-        drawable.setStrokeWidth(Utility.dpToPx(context.getResources(), 1.5f));
+        drawable.setCenterRadius(CommonUtils.dpToPx(context.getResources(), 9.0f));
+        drawable.setStrokeWidth(CommonUtils.dpToPx(context.getResources(), 1.5f));
         drawable.setStrokeCap(Paint.Cap.ROUND);
         drawable.start();
         return drawable;

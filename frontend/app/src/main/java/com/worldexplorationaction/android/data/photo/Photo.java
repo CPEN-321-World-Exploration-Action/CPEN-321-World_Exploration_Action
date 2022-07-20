@@ -3,7 +3,7 @@ package com.worldexplorationaction.android.data.photo;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -79,7 +79,7 @@ public class Photo implements Serializable {
     }
 
     public String getPhotoUrl() {
-        return RetrofitUtility.BASE_URL + "photos/storing/" + photoId;
+        return RetrofitUtils.BASE_URL + "photos/storing/" + photoId;
     }
 
     public Boolean getUserLiked() {
