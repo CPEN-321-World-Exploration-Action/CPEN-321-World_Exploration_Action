@@ -67,16 +67,11 @@ export async function getTrophyUser(req, res){
 }
 
 export async function createTrophyUser(req, res) {
-<<<<<<< HEAD
-    const user_id = req.params.user_id;
-    return await trophyDetail.createTrophyUser({ user_id });
-=======
   const userId = req.params.user_id;
   if (!userId) {
     throw new BadRequestError("Missing query: userId");
   }
   return await trophyDetail.createTrophyUser({ user_id });
->>>>>>> 132ac7a67b483f23e1ef42bd3faf0203c5baff29
 }
 
 // Dev Functions
