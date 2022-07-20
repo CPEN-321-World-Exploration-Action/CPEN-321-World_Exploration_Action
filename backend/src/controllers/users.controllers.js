@@ -6,8 +6,8 @@ import * as friends from "../services/users/friends.js";
 export async function login(req, res) {
   const idToken = req.header("Authorization");
 
-  const userProfile = userAccounts.loginWithGoogle(idToken);
-  req.session.userId = userProfile.user_id
+  const userProfile = await userAccounts.loginWithGoogle(idToken);
+  req.session.userId = userProfile.user_id;
   
   // After auth middleware, we have a session with userId.
   // const user_id = req.session.userId;
