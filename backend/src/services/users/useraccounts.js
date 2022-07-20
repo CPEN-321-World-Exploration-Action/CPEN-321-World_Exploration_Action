@@ -58,13 +58,9 @@ export async function createUserProfile(body) {
 
 
 // dev functions
-export async function createUser(req, res){
-  try{
-    const user = await User.create(req.body)
-    res.status(201).json({user})
-  }catch (error){
-    res.status(500).json({message: error})
-  }
+export async function createUser(req, res) {
+  const user = await User.create(req.body);
+  res.status(201).json({ user });
 }
 
 export async function getAllUsers(){

@@ -14,7 +14,9 @@ const storage = multer.diskStorage({
       default:
         cb(new Error("Unknown mimetype: " + file.mimetype), null);
     }
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    // const billion = BigInt(1e9)
+    // const unqiueNumber = Math.round(Math.random()*billion);
+    const uniqueSuffix = Date.now() + "-" + generateRandomString(12);
     cb(
       null,
       req.params["trophyId"] +
@@ -29,3 +31,12 @@ const storage = multer.diskStorage({
 });
 
 export default multer({ storage: storage });
+
+function generateRandomString(length){
+    var result = '';
+    for (var i=0; i < length; i++){
+      const randomUnicode = Math.floor(Math.random() * (90 - 65 + 1) + 65) // random unicode between 65 (A) and 90 (Z)
+      result += String.fromCharCode(randomUnicode);
+    }
+    return result
+}

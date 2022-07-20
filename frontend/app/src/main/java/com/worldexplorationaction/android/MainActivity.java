@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
                 case LEGACY:
                     Log.d(TAG, "The legacy version of the renderer is used.");
                     break;
+                default:
+                    Log.d(TAG, "An unknown version of the renderer is used.");
+                    break;
             }
         });
     }

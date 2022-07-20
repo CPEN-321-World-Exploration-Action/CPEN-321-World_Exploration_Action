@@ -19,7 +19,7 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserProfile;
 import com.worldexplorationaction.android.databinding.FragmentFriendsBinding;
 import com.worldexplorationaction.android.ui.profile.ProfileActivity;
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Objects;
 
@@ -45,7 +45,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
         binding.friendsSearchEditText.addTextChangedListener(this);
 
         View root = binding.getRoot();
-        root.setPadding(0, Utility.getStatusBarHeight(getResources()), 0, 0);
+        root.setPadding(0, CommonUtils.getStatusBarHeight(getResources()), 0, 0);
         return root;
     }
 
@@ -63,10 +63,12 @@ public class FriendsFragment extends Fragment implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        // Do nothing
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // Do nothing
     }
 
     @Override
@@ -111,6 +113,7 @@ public class FriendsFragment extends Fragment implements TextWatcher {
                 break;
             default:
                 Log.e(TAG, "User of unknown mode is click");
+                break;
         }
     }
 

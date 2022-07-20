@@ -3,6 +3,7 @@ package com.worldexplorationaction.android.ui.trophy;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +56,8 @@ public class EvaluatePhotoActivity extends AppCompatActivity {
         binding.number.setText(String.valueOf(photo.getNumberOfLikes()));
 
         binding.likeButton.setOnClickListener(v -> {
+            Log.d(TAG, "likeButton clicked");
+
             viewModel.likePhoto(photo.getPhotoId());
 
             if (userLiked) {

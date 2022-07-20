@@ -3,10 +3,7 @@ import { Photo } from "../../data/db/photo.db.js";
 export async function userLikePhoto(userID, picID) {
   const photo = await Photo.findPhoto(picID);
   if (!photo) {
-    return {
-      code: 404,
-      message: "Cannot find the photo",
-    };
+    return;
   }
   if (photo.likedUsers.includes(userID)) {
     await Photo.userUnlikePhoto(userID, picID);

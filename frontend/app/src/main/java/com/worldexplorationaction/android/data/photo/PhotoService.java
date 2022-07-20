@@ -1,6 +1,6 @@
 package com.worldexplorationaction.android.data.photo;
 
-import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 
 import java.util.List;
 
@@ -34,6 +34,6 @@ public interface PhotoService {
     Call<ResponseBody> uploadPhoto(@Path("userId") String userId, @Path("trophyId") String trophyId, @Part MultipartBody.Part multipartImage);
 
     class Holder {
-        private static final PhotoService instance = RetrofitUtility.getRetrofit("photos/").create(PhotoService.class);
+        private static final PhotoService instance = RetrofitUtils.getRetrofit("photos/").create(PhotoService.class);
     }
 }

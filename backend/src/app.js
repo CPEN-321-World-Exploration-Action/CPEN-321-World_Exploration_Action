@@ -47,14 +47,9 @@ app.use((err, req, res, next) => {
 });
 
 async function run() {
-  try {
-    console.log("Connecting to the database");
-    await mongoose.connect(process.env.dbURI ?? defaultDbUri);
-    console.log("Successfully connected to the database");
-  } catch (err) {
-    console.log("Failed to connect to the database", err);
-    return;
-  }
+  console.log("Connecting to the database");
+  await mongoose.connect(process.env.dbURI ?? defaultDbUri);
+  console.log("Successfully connected to the database");
 
   try {
     var server = app.listen(8081, (req, res) => {

@@ -191,7 +191,7 @@ public class UserLocation implements LocationSource {
     /**
      * Called by the {@link #permissionsRequestLauncher}
      */
-    private void permissionsRequestActivityCallback(Map<String, Boolean> result) {
+    private void permissionsRequestActivityCallback(Map<String, Boolean> unused) {
         if (isPermissionGranted()) {
             Log.i(TAG, "Permissions granted by user");
             tryRequestingLocationUpdates();

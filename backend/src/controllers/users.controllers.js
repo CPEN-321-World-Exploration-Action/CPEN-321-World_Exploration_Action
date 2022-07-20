@@ -3,44 +3,46 @@ import * as trophyControllers from "../controllers/trophies.controllers.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
-export async function login(req, res){
-  // After auth middleware, we have a session with userId. 
-  const user_id = req.session.userId
-  req.params.user_id = user_id // Required to interface with trophyControllers.
-  req.session.save()
+export async function login(req, res) {
+  // After auth middleware, we have a session with userId.
+  const user_id = req.session.userId;
+  req.params.user_id = user_id; // Required to interface with trophyControllers.
+  req.session.save();
 
-  try{
-    let user = await userAccounts.getUserProfile(user_id)
-    // let trophyUser = await trophyDetail.getTrophyUser(userId) 
-    let trophyUser = await trophyControllers.getTrophyUser(req, res)
-    console.log(trophyUser)
-    if (!user){
-      req.payload.user_id = user_id // Add to payload so payload can be used to create profile with one object
-      console.log(`User does not exist. Creating User with id: ${user_id}`)
-      user = await userAccounts.createUserProfile(req.payload)
+  try {
+    let user = await userAccounts.getUserProfile(user_id);
+    // let trophyUser = await trophyDetail.getTrophyUser(userId)
+    let trophyUser = await trophyControllers.getTrophyUser(req, res);
+    console.log(trophyUser);
+    if (!user) {
+      req.payload.user_id = user_id; // Add to payload so payload can be used to create profile with one object
+      console.log(`User does not exist. Creating User with id: ${user_id}`);
+      user = await userAccounts.createUserProfile(req.payload);
       //Using newly created account, we also need to create a TrophyUser document
-      trophyUser = await trophyControllers.createTrophyUser(req, res)
+      trophyUser = await trophyControllers.createTrophyUser(req, res);
     }
-    if (!trophyUser){
+    if (!trophyUser) {
       // If user!=null then trophyUser should never be null either unless table has been dropped.
-      console.log(`User with id ${user_id} exists in the user database but not in the Trophy database. Creating New Entry`)
-      trophyUser = await trophyControllers.createTrophyUser(req, res)
+      console.log(
+        `User with id ${user_id} exists in the user database but not in the Trophy database. Creating New Entry`
+      );
+      trophyUser = await trophyControllers.createTrophyUser(req, res);
       // return res.status(500).json({message:`User with id ${user_id} exists in the user database but not in the Trophy database`})
     }
-    res.status(201).json(user.user_id)
-  } catch (error){
-    console.log(error)
-    res.status(500).json({message: error})
+    res.status(201).json(user.user_id);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
   }
 }
 
-export async function logout(req, res){
+export async function logout(req, res) {
   const userId = req.userId;
-  if (req.session.userId){
+  if (req.session.userId) {
     req.session.destroy();
   }
   await userAccounts.signOut(userId);
-  res.status(200).json({message: "Logged Out."})
+  res.status(200).json({ message: "Logged Out." });
 }
 
 export async function uploadFcmToken(req, res) {
@@ -61,18 +63,18 @@ export async function getProfile(req, res) {
   }
 }
 
-export async function createProfile(req, res){
-  const userId = req.params['userId'];
+export async function createProfile(req, res) {
+  const userId = req.params["userId"];
   const user = await userAccounts.createUserProfile(userId);
-  console.log(user)
-  if (user){
+  console.log(user);
+  if (user) {
     res.status(200).json({
       user,
     });
-  }else{
+  } else {
     res.status(404).json({
       message: "Could not create user",
-    })
+    });
   }
 }
 
@@ -173,45 +175,47 @@ export async function subscribeLeaderboardUpdate(req, res) {
   }
 }
 
-
 // Dev functions
-export async function createUser(req, res){
+export async function createUser(req, res) {
   // When creating a user, we also need to create a document in the TrophyUser DB
 
   // For some reason, trying to catch validation errors here doesn't work, so
-  // createUser() handles returing res. 
-  userAccounts.createUser(req, res)
+  // createUser() handles returing res.
+  userAccounts.createUser(req, res);
 }
 
-export async function getAllUsers(req, res){
-  try{
-    const users = await userAccounts.getAllUsers()
-    res.status(200).json({users})
-  }catch (error){
-    res.status(500).json({message: error})
-  }
+export async function getAllUsers(req, res) {
+  const users = await userAccounts.getAllUsers();
+  res.status(200).json({ users });
 }
 
-export async function deleteUser(req, res){
-
-  const {userID: user_id} = req.params
-  try{
+export async function deleteUser(req, res) {
+  const user_id = req.params.user_id;
+  try {
     // Return deleted user for testing purposes
-    const user = await userAccounts.deleteUser(user_id)
-    if (!user){
-      return res.status(404).json({message: `User with id ${user_id} not found.`})
+    const user = await userAccounts.deleteUser(user_id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: `User with id ${user_id} not found.` });
     }
     // Also need to remove user from TrophyUser database
-    const trophyUser = await trophyDetail.deleteTrophyUser(user_id)
-    if (!trophyUser){
-      return res.status(404).json({message: `TrophyUser with id ${user_id} not found.`})
+    const trophyUser = await trophyDetail.deleteTrophyUser(user_id);
+    if (!trophyUser) {
+      return res
+        .status(404)
+        .json({ message: `TrophyUser with id ${user_id} not found.` });
     }
 
     // Regenerate session to wipe userId
-    req.session.regenerate(function(err){if (err){console.log(err)}})
+    req.session.regenerate(function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
 
-    res.status(200).json({user, trophyUser})
-  }catch (error){
-    res.status(500).json({message:error})
+    res.status(200).json({ user, trophyUser });
+  } catch (error) {
+    res.status(500).json({ message: error });
   }
 }
