@@ -62,7 +62,7 @@ export async function getTrophyUser(req, res) {
 }
 
 export async function createTrophyUser(req, res) {
-    const user_id = req.params;
+    const user_id = req.params.user_id;
     return await trophyDetail.createTrophyUser({ user_id });
 }
 // Dev Functions
