@@ -9,31 +9,7 @@ export async function login(req, res) {
   const userProfile = await userAccounts.loginWithGoogle(idToken);
   req.session.userId = userProfile.user_id;
   
-  // After auth middleware, we have a session with userId.
-  // const user_id = req.session.userId;
-  // req.params.user_id = user_id; // Required to interface with trophyControllers.
-  // req.session.save();
-
-  //   let user = await userAccounts.getUserProfile(user_id);
-  //   // let trophyUser = await trophyDetail.getTrophyUser(userId)
-  //   let trophyUser = await trophyControllers.getTrophyUser(req, res);
-  //   console.log(trophyUser);
-  //   if (!user) {
-  //     req.payload.user_id = user_id; // Add to payload so payload can be used to create profile with one object
-  //     console.log(`User does not exist. Creating User with id: ${user_id}`);
-  //     user = await userAccounts.createUserProfile(req.payload);
-  //     //Using newly created account, we also need to create a TrophyUser document
-  //     trophyUser = await trophyControllers.createTrophyUser(req, res);
-  //   }
-  //   if (!trophyUser) {
-  //     // If user!=null then trophyUser should never be null either unless table has been dropped.
-  //     console.log(
-  //       `User with id ${user_id} exists in the user database but not in the Trophy database. Creating New Entry`
-  //     );
-  //     trophyUser = await trophyControllers.createTrophyUser(req, res);
-  //     // return res.status(500).json({message:`User with id ${user_id} exists in the user database but not in the Trophy database`})
-  //   }
-    res.status(201).json(userProfile);
+  res.status(201).json(userProfile);
 }
 
 export async function logout(req, res) {
