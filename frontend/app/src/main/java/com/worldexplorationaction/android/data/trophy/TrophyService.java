@@ -1,6 +1,6 @@
 package com.worldexplorationaction.android.data.trophy;
 
-import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 
 import java.util.List;
 
@@ -25,6 +25,6 @@ public interface TrophyService {
     Call<Trophy> getTrophyDetails(@Path("trophyId") String trophyId);
 
     class Holder {
-        private static final TrophyService instance = RetrofitUtility.getRetrofit("trophies/").create(TrophyService.class);
+        private static final TrophyService instance = RetrofitUtils.getRetrofit("trophies/").create(TrophyService.class);
     }
 }

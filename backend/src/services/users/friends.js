@@ -1,6 +1,6 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
-import "../../utils/utils.js";
+import { elementRemoved } from "../../utils/utils.js";
 
 const friendRequests = new Map();
 
@@ -62,7 +62,7 @@ export async function declineUser(userId, friendId) {
 function removeRequest(source, target) {
   const existingRequests = friendRequests.get(target);
   if (existingRequests) {
-    friendRequests.set(target, existingRequests.removed(source));
+    friendRequests.set(target, elementRemoved(existingRequests, source));
   }
 }
 

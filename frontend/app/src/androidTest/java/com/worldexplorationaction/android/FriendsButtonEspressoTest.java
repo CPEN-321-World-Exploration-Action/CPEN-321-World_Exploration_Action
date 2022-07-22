@@ -3,12 +3,11 @@ package com.worldexplorationaction.android;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static org.hamcrest.Matchers.allOf;
 
 import android.view.View;
@@ -16,13 +15,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
-
-import com.worldexplorationaction.android.ui.friends.FriendsFragment;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -46,7 +42,7 @@ public class FriendsButtonEspressoTest {
                     "android.permission.ACCESS_COARSE_LOCATION");
 
     @Test
-    public void friendsbutton() {
+    public void friendsNavigationButton() {
         ViewInteraction bottomNavigationItemView = onView(
                 allOf(withId(R.id.navigation_friends), withContentDescription("Friends"),
                         childAtPosition(
@@ -56,7 +52,13 @@ public class FriendsButtonEspressoTest {
                                 3),
                         isDisplayed()));
         bottomNavigationItemView.perform(click());
-        onView(withId(R.id.friends_search_edit_text)).perform(typeText("cpen"));
+
+        /* Check elements to make sure the friends fragment is displayed */
+        ViewInteraction editText = onView(
+                allOf(withId(R.id.friends_search_edit_text),
+                        withParent(withParent(withId(R.id.friends_search_bar_background))),
+                        isDisplayed()));
+        editText.check(matches(isDisplayed()));
     }
 
     private static Matcher<View> childAtPosition(

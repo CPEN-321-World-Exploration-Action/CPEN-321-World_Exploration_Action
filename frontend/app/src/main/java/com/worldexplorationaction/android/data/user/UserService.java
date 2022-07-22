@@ -1,6 +1,6 @@
 package com.worldexplorationaction.android.data.user;
 
-import com.worldexplorationaction.android.ui.utility.RetrofitUtility;
+import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface UserService {
     }
 
     @POST("accounts/login")
-    Call<String> login(@Header("Authorization") String tokenId);
+    Call<UserProfile> login(@Header("Authorization") String tokenId);
 
     @POST("accounts/logout")
     Call<Void> logout();
@@ -60,6 +60,6 @@ public interface UserService {
     Call<Void> declineRequest(@Query("requesterUserId") String requesterUserId);
 
     class Holder {
-        private static final UserService instance = RetrofitUtility.getRetrofit("users/").create(UserService.class);
+        private static final UserService instance = RetrofitUtils.getRetrofit("users/").create(UserService.class);
     }
 }

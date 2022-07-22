@@ -22,11 +22,13 @@ import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
 import com.worldexplorationaction.android.ui.utility.CustomCallback;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.function.BiConsumer;
 
 public class SignInManager implements ActivityResultCallback<ActivityResult> {
     private static final String TAG = SignInManager.class.getSimpleName();
+    private static final String TEST_USER_ID = "test_uid_001";
     public static String signedInUserId;
     private final GoogleSignInClient googleSignInClient;
     private final ActivityResultLauncher<Intent> googleSignInLauncher;
@@ -86,6 +88,13 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
     }
 
     public void signIn(AppCompatActivity activity, boolean checkLastAccount) {
+        if (CommonUtils.isRunningUiTest()) {
+            Log.w(TAG, "Skip login in UI tests.");
+            signedInUserId = TEST_USER_ID;
+            onSignInResultListener.accept(true, null);
+            return;
+        }
+
         if (checkLastAccount) {
             Log.d(TAG, "Getting last signed in account");
             GoogleSignInAccount lastAccount = GoogleSignIn.getLastSignedInAccount(activity);
@@ -110,6 +119,7 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
         }, null, errorMessage -> {
             Log.e(TAG, "userService.logout failed " + errorMessage);
         }));
+        signedInUserId = null;
     }
 
     private void onSignInSuccess(@NonNull GoogleSignInAccount account) {
@@ -122,7 +132,7 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
         userService.login(idToken).enqueue(new CustomCallback<>(responseBody -> {
             if (responseBody != null) {
                 Log.e(TAG, "userService.login success");
-                signedInUserId = responseBody;
+                signedInUserId = responseBody.getId();
                 onSignInResultListener.accept(true, null);
                 uploadFcmToken();
             } else {

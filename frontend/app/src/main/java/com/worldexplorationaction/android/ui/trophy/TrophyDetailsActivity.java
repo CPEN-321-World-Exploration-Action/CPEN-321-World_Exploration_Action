@@ -31,7 +31,6 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private static final String TAG = TrophyDetailsActivity.class.getSimpleName();
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
-    private static final String PHOTO_DETAILS_KEY = "PHOTO_DETAILS_KEY";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     GridLayout trophyGrid;
     private TrophyDetailsBinding binding;
@@ -99,7 +98,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
-    private void onSortPhotoClicked(View v) {
+    private void onSortPhotoClicked(View unused) {
         new AlertDialog.Builder(this)
                 .setTitle("Sort By")
                 .setItems(new CharSequence[]{
@@ -113,7 +112,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private void onMapsButtonClicked(View v) {
+    private void onMapsButtonClicked(View unused) {
         Log.d(TAG, "onMapsButtonClicked");
         Uri uri = Uri.parse("https://www.google.com/maps/search/")
                 .buildUpon()
@@ -126,7 +125,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    private void onTrophyActionButtonClicked(View v) {
+    private void onTrophyActionButtonClicked(View unused) {
         if (!userAtLocation) {
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
@@ -186,8 +185,6 @@ public class TrophyDetailsActivity extends AppCompatActivity {
             int index = i;
             if (i < photos.size()) {
                 String url = photos.get(i).getPhotoUrl();
-                String id = photos.get(i).getPhotoId();
-                int likes = photos.get(i).getNumberOfLikes();
                 Glide.with(this)
                         .load(url)
                         .placeholder(R.drawable.ic_default_avatar_35dp)

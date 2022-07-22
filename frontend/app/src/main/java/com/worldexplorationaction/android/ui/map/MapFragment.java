@@ -25,19 +25,16 @@ import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.databinding.FragmentMapBinding;
 import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
-import com.worldexplorationaction.android.ui.utility.Utility;
+import com.worldexplorationaction.android.ui.utility.CommonUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMyLocationButtonClickListener {
     private static final String TAG = MapFragment.class.getSimpleName();
-    public static String trophyTitle = "";
     private static CameraPosition lastCameraPosition;
     private MapViewModel mapViewModel;
     private TrophyBitmaps trophyBitmaps;
@@ -45,13 +42,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private FragmentMapBinding binding;
     private GoogleMapsFragment googleMapsFragment;
     private GoogleMap googleMap;
-    private Collection<Marker> markers;
+//    private Collection<Marker> markers;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         userLocation = new UserLocation(this);
-        markers = new LinkedList<>();
+//        markers = new LinkedList<>();
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel.getDisplayTrophies().observe(getViewLifecycleOwner(), this::onDisplayTrophiesUpdate);
 
@@ -92,7 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         /* Must be called after the map is initialized */
         trophyBitmaps = new TrophyBitmaps(getResources());
 
-        int statusBarHeight = Utility.getStatusBarHeight(getResources());
+        int statusBarHeight = CommonUtils.getStatusBarHeight(getResources());
         map.setPadding(0, statusBarHeight, 0, 0);
 
         map.setLocationSource(userLocation);
@@ -135,7 +132,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Toast.makeText(requireContext(), "Cannot get the current location.", Toast.LENGTH_LONG).show();
                 TrophyDetailsActivity.start(requireContext(), trophy, false);
             } else {
-                double distance = Utility.getDistance(location, marker.getPosition());
+                double distance = CommonUtils.getDistance(location, marker.getPosition());
                 boolean canCollect = distance < 500.0f;
                 TrophyDetailsActivity.start(requireContext(), trophy, canCollect);
             }

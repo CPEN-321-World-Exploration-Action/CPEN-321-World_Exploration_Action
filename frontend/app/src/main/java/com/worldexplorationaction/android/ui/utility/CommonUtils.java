@@ -13,9 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Utility {
-    private static final String TAG = Utility.class.getSimpleName();
-
+public class CommonUtils {
     /**
      * Get the height of the status bar in an activity.
      * Source: https://stackoverflow.com/a/3356263
@@ -66,5 +64,14 @@ public class Utility {
         location2.setLatitude(latLng.latitude);
         location2.setLongitude(latLng.longitude);
         return location.distanceTo(location2);
+    }
+
+    public static boolean isRunningUiTest() {
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 }

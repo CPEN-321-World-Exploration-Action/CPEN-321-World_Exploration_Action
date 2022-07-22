@@ -17,6 +17,7 @@ import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
@@ -140,7 +141,14 @@ public class TrophyDetailsViewModel extends ViewModel {
     }
 
     public void uploadPhoto(Bitmap photo) {
-        File file = saveBitmap(photo);
+        File file;
+        try {
+            file = saveBitmap(photo);
+        } catch (IOException e) {
+            Log.e(TAG, "saveBitmap: " + e.getLocalizedMessage());
+            showToastMessage("Unable to save the photo taken: " + e.getLocalizedMessage());
+            return;
+        }
 
         MultipartBody.Part part = MultipartBody.Part.createFormData(
                 "photo",
@@ -159,17 +167,13 @@ public class TrophyDetailsViewModel extends ViewModel {
         }));
     }
 
-    private File saveBitmap(Bitmap bitmap) {
-        try {
-            File file = File.createTempFile("trophy_photo", ".png");
-            OutputStream outStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-            return file;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private File saveBitmap(Bitmap bitmap) throws IOException {
+        File file = File.createTempFile("trophy_photo", ".png");
+        OutputStream outStream = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+        outStream.flush();
+        outStream.close();
+        return file;
     }
 
     private String getUserId() {

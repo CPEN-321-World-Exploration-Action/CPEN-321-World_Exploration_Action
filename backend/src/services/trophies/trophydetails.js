@@ -68,16 +68,8 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     }
 }
 
-export async function createTrophyUser(body){
-   return await TrophyUser.create(body)
-}
-
 export async function getTrophyUser(user_id){
-    return await TrophyUser.findOne({user_id:user_id})
-}
-
-export async function deleteTrophyUser(user_id){
-    return await TrophyUser.findOneAndDelete({user_id:user_id})
+    return await TrophyUser.findOrCreate(user_id);
 }
 
 export async function updateTrophyUser(user_id, body){
@@ -92,19 +84,6 @@ export async function updateTrophyUser(user_id, body){
 
 export async function getTrophyDetails(ids){
     return await TrophyTrophy.find({trophy_id:{$in: ids}})
-}
-
-// Dev function
-export async function getAllTrophies(){
-    return await TrophyTrophy.find({})
-}
-
-export async function getAllTrophiesUsers(){
-    return await TrophyUser.find({})
-}
-
-export async function createTrophy(req){
-    return await TrophyTrophy.create(req.body)
 }
 
 export async function createManyTrophies(locations){
@@ -150,10 +129,6 @@ export async function createManyTrophies(locations){
     return trophy_ids
 }
 
-export async function deleteTrophy(trophyID){
-    return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
-}
-
 export async function updateTrophy(trophyID, body){
     return await TrophyTrophy.findOneAndUpdate({trophy_id:trophyID},body, {
         new: true, 
@@ -181,7 +156,7 @@ export async function computeMinTrophyDistance(user_latitude, user_longitude, tr
 export function haversineDistance(lat1, lon1, lat2, lon2){
     // The Haversine formula computes the great circle distance between two points
 
-    const R = 6371e3; // metres - radius of Earth
+    const R = 6371000; // metres - radius of Earth
     const phi_1 = lat1 * Math.PI/180; // φ, λ in radians
     const phi_2 = lat2 * Math.PI/180;
     const dphi = (lat2-lat1) * Math.PI/180;
@@ -197,10 +172,35 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     return d
 }
 
-export async function getUserCollectedTrophy(userID) {
-    return TrophyUser.getTrophyCollected(userID);
-}
+// // Dev functions
+// export async function getAllTrophies(){
+//     return await TrophyTrophy.find({})
+// }
 
-export async function getUserUncollectedTrophy(userID) {
-    return TrophyUser.getUserUncollectedTrophyIDs(userID);
-}
+// export async function getAllTrophiesUsers(){
+//     return await TrophyUser.find({})
+// }
+
+// export async function createTrophy(req){
+//     return await TrophyTrophy.create(req.body)
+// }
+
+// export async function deleteTrophyUser(user_id){
+//     return await TrophyUser.findOneAndDelete({user_id:user_id})
+// }
+
+// export async function getUserCollectedTrophy(userID) {
+//     return TrophyUser.getTrophyCollected(userID);
+// }
+
+// export async function getUserUncollectedTrophy(userID) {
+//     return TrophyUser.getUserUncollectedTrophyIDs(userID);
+// }
+
+// export async function deleteTrophy(trophyID){
+//     return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
+// }
+
+// export async function createTrophyUser(body){
+//     return await TrophyUser.create(body)
+//}
