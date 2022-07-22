@@ -68,10 +68,6 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     }
 }
 
-export async function createTrophyUser(body){
-   return await TrophyUser.create(body)
-}
-
 export async function getTrophyUser(user_id){
     return await TrophyUser.findOne({user_id:user_id})
 }
@@ -133,10 +129,6 @@ export async function createManyTrophies(locations){
     return trophy_ids
 }
 
-export async function deleteTrophy(trophyID){
-    return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
-}
-
 export async function updateTrophy(trophyID, body){
     return await TrophyTrophy.findOneAndUpdate({trophy_id:trophyID},body, {
         new: true, 
@@ -180,7 +172,7 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     return d
 }
 
-// // Dev function
+// // Dev functions
 // export async function getAllTrophies(){
 //     return await TrophyTrophy.find({})
 // }
@@ -204,3 +196,11 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
 // export async function getUserUncollectedTrophy(userID) {
 //     return TrophyUser.getUserUncollectedTrophyIDs(userID);
 // }
+
+// export async function deleteTrophy(trophyID){
+//     return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
+// }
+
+// export async function createTrophyUser(body){
+//     return await TrophyUser.create(body)
+//}
