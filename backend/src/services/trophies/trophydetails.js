@@ -69,7 +69,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
 }
 
 export async function getTrophyUser(user_id){
-    return await TrophyUser.findOne({user_id:user_id})
+    return await TrophyUser.findOrCreate(user_id);
 }
 
 export async function updateTrophyUser(user_id, body){
