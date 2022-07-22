@@ -1,6 +1,4 @@
 import * as photoManaging from "../services/photos/photomanaging.js";
-import * as photoSorting from "../services/photos/photosorting.js";
-import * as photoStoring from "../services/photos/photostoring.js";
 
 /* Managing */
 
@@ -29,7 +27,7 @@ export async function getPhotoIDsByTrophyID(req, res) {
   const trophyId = req.query.trophyId;
   const order = req.query.order;
 
-  const photos = await photoSorting.getPhotoIDsByTrophyID(trophyId, order, req.userId);
+  const photos = await photoManaging.getPhotoIDsByTrophyID(trophyId, order, req.userId);
   if (photos) {
     res.status(200).json(photos);
   } else {
@@ -41,44 +39,16 @@ export async function getPhotoIDsByTrophyID(req, res) {
 
 export async function getPhotoIDsByUserID(req, res) {
   const userID = req.params.userId;
-  const photos = await photoSorting.getPhotoIDsByUserID(userID);
+  const photos = await photoManaging.getPhotoIDsByUserID(userID);
   res.status(200).json(photos);
 }
 
 /* Storing */
 
-/*
-export async function uploadPhoto(req, res) {
-  const userID = req.query.userID;
-  const trophyID = req.query.trophyID;
-  const photoURL = req.query.photoURL;
-
-  if (!userID) {
-    res.status(400).json({
-      message: "Missing query parameter: userID",
-    });
-    return;
-  } else if (!trophyID) {
-    res.status(400).json({
-      message: "Missing query parameter: trophyID",
-    });
-    return;
-  } else if (!photoURL) {
-    res.status(400).json({
-      message: "Missing query parameter: photoURL",
-    });
-    return;
-  }
-
-  await photoStoring.uploadPhoto(userID, trophyID, photoURL);
-  res.status(200).send();
-}
-*/
-
 export async function getImage(req, res) {
   const picID = req.query.picID;
 
-  const photo = await photoStoring.getImage(picID);
+  const photo = await photoManaging.getImage(picID);
 
   if (photo) {
     res.status(200).json({
@@ -97,7 +67,7 @@ export async function uploadPhoto(req, res) {
       message: "No photo received",
     });
   }
-  await photoStoring.uploadPhoto(
+  await photoManaging.uploadPhoto(
     req.params["userId"],
     req.params["trophyId"],
     req.file.filename

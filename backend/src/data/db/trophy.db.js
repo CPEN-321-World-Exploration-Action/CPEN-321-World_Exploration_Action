@@ -95,27 +95,20 @@ const trophySchemaUser = new Schema(
   {
     statics: {
       async removeUncollectedTrophy(userId, trophyId) {
-        const pullAll = { $pullAll: { uncollectedTrophies: [trophyId] } };
-        await this.findOneAndUpdate(
+        const update = { $pullAll: { uncollectedTrophies: [trophyId] } };
+        const res = await this.updateOne(
           { user_id: userId },
-          pullAll
-        ).exec();
+          update
+        );
+        return res.modifiedCount > 0;
       },
       async addCollectedTrophy(userId, trophyId) {
-        /*
-        var user = await this.findOne({ user_id: userId }).exec();
-        user.collectedTrophies.push(trophyId);
-        user.save();
-        */
-        this.update(
+        const update = { $addToSet: { collectedTrophies: trophyId } };
+        const res = await this.updateOne(
           { user_id: userId },
-          { $addToSet: { collectedTrophies: trophyId } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            }
-          }
+          update
         );
+        return res.modifiedCount > 0;
       },
       async findOrCreate(userID) {
         let user = await this.findOne({ user_id: userID }).exec();

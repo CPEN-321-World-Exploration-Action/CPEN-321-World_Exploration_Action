@@ -135,7 +135,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     public void acceptRequest(UserProfile user) {
         userService.acceptRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "acceptRequest succeeded");
-            showToastMessage("Successfully accepted" + user.getName() + "'s friend request");
+            showToastMessage("Successfully accepted " + user.getName() + "'s friend request");
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "acceptRequest failed " + errorMessage);

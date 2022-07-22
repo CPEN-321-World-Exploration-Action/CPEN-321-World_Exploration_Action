@@ -1,9 +1,13 @@
 import * as userAccounts from "../services/users/useraccounts.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
+import { BadRequestError } from "../utils/errors.js";
 
 export async function login(req, res) {
   const idToken = req.header("Authorization");
+  if (!idToken) {
+    throw new BadRequestError("Missing header: Authorization");
+  }
 
   const userProfile = await userAccounts.loginWithGoogle(idToken);
   req.session.userId = userProfile.user_id;
@@ -22,47 +26,44 @@ export async function logout(req, res) {
 
 export async function uploadFcmToken(req, res) {
   const fcmToken = req.params.fcmToken;
+  if (!fcmToken) {
+    throw new BadRequestError("Missing query parameter: fcmToken");
+  }
   await userAccounts.uploadFcmToken(req.userId, fcmToken);
   res.status(200).send();
 }
 
 export async function getProfile(req, res) {
   const userId = req.params.userId;
-  const user = await userAccounts.getUserProfile(userId);
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(404).json({
-      message: "Could not find the user",
-    });
+  if (!userId) {
+    throw new BadRequestError("Missing query parameter: userId");
   }
+  const user = await userAccounts.getUserProfile(userId);
+  res.status(200).json(user);
 }
 
-export async function createProfile(req, res) {
-  const userId = req.params["userId"];
-  const user = await userAccounts.createUserProfile(userId);
-  console.log(user);
-  if (user) {
-    res.status(200).json({
-      user,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not create user",
-    });
-  }
-}
+// export async function createProfile(req, res) {
+//   const userId = req.params["userId"];
+//   const user = await userAccounts.createUserProfile(userId);
+//   console.log(user);
+//   if (user) {
+//     res.status(200).json({
+//       user,
+//     });
+//   } else {
+//     res.status(404).json({
+//       message: "Could not create user",
+//     });
+//   }
+// }
 
 export async function searchUser(req, res) {
   const query = req.query.query;
-  if (query) {
-    const result = await userAccounts.searchUser(query);
-    res.status(200).json(result);
-  } else {
-    res.status(400).json({
-      message: "Missing or invalid query",
-    });
+  if (!query) {
+    throw new BadRequestError("Missing query parameter: query");
   }
+  const result = await userAccounts.searchUser(query);
+  res.status(200).json(result);
 }
 
 /*** Friends ***/
@@ -79,10 +80,7 @@ export async function getFriendRequests(req, res) {
 export async function sendFriendRequest(req, res) {
   const targetId = req.query.targetUserId;
   if (!targetId) {
-    res.status(400).json({
-      message: "Missing query parameter: targetId",
-    });
-    return;
+    throw new BadRequestError("Missing query parameter: targetId");
   }
   await friends.sendRequest(req.userId, targetId);
   res.status(200).send();
@@ -91,10 +89,7 @@ export async function sendFriendRequest(req, res) {
 export async function deleteFriend(req, res) {
   const friendId = req.query.friendId;
   if (!friendId) {
-    res.status(400).json({
-      message: "Missing query parameter: friendId",
-    });
-    return;
+    throw new BadRequestError("Missing query parameter: friendId");
   }
   await friends.deleteFriend(req.userId, friendId);
   res.status(200).send();
@@ -103,10 +98,7 @@ export async function deleteFriend(req, res) {
 export async function acceptFriendRequest(req, res) {
   const requesterId = req.query.requesterUserId;
   if (!requesterId) {
-    res.status(400).json({
-      message: "Missing query parameter: requesterUserId",
-    });
-    return;
+    throw new BadRequestError("Missing query parameter: requesterUserId");
   }
   await friends.acceptUser(req.userId, requesterId);
   res.status(200).send();
@@ -115,10 +107,7 @@ export async function acceptFriendRequest(req, res) {
 export async function declineFriendRequest(req, res) {
   const requesterId = req.query.requesterUserId;
   if (!requesterId) {
-    res.status(400).json({
-      message: "Missing query parameter: requesterUserId",
-    });
-    return;
+    throw new BadRequestError("Missing query parameter: requesterUserId");
   }
   await friends.declineUser(req.userId, requesterId);
   res.status(200).send();
@@ -138,16 +127,13 @@ export async function getFriendLeaderboard(req, res) {
 
 export async function subscribeLeaderboardUpdate(req, res) {
   const fcmToken = req.query.fcmToken;
-  if (fcmToken) {
-    const expireTime = await leaderboard.subscribeUpdate(req.userId, fcmToken);
-    res.status(200).json({
-      expireTime,
-    });
-  } else {
-    res.status(400).json({
-      message: "Missing query parameter: fcmToken",
-    });
+  if (!fcmToken) {
+    throw new BadRequestError("Missing query parameter: fcmToken");
   }
+  const expireTime = await leaderboard.subscribeUpdate(req.userId, fcmToken);
+  res.status(200).json({
+    expireTime,
+  });
 }
 
 // Dev functions
