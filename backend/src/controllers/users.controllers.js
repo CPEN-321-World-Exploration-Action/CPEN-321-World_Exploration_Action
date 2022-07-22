@@ -29,13 +29,7 @@ export async function uploadFcmToken(req, res) {
 export async function getProfile(req, res) {
   const userId = req.params.userId;
   const user = await userAccounts.getUserProfile(userId);
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(404).json({
-      message: "Could not find the user",
-    });
-  }
+  res.status(200).json(user);
 }
 
 export async function createProfile(req, res) {

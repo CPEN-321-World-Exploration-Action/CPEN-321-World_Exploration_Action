@@ -1,7 +1,7 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
 import * as googleSignIn from "../../data/external/googlesignin.external.js";
-import { BadRequestError } from "../../utils/errors.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
   await User.incrementTrophyScore(message.userId, message.trophyScore);
@@ -14,7 +14,7 @@ export async function onReceiveTrophyCollectedMessage(message) {
 export async function getUserProfile(userId) {
   const userDocument = await User.findUser(userId);
   if (!userDocument) {
-    return null;
+    throw new NotFoundError("Could not find the user");
   }
   const user = userDocument.toObject();
   user.rank = await User.computeUserRank(userId);
