@@ -1,11 +1,11 @@
 import { Photo } from "../../data/db/photo.db.js";
-import { BadRequestError } from "../../utils/errors.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 
 /* Managing */
 export async function userLikePhoto(userID, picID) {
   const photo = await Photo.findPhoto(picID);
   if (!photo) {
-    return;
+    throw new NotFoundError("Cannot find the picture");
   }
   if (photo.likedUsers.includes(userID)) {
     await Photo.userUnlikePhoto(userID, picID);
@@ -48,4 +48,3 @@ function setUserLiked(photos, userId) {
     user_liked: likedUsers.includes(userId),
   }));
 }
-
