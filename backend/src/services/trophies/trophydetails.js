@@ -76,10 +76,6 @@ export async function getTrophyUser(user_id){
     return await TrophyUser.findOne({user_id:user_id})
 }
 
-export async function deleteTrophyUser(user_id){
-    return await TrophyUser.findOneAndDelete({user_id:user_id})
-}
-
 export async function updateTrophyUser(user_id, body){
         // By default this will return the TrophyUser before being updated
         // It will update it correctly, just return the old task here.
@@ -92,19 +88,6 @@ export async function updateTrophyUser(user_id, body){
 
 export async function getTrophyDetails(ids){
     return await TrophyTrophy.find({trophy_id:{$in: ids}})
-}
-
-// Dev function
-export async function getAllTrophies(){
-    return await TrophyTrophy.find({})
-}
-
-export async function getAllTrophiesUsers(){
-    return await TrophyUser.find({})
-}
-
-export async function createTrophy(req){
-    return await TrophyTrophy.create(req.body)
 }
 
 export async function createManyTrophies(locations){
@@ -197,10 +180,27 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     return d
 }
 
-export async function getUserCollectedTrophy(userID) {
-    return TrophyUser.getTrophyCollected(userID);
-}
+// // Dev function
+// export async function getAllTrophies(){
+//     return await TrophyTrophy.find({})
+// }
 
-export async function getUserUncollectedTrophy(userID) {
-    return TrophyUser.getUserUncollectedTrophyIDs(userID);
-}
+// export async function getAllTrophiesUsers(){
+//     return await TrophyUser.find({})
+// }
+
+// export async function createTrophy(req){
+//     return await TrophyTrophy.create(req.body)
+// }
+
+// export async function deleteTrophyUser(user_id){
+//     return await TrophyUser.findOneAndDelete({user_id:user_id})
+// }
+
+// export async function getUserCollectedTrophy(userID) {
+//     return TrophyUser.getTrophyCollected(userID);
+// }
+
+// export async function getUserUncollectedTrophy(userID) {
+//     return TrophyUser.getUserUncollectedTrophyIDs(userID);
+// }
