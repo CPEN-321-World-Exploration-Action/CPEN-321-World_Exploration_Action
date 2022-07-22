@@ -95,70 +95,48 @@ const trophySchemaUser = new Schema(
   {
     statics: {
       async removeUncollectedTrophy(userId, trophyId) {
-        /*
-        var user = await this.findOne({ user_id: userId }).exec();
-        user.uncollectedTrophies = user.uncollectedTrophies.filter(function (
-          value,
-          index,
-          arr
-        ) {
-          return value !== trophyId;
-        });
-        user.save();
-        */
-        this.findOneAndUpdate(
+        const update = { $pullAll: { uncollectedTrophies: [trophyId] } };
+        const res = await this.updateOne(
           { user_id: userId },
-          {
-            $pullAll: {
-              uncollectedTrophies: trophyId
-            },
-          },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-            }
-          }
+          update
         );
+        return res.modifiedCount > 0;
       },
       async addCollectedTrophy(userId, trophyId) {
-        /*
-        var user = await this.findOne({ user_id: userId }).exec();
-        user.collectedTrophies.push(trophyId);
-        user.save();
-        */
-        this.update(
+        const update = { $addToSet: { collectedTrophies: trophyId } };
+        const res = await this.updateOne(
           { user_id: userId },
-          { $addToSet: { collectedTrophies: trophyId} },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            }
-          }
+          update
         );
+        return res.modifiedCount > 0;
       },
-      async storeTrophies(userID, trophies) {
-        var user = await this.findOne({ user_id: userID }).exec();
-        for (let value of trophies) {
-          user.collectedTrophies.push(value);
+      async findOrCreate(userID) {
+        let user = await this.findOne({ user_id: userID }).exec();
+        if (!user) {
+          user = await this.create({ user_id: userID });
         }
-        user.save();
+        return user;
       },
+      // not used
+      // async storeTrophies(userID, trophies) {
+      //   var user = await this.findOne({ user_id: userID }).exec();
+      //   for (let value of trophies) {
+      //     user.collectedTrophies.push(value);
+      //   }
+      //   user.save();
+      // },
       async getUsersTags(userID) {
+        // TODO: FIXME: this might crash
         return await this.findOne({ user_id: userID }).exec().trophyTags;
       },
       async getUserUncollectedTrophyIDs(userID) {
-        var user = await this.findOne({ user_id: userID }).exec();
-        return (await user).uncollectedTrophies;
+        const user = await this.findOrCreate(userID);
+        return user.uncollectedTrophies;
       },
-      async getUserCollectedTrophyIDs(userID){
-        var user = await this.findOne({ user_id: userID }).exec();
-        return (await user).collectedTrophies;
-      },
-      async getTrophyCollected(userID) {
-        var user = await this.findOne({ user_id: userID }).exec();
+      async getUserCollectedTrophyIDs(userID) {
+        const user = await this.findOrCreate(userID);
         return user.collectedTrophies;
-      }
+      },
     },
     methods: {},
   }

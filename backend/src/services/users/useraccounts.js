@@ -1,7 +1,7 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
 import * as googleSignIn from "../../data/external/googlesignin.external.js";
-import { BadRequestError } from "../../utils/errors.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
   await User.incrementTrophyScore(message.userId, message.trophyScore);
@@ -14,7 +14,7 @@ export async function onReceiveTrophyCollectedMessage(message) {
 export async function getUserProfile(userId) {
   const userDocument = await User.findUser(userId);
   if (!userDocument) {
-    return null;
+    throw new NotFoundError("Could not find the user");
   }
   const user = userDocument.toObject();
   user.rank = await User.computeUserRank(userId);
@@ -28,8 +28,9 @@ export async function uploadFcmToken(userId, fcmToken) {
 export async function loginWithGoogle(idToken) {
   let userId, idTokenPayload;
   try {
-    ({userId, idTokenPayload} = await googleSignIn.verifyUser(idToken));
+    ({userId, payload: idTokenPayload} = await googleSignIn.verifyUser(idToken));
   } catch (err) {
+    console.log(err);
     throw new BadRequestError(`Unable to verify the ID Token: ${idToken}`);
   }
 
@@ -51,22 +52,21 @@ export async function signOut(userId) {
   console.log(`User ${userId} has signed out`);
 }
 
-// TODO: internal helper
-export async function createUserProfile(body) {
+async function createUserProfile(body) {
   return await User.create(body);
 }
 
 
 // dev functions
-export async function createUser(req, res) {
-  const user = await User.create(req.body);
-  res.status(201).json({ user });
-}
+// export async function createUser(req, res) {
+//   const user = await User.create(req.body);
+//   res.status(201).json({ user });
+// }
 
-export async function getAllUsers(){
-  return await User.find({});
-}
+// export async function getAllUsers(){
+//   return await User.find({});
+// }
 
-export async function deleteUser(user_id){
-  return await User.findOneAndDelete({user_id:user_id}, {})
-}
+// export async function deleteUser(user_id){
+//   return await User.findOneAndDelete({user_id:user_id}, {})
+// }

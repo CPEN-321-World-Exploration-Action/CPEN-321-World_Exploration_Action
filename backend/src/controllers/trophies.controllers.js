@@ -58,105 +58,101 @@ export async function getTrophyDetails(req, res) {
   res.status(200).json(trophies[0]);
 }
 
-export async function getTrophyUser(req, res){
-  const userId = req.params.user_id;
-  if (!userId) {
-    throw new BadRequestError("Missing query: userId");
-  }
-  return await trophyDetail.getTrophyUser(userId);
-}
 
-export async function createTrophyUser(req, res) {
-<<<<<<< HEAD
-    const user_id = req.params.user_id;
-    return await trophyDetail.createTrophyUser({ user_id });
-=======
-  const userId = req.params.user_id;
-  if (!userId) {
-    throw new BadRequestError("Missing query: userId");
-  }
-  return await trophyDetail.createTrophyUser({ user_id });
->>>>>>> 132ac7a67b483f23e1ef42bd3faf0203c5baff29
-}
+// // Dev Functions
+// export async function getTrophyUser(req, res){
+//   const userId = req.params.user_id;
+//   if (!userId) {
+//     throw new BadRequestError("Missing query: userId");
+//   }
+//   return await trophyDetail.getTrophyUser(userId);
+// }
 
-// Dev Functions
-export async function getAllTrophies(req, res) {
-  const trophies = await trophyDetail.getAllTrophies();
-  if (!trophies) {
-    return res.status(404).json({ message: "No Trophies Found" });
-  }
-  res.status(200).json({ trophies });
-}
+// export async function createTrophyUser(req, res) {
+//   const userId = req.params.user_id;
+//   if (!userId) {
+//     throw new BadRequestError("Missing query: userId");
+//   }
+//   return await trophyDetail.createTrophyUser({ user_id });
+// }
 
-export async function getAllTrophiesUsers(req, res) {
-  const trophies = await trophyDetail.getAllTrophiesUsers();
-  if (!trophies) {
-    return res.status(404).json({ message: "No Trophies Found" });
-  }
-  res.status(200).json({ trophies });
-}
+// export async function getAllTrophies(req, res) {
+//   const trophies = await trophyDetail.getAllTrophies();
+//   if (!trophies) {
+//     return res.status(404).json({ message: "No Trophies Found" });
+//   }
+//   res.status(200).json({ trophies });
+// }
 
-export async function createTrophy(req, res) {
-  const trophy = await trophyDetail.createTrophy(req);
-  res.status(201).json({ trophy });
-}
+// export async function getAllTrophiesUsers(req, res) {
+//   const trophies = await trophyDetail.getAllTrophiesUsers();
+//   if (!trophies) {
+//     return res.status(404).json({ message: "No Trophies Found" });
+//   }
+//   res.status(200).json({ trophies });
+// }
 
-export async function deleteTrophy(req, res) {
-  const trophyID = req.params.id;
-  const trophy = await trophyDetail.deleteTrophy(trophyID);
-  if (!trophy) {
-    return res
-      .status(404)
-      .json({ message: `Could not find Trophy with id: ${trophyID}` });
-  }
-  // Return info about deleted trophy only for testing.
-  res.status(200).json({ trophy });
-}
+// export async function createTrophy(req, res) {
+//   const trophy = await trophyDetail.createTrophy(req);
+//   res.status(201).json({ trophy });
+// }
 
-export async function updateTrophy(req, res) {
-  const trophyID = req.params.id;
+// export async function deleteTrophy(req, res) {
+//   const trophyID = req.params.id;
+//   const trophy = await trophyDetail.deleteTrophy(trophyID);
+//   if (!trophy) {
+//     return res
+//       .status(404)
+//       .json({ message: `Could not find Trophy with id: ${trophyID}` });
+//   }
+//   // Return info about deleted trophy only for testing.
+//   res.status(200).json({ trophy });
+// }
 
-  // By default this will return the task before being updated
-  // It will update it correctly, just return the old trophy here.
-  // Also validators won't run without passing in the options object
-  const trophy = await trophyDetail.updateTrophy(trophyID, req.body);
+// export async function updateTrophy(req, res) {
+//   const trophyID = req.params.id;
 
-  if (!trophy) {
-    return res
-      .status(404)
-      .json({ message: `No trophy with id: ${trophyID}` });
-  }
-  res.status(200).json({ trophy });
-}
+//   // By default this will return the task before being updated
+//   // It will update it correctly, just return the old trophy here.
+//   // Also validators won't run without passing in the options object
+//   const trophy = await trophyDetail.updateTrophy(trophyID, req.body);
 
-export async function getUserCollectedTrophy(req, res) {
-  const userID = req.query.userID;
+//   if (!trophy) {
+//     return res
+//       .status(404)
+//       .json({ message: `No trophy with id: ${trophyID}` });
+//   }
+//   res.status(200).json({ trophy });
+// }
 
-  const trophy = await trophyDetail.getUserCollectedTrophy(userID);
+// export async function getUserCollectedTrophy(req, res) {
+//   const userID = req.query.userID;
 
-  if (trophy) {
-    res.status(200).json({
-      trophy,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not find collected trophies",
-    });
-  }
-}
+//   const trophy = await trophyDetail.getUserCollectedTrophy(userID);
 
-export async function getUserUncollectedTrophy(req, res) {
-  const userID = req.query.userID;
+//   if (trophy) {
+//     res.status(200).json({
+//       trophy,
+//     });
+//   } else {
+//     res.status(404).json({
+//       message: "Could not find collected trophies",
+//     });
+//   }
+// }
 
-  const trophy = await trophyDetail.getUserUncollectedTrophy(userID);
+// export async function getUserUncollectedTrophy(req, res) {
+//   const userID = req.query.userID;
 
-  if (trophy) {
-    res.status(200).json({
-      trophy,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not find uncollected trophies",
-    });
-  }
-}
+//   const trophy = await trophyDetail.getUserUncollectedTrophy(userID);
+
+//   if (trophy) {
+//     res.status(200).json({
+//       trophy,
+//     });
+//   } else {
+//     res.status(404).json({
+//       message: "Could not find uncollected trophies",
+//     });
+//   }
+// }

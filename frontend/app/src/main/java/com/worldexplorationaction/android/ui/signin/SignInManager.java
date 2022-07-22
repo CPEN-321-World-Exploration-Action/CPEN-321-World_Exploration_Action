@@ -132,7 +132,7 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
         userService.login(idToken).enqueue(new CustomCallback<>(responseBody -> {
             if (responseBody != null) {
                 Log.e(TAG, "userService.login success");
-                signedInUserId = responseBody;
+                signedInUserId = responseBody.getId();
                 onSignInResultListener.accept(true, null);
                 uploadFcmToken();
             } else {
