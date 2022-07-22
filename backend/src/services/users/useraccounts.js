@@ -52,8 +52,7 @@ export async function signOut(userId) {
   console.log(`User ${userId} has signed out`);
 }
 
-// TODO: internal helper
-export async function createUserProfile(body) {
+async function createUserProfile(body) {
   return await User.create(body);
 }
 

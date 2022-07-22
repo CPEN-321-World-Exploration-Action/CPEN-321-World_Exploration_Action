@@ -32,20 +32,20 @@ export async function getProfile(req, res) {
   res.status(200).json(user);
 }
 
-export async function createProfile(req, res) {
-  const userId = req.params["userId"];
-  const user = await userAccounts.createUserProfile(userId);
-  console.log(user);
-  if (user) {
-    res.status(200).json({
-      user,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not create user",
-    });
-  }
-}
+// export async function createProfile(req, res) {
+//   const userId = req.params["userId"];
+//   const user = await userAccounts.createUserProfile(userId);
+//   console.log(user);
+//   if (user) {
+//     res.status(200).json({
+//       user,
+//     });
+//   } else {
+//     res.status(404).json({
+//       message: "Could not create user",
+//     });
+//   }
+// }
 
 export async function searchUser(req, res) {
   const query = req.query.query;
