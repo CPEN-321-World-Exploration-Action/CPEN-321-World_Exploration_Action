@@ -28,8 +28,9 @@ export async function uploadFcmToken(userId, fcmToken) {
 export async function loginWithGoogle(idToken) {
   let userId, idTokenPayload;
   try {
-    ({userId, idTokenPayload} = await googleSignIn.verifyUser(idToken));
+    ({userId, payload: idTokenPayload} = await googleSignIn.verifyUser(idToken));
   } catch (err) {
+    console.log(err);
     throw new BadRequestError(`Unable to verify the ID Token: ${idToken}`);
   }
 
