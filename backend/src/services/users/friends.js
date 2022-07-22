@@ -6,11 +6,11 @@ import { elementRemoved } from "../../utils/utils.js";
 const friendRequests = new Map();
 
 export async function retrieveFriends(userId) {
-  try {
-    return await User.getFriends(userId);
-  } catch (err) {
+  const user = await User.findUser(userId);
+  if (!user){
     throw new NotFoundError("Cannot find the user");
   }
+  return await User.getFriends(userId);
 }
 
 export async function getFriendRequests(userId) {
