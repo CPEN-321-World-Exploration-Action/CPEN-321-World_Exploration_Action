@@ -1,5 +1,4 @@
 import * as userAccounts from "../services/users/useraccounts.js";
-import * as trophyControllers from "../controllers/trophies.controllers.js";
 import * as leaderboard from "../services/users/leaderboard.js";
 import * as friends from "../services/users/friends.js";
 
