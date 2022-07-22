@@ -9,7 +9,6 @@ const trophiesRouter = express.Router();
 trophiesRouter.get("/user-trophies", [nocache(), auth], trophyControllers.getTrophiesUser);
 trophiesRouter.get("/:trophyId", [nocache()], trophyControllers.getTrophyDetails);
 trophiesRouter.post("/:userId/:trophyId", [nocache(), auth], trophyControllers.collectTrophy);
-//trophiesRouter.get("/:userId/trophies", [nocache(), auth], trophyControllers.getTrophiesUser);
 
 
 // Dev Routes
