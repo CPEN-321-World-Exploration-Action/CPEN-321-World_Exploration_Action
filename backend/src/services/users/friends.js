@@ -33,8 +33,7 @@ export async function sendRequest(senderId, targetId) {
 }
 
 export async function deleteFriend(userId, friendId) {
-  await User.deleteFriend(userId, friendId);
-  await User.deleteFriend(friendId, userId);
+  await User.mutuallyDeleteFriend(userId, friendId);
 }
 
 export async function acceptUser(userId, friendId) {
