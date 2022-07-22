@@ -1,14 +1,24 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
+import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 import { elementRemoved } from "../../utils/utils.js";
 
 const friendRequests = new Map();
 
 export async function retrieveFriends(userId) {
-  return await User.getFriends(userId);
+  try {
+    return await User.getFriends(userId);
+  } catch (err) {
+    throw new NotFoundError("Cannot find the user");
+  }
 }
 
 export async function getFriendRequests(userId) {
+  const user = await User.findUser(senderId);
+  if (!user) {
+    throw new NotFoundError("Cannot find the user");
+  }
+
   const requestors = friendRequests.get(userId);
   if (requestors) {
     return await User.findUsers(requestors);
@@ -18,13 +28,21 @@ export async function getFriendRequests(userId) {
 }
 
 export async function sendRequest(senderId, targetId) {
+  const sender = await User.findUser(senderId);
+  const target = await User.findUser(targetId);
+  if (!sender) {
+    throw new NotFoundError("Cannot find the sending user");
+  }
+  if (!target) {
+    throw new NotFoundError("Cannot find the target user");
+  }
+
   const existingRequests = friendRequests.get(targetId) ?? [];
   if (!existingRequests.includes(senderId)) {
     existingRequests.push(senderId);
   }
   friendRequests.set(targetId, existingRequests);
 
-  const sender = await User.findUser(senderId);
   sendNotificationInBackground(
     targetId,
     "New Friend Request",
@@ -33,11 +51,14 @@ export async function sendRequest(senderId, targetId) {
 }
 
 export async function deleteFriend(userId, friendId) {
-  await User.mutuallyDeleteFriend(userId, friendId);
+  const result = await User.mutuallyDeleteFriend(userId, friendId);
+  if (!result) {
+    throw new BadRequestError("They are not friends.");
+  }
 }
 
 export async function acceptUser(userId, friendId) {
-  removeRequest(friendId, userId);
+  removeRequest(friendId, userId); // this will make sure userId and friendId are valid
   await User.mutuallyAddFriend(userId, friendId);
 
   const acceptor = await User.findUser(userId);
@@ -49,7 +70,7 @@ export async function acceptUser(userId, friendId) {
 }
 
 export async function declineUser(userId, friendId) {
-  removeRequest(friendId, userId);
+  removeRequest(friendId, userId);// this will make sure userId and friendId are valid
 
   const user = await User.findUser(userId);
   sendNotificationInBackground(
@@ -61,9 +82,10 @@ export async function declineUser(userId, friendId) {
 
 function removeRequest(source, target) {
   const existingRequests = friendRequests.get(target);
-  if (existingRequests) {
-    friendRequests.set(target, elementRemoved(existingRequests, source));
+  if (!existingRequests || !existingRequests.includes(source)) {
+    throw new NotFoundError("Cannot find the friend request");
   }
+  friendRequests.set(target, elementRemoved(existingRequests, source));
 }
 
 function sendNotificationInBackground(targetUserId, title, body) {
