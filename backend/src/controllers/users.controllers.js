@@ -176,46 +176,46 @@ export async function subscribeLeaderboardUpdate(req, res) {
 }
 
 // Dev functions
-export async function createUser(req, res) {
-  // When creating a user, we also need to create a document in the TrophyUser DB
+// export async function createUser(req, res) {
+//   // When creating a user, we also need to create a document in the TrophyUser DB
 
-  // For some reason, trying to catch validation errors here doesn't work, so
-  // createUser() handles returing res.
-  userAccounts.createUser(req, res);
-}
+//   // For some reason, trying to catch validation errors here doesn't work, so
+//   // createUser() handles returing res.
+//   userAccounts.createUser(req, res);
+// }
 
-export async function getAllUsers(req, res) {
-  const users = await userAccounts.getAllUsers();
-  res.status(200).json({ users });
-}
+// export async function getAllUsers(req, res) {
+//   const users = await userAccounts.getAllUsers();
+//   res.status(200).json({ users });
+// }
 
-export async function deleteUser(req, res) {
-  const user_id = req.params.user_id;
-  try {
-    // Return deleted user for testing purposes
-    const user = await userAccounts.deleteUser(user_id);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: `User with id ${user_id} not found.` });
-    }
-    // Also need to remove user from TrophyUser database
-    const trophyUser = await trophyDetail.deleteTrophyUser(user_id);
-    if (!trophyUser) {
-      return res
-        .status(404)
-        .json({ message: `TrophyUser with id ${user_id} not found.` });
-    }
+// export async function deleteUser(req, res) {
+//   const user_id = req.params.user_id;
+//   try {
+//     // Return deleted user for testing purposes
+//     const user = await userAccounts.deleteUser(user_id);
+//     if (!user) {
+//       return res
+//         .status(404)
+//         .json({ message: `User with id ${user_id} not found.` });
+//     }
+//     // Also need to remove user from TrophyUser database
+//     const trophyUser = await trophyDetail.deleteTrophyUser(user_id);
+//     if (!trophyUser) {
+//       return res
+//         .status(404)
+//         .json({ message: `TrophyUser with id ${user_id} not found.` });
+//     }
 
-    // Regenerate session to wipe userId
-    req.session.regenerate(function (err) {
-      if (err) {
-        console.log(err);
-      }
-    });
+//     // Regenerate session to wipe userId
+//     req.session.regenerate(function (err) {
+//       if (err) {
+//         console.log(err);
+//       }
+//     });
 
-    res.status(200).json({ user, trophyUser });
-  } catch (error) {
-    res.status(500).json({ message: error });
-  }
-}
+//     res.status(200).json({ user, trophyUser });
+//   } catch (error) {
+//     res.status(500).json({ message: error });
+//   }
+// }

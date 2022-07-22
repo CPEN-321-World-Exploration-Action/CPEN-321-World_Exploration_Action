@@ -58,15 +58,15 @@ export async function createUserProfile(body) {
 
 
 // dev functions
-export async function createUser(req, res) {
-  const user = await User.create(req.body);
-  res.status(201).json({ user });
-}
+// export async function createUser(req, res) {
+//   const user = await User.create(req.body);
+//   res.status(201).json({ user });
+// }
 
-export async function getAllUsers(){
-  return await User.find({});
-}
+// export async function getAllUsers(){
+//   return await User.find({});
+// }
 
-export async function deleteUser(user_id){
-  return await User.findOneAndDelete({user_id:user_id}, {})
-}
+// export async function deleteUser(user_id){
+//   return await User.findOneAndDelete({user_id:user_id}, {})
+// }
