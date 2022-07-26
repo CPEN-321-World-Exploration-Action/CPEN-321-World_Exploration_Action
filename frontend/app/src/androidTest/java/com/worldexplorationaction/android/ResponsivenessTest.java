@@ -91,7 +91,29 @@ public class ResponsivenessTest {
 
     @Test
     public void viewProfile() {
+        runWithRuntimeCheck(() -> {
+            ViewInteraction profileButton = onView(
+                    allOf(withId(R.id.navigation_profile), withContentDescription("Profile"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.nav_view),
+                                            0),
+                                    0),
+                            isDisplayed()));
+            profileButton.perform(click());
+        });
 
+        runWithRuntimeCheck(() -> {
+            ViewInteraction logoutButton = onView(
+                    allOf(withId(R.id.profile_logout_button),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.nav_host_fragment_activity_main),
+                                            0),
+                                    9),
+                            isDisplayed()));
+            logoutButton.perform(click());
+        });
     }
 
     @Test
