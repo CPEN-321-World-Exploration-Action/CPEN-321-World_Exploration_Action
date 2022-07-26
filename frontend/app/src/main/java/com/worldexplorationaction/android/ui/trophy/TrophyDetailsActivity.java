@@ -38,10 +38,15 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private boolean userAtLocation;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
+        packageContext.startActivity(getIntent(packageContext, trophy, userAtLocation));
+    }
+
+    public static Intent getIntent(Context packageContext, Trophy trophy, Boolean userAtLocation) {
+        System.out.println("AAAAAA" + trophy);
         Intent intent = new Intent(packageContext, TrophyDetailsActivity.class);
         intent.putExtra(TROPHY_DETAILS_KEY, trophy);
         intent.putExtra(USER_AT_LOCATION_KEY, userAtLocation);
-        packageContext.startActivity(intent);
+        return intent;
     }
 
     @Override
