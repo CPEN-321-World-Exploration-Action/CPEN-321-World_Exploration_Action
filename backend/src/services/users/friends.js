@@ -14,7 +14,7 @@ export async function retrieveFriends(userId) {
 }
 
 export async function getFriendRequests(userId) {
-  const user = await User.findUser(senderId);
+  const user = await User.findUser(userId);
   if (!user) {
     throw new NotFoundError("Cannot find the user");
   }
