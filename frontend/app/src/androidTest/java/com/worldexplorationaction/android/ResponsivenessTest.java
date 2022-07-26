@@ -7,6 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -113,6 +114,60 @@ public class ResponsivenessTest {
                                     9),
                             isDisplayed()));
             logoutButton.perform(click());
+        });
+    }
+
+    @Test
+    public void watchLeaderboard() {
+        runWithRuntimeCheck(() -> {
+            ViewInteraction leaderboardButton = onView(
+                    allOf(withId(R.id.navigation_leaderboard), withContentDescription("Leaderboard"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.nav_view),
+                                            0),
+                                    2),
+                            isDisplayed()));
+            leaderboardButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction leaderboardFriendsButton = onView(
+                    allOf(withId(R.id.leaderboard_friends_button), withText("Friends"),
+                            childAtPosition(
+                                    allOf(withId(R.id.linearLayout),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    1)),
+                                    1),
+                            isDisplayed()));
+            leaderboardFriendsButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction leaderboardGlobalButton = onView(
+                    allOf(withId(R.id.leaderboard_global_button), withText("Global"),
+                            childAtPosition(
+                                    allOf(withId(R.id.linearLayout),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    1)),
+                                    0),
+                            isDisplayed()));
+            leaderboardGlobalButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction leaderboardFriendsButton = onView(
+                    allOf(withId(R.id.leaderboard_friends_button), withText("Friends"),
+                            childAtPosition(
+                                    allOf(withId(R.id.linearLayout),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    1)),
+                                    1),
+                            isDisplayed()));
+            leaderboardFriendsButton.perform(click());
         });
     }
 
