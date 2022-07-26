@@ -16,3 +16,9 @@ export class NotFoundError extends BadRequestError {
     super(message, status);
   }
 }
+
+export class UnauthorizedError extends BadRequestError {
+  constructor(message, status = 401) {
+    super(message, status);
+  }
+}

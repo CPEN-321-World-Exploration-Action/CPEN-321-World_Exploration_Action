@@ -14,7 +14,7 @@ export async function retrieveFriends(userId) {
 }
 
 export async function getFriendRequests(userId) {
-  const user = await User.findUser(senderId);
+  const user = await User.findUser(userId);
   if (!user) {
     throw new NotFoundError("Cannot find the user");
   }
@@ -28,6 +28,10 @@ export async function getFriendRequests(userId) {
 }
 
 export async function sendRequest(senderId, targetId) {
+  if (senderId === targetId) {
+    throw new BadRequestError("Cannot send a friend request to yourself");
+  }
+
   const sender = await User.findUser(senderId);
   const target = await User.findUser(targetId);
   if (!sender) {
