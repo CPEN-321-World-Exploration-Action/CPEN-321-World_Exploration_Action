@@ -1,6 +1,7 @@
 package com.worldexplorationaction.android;
 
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -9,12 +10,17 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
@@ -23,6 +29,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.worldexplorationaction.android.data.trophy.Trophy;
+import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 
@@ -208,6 +216,58 @@ public class ResponsivenessTest {
                                     0),
                             isDisplayed()));
             myLocationButton.perform(click());
+        });
+    }
+
+    @Test
+    public void reviewTrophyDetailsAndPhotos() {
+        Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",
+                49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
+        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
+        ActivityScenario.launch(intent);
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction sortButton = onView(
+                    allOf(withId(R.id.sort_photos),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    6),
+                            isDisplayed()));
+            sortButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            DataInteraction timeButton = onData(anything())
+                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
+                            childAtPosition(
+                                    withId(androidx.appcompat.R.id.contentPanel),
+                                    0)))
+                    .atPosition(0);
+            timeButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction sortButton = onView(
+                    allOf(withId(R.id.sort_photos),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    6),
+                            isDisplayed()));
+            sortButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            DataInteraction likeNumberButton = onData(anything())
+                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
+                            childAtPosition(
+                                    withId(androidx.appcompat.R.id.contentPanel),
+                                    0)))
+                    .atPosition(1);
+            likeNumberButton.perform(click());
         });
     }
 }
