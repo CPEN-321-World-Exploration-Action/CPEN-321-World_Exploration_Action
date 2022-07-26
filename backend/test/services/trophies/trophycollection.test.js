@@ -12,27 +12,23 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     );
     */
     /* Change in database */
-    expect(
-      await TrophyUser.findOrCreate(userId).uncollectedTrophies.toBe(
-        "need to mock"
-      )
+    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
+      "need to mock"
     );
-    expect(
-      await TrophyUser.findOrCreate(userId).collectedTrophies.toBe(
-        "need to mock"
-      )
+    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
+      "need to mock"
     );
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).list_of_collectors.toBe("need to mock")
-    );
+      }).list_of_collectors
+    ).toBe("need to mock");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).number_of_collectors.toBe("need to mock")
-    );
-    /* MessageManager Part */
+      }).number_of_collectors
+    ).toBe("need to mock");
+    /* MessageManager Part - score matters */
     expect();
   });
 
@@ -41,26 +37,22 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       DuplicationError
     );
     /* Change in database */
-    expect(
-      await TrophyUser.findOrCreate(userId).uncollectedTrophies.toBe(
-        "need to mock to be the same"
-      )
+    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
+      "need to mock to be the same"
     );
-    expect(
-      await TrophyUser.findOrCreate(userId).collectedTrophies.toBe(
-        "need to mock to be the same"
-      )
+    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
+      "need to mock to be the same"
     );
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).list_of_collectors.toBe("need to mock to be the same")
-    );
+      }).list_of_collectors
+    ).toBe("need to mock to be the same");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).number_of_collectors.toBe("need to mock to be the same")
-    );
+      }).number_of_collectors
+    ).toBe("need to mock to be the same");
   });
 
   test("collectTrophy_invalid_userId", async () => {
@@ -71,13 +63,13 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).list_of_collectors.toBe("need to mock to be the same")
-    );
+      }).list_of_collectors
+    ).toBe("need to mock to be the same");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
-      }).number_of_collectors.toBe("need to mock to be the same")
-    );
+      }).number_of_collectors
+    ).toBe("need to mock to be the same");
   });
 
   test("collectTrophy_invalid_trophyId", async () => {
@@ -85,15 +77,11 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       InputError
     );
     /* Change in database */
-    expect(
-      await TrophyUser.findOrCreate(userId).uncollectedTrophies.toBe(
-        "need to mock to be the same"
-      )
+    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
+      "need to mock to be the same"
     );
-    expect(
-      await TrophyUser.findOrCreate(userId).collectedTrophies.toBe(
-        "need to mock to be the same"
-      )
+    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
+      "need to mock to be the same"
     );
   });
 

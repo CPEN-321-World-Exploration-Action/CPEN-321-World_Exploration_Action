@@ -1,5 +1,5 @@
 import { jest } from "@jest/globals";
-import friendsMock, {mockUsers} from "../../../src/services/users/__mocks__/friends";
+import friendsMock, {mockUsers} from "../../../src/services/users/__mocks__/friends.js";
 
 jest.unstable_mockModule("../../../src/services/users/friends", friendsMock);
 
