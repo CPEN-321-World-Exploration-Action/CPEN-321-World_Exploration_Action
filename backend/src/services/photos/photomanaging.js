@@ -5,7 +5,7 @@ import { BadRequestError, NotFoundError } from "../../utils/errors.js";
 export async function userLikePhoto(userID, picID) {
   const photo = await Photo.findPhoto(picID);
   if (!photo) {
-    throw new NotFoundError("Cannot find the picture");
+    throw new NotInDBError("Cannot find the picture");
   }
   if (photo.likedUsers.includes(userID)) {
     await Photo.userUnlikePhoto(userID, picID);
