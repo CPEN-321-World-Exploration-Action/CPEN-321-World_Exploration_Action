@@ -221,10 +221,7 @@ public class ResponsivenessTest {
 
     @Test
     public void reviewTrophyDetailsAndPhotos() {
-        Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",
-                49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
-        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
-        ActivityScenario.launch(intent);
+        startTrophyDetailsActivity();
 
         runWithRuntimeCheck(() -> {
             ViewInteraction sortButton = onView(
@@ -269,5 +266,53 @@ public class ResponsivenessTest {
                     .atPosition(1);
             likeNumberButton.perform(click());
         });
+    }
+
+    @Test
+    public void evaluatePhotos() {
+        startTrophyDetailsActivity();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction photo = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.images_grid),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    9)),
+                                    0),
+                            isDisplayed()));
+            photo.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction likeButton = onView(
+                    allOf(withId(R.id.like_button),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    4),
+                            isDisplayed()));
+            likeButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction likeButton = onView(
+                    allOf(withId(R.id.like_button),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    4),
+                            isDisplayed()));
+            likeButton.perform(click());
+        });
+    }
+
+    private static void startTrophyDetailsActivity() {
+        Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",
+                49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
+        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
+        ActivityScenario.launch(intent);
     }
 }
