@@ -1,4 +1,4 @@
-package com.worldexplorationaction.android;
+package com.worldexplorationaction.android.nonfunctional;
 
 
 import static androidx.test.espresso.Espresso.onData;
@@ -7,6 +7,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -26,18 +28,23 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.worldexplorationaction.android.MainActivity;
+import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,7 +61,7 @@ import java.io.IOException;
 @RunWith(AndroidJUnit4.class)
 public class ResponsivenessTest {
     private static final long MAX_DELAY = 2_000_000_000L; // in nanosecond, 2 seconds
-    private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 3 second
+    private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
     private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
 
     @Rule
@@ -108,7 +115,7 @@ public class ResponsivenessTest {
     private static void openFriendView() {
         runWithRuntimeCheck(() -> {
             ViewInteraction friendsButton = onView(
-                    allOf(withId(R.id.navigation_friends), withContentDescription("Friends"),
+                    Matchers.allOf(ViewMatchers.withId(R.id.navigation_friends), withContentDescription("Friends"),
                             childAtPosition(
                                     childAtPosition(
                                             withId(R.id.nav_view),
@@ -256,25 +263,15 @@ public class ResponsivenessTest {
         TrophyDetailsUtils.startTrophyDetailsActivity();
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction sortButton = onView(
-                    allOf(withId(R.id.sort_photos),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    6),
-                            isDisplayed()));
-            sortButton.perform(click());
+            onView(withId(R.id.sort_photos))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
         });
 
         runWithRuntimeCheck(() -> {
-            DataInteraction timeButton = onData(anything())
-                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
-                            childAtPosition(
-                                    withId(androidx.appcompat.R.id.contentPanel),
-                                    0)))
-                    .atPosition(0);
-            timeButton.perform(click());
+            onView(withText("Time"))
+                    .inRoot(isDialog())
+                    .perform(click());
         });
 
         runWithRuntimeCheck(() -> {
@@ -290,13 +287,9 @@ public class ResponsivenessTest {
         });
 
         runWithRuntimeCheck(() -> {
-            DataInteraction likeNumberButton = onData(anything())
-                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
-                            childAtPosition(
-                                    withId(androidx.appcompat.R.id.contentPanel),
-                                    0)))
-                    .atPosition(1);
-            likeNumberButton.perform(click());
+            onView(withText("Like Number"))
+                    .inRoot(isDialog())
+                    .perform(click());
         });
 
         runWithRuntimeCheck(() -> {
@@ -329,14 +322,7 @@ public class ResponsivenessTest {
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction likeButton = onView(
-                    allOf(withId(R.id.like_button),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    4),
-                            isDisplayed()));
+            ViewInteraction likeButton = onView(withId(R.id.like_button));
             likeButton.perform(click());
         });
 
@@ -411,26 +397,14 @@ public class ResponsivenessTest {
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction userView = onView(
-                    allOf(childAtPosition(
-                                    allOf(withId(R.id.friends_user_list),
-                                            childAtPosition(
-                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                    2)),
-                                    0),
-                            isDisplayed()));
-            userView.perform(click());
+            onView(withId(R.id.friends_user_list))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction yesButton = onView(
-                    allOf(withId(android.R.id.button1), withText("Yes"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(androidx.appcompat.R.id.buttonPanel),
-                                            0),
-                                    3)));
-            yesButton.perform(scrollTo(), click());
+            onView(withText("Yes"))
+                    .inRoot(isDialog())
+                    .perform(scrollTo(), click());
         });
     }
 
@@ -467,15 +441,8 @@ public class ResponsivenessTest {
         openFriendView();
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction requestView = onView(
-                    allOf(childAtPosition(
-                                    allOf(withId(R.id.friends_user_list),
-                                            childAtPosition(
-                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                                    2)),
-                                    0),
-                            isDisplayed()));
-            requestView.perform(click());
+            onView(withId(R.id.friends_user_list))
+                    .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         });
 
         runWithRuntimeCheck(() -> {
