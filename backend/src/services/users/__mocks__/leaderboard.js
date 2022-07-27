@@ -1,5 +1,19 @@
 import { jest } from "@jest/globals";
 
+export const onReceiveUserScoreUpdatedMessage = jest.fn(async (message) => {});
+
+export const getGlobalLeaderboard = jest.fn(async () => {
+  return mockGlobalLeaderboard;
+});
+
+export const getFriendLeaderboard = jest.fn(async (userId) => {
+  return mockFriendLeaderboard;
+});
+
+export const subscribeUpdate = jest.fn(async (userId, fcmToken) => {
+  return mockExpireTime;
+});
+
 export const mockGlobalLeaderboard = [
   {
     user_id: "572385753286",
@@ -27,23 +41,7 @@ export const mockFriendLeaderboard = [
     picture:
       "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
     score: 890,
-  }
+  },
 ];
 
 export const mockExpireTime = 1657673071835;
-
-export const leaderboardMock = () => ({
-  onReceiveUserScoreUpdatedMessage: async (message) => {
-  },
-  getGlobalLeaderboard: async () => {
-    return mockGlobalLeaderboard;
-  },
-  getFriendLeaderboard: async (userId) => {
-    return mockFriendLeaderboard;
-  },
-  subscribeUpdate: async (userId, fcmToken) => {
-    return mockExpireTime;
-  },
-});
-
-export default leaderboardMock;
