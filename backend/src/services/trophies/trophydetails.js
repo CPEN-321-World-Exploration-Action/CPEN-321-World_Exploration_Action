@@ -50,7 +50,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
         }
     }
     // Update User's list of uncollected trophies
-    await updateTrophyUser(user_id, {uncollectedTrophyIDs})
+    await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
     
     let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs);
     console.log(uncollectedTrophies)
