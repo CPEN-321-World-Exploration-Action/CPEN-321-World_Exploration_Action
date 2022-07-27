@@ -24,13 +24,14 @@ export async function getTrophiesUser(req, res) {
       .json({ message: "User latitude and longitude are required." });
   }
 
-  const trophyUser = await trophyDetail.getTrophyUser(user_id);
+  // removed because this will never be false
+  // const trophyUser = await trophyDetail.getTrophyUser(user_id);
 
-  if (!trophyUser) {
-    return res.status(401).json({
-      message: `User with id ${user_id} not found in TrophyUser database`,
-    });
-  }
+  // if (!trophyUser) {
+  //   return res.status(401).json({
+  //     message: `User with id ${user_id} not found in TrophyUser database`,
+  //   });
+  // }
 
   const trophies = await trophyDetail.getTrophiesUser(
     user_id,
