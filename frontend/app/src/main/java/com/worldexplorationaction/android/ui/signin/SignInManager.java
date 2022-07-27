@@ -89,9 +89,8 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
 
     public void signIn(AppCompatActivity activity, boolean checkLastAccount) {
         if (CommonUtils.isRunningUiTest()) {
-            Log.w(TAG, "Skip login in UI tests.");
-            signedInUserId = TEST_USER_ID;
-            onSignInResultListener.accept(true, null);
+            Log.w(TAG, "Login in UI tests.");
+            uiTestLogin();
             return;
         }
 
@@ -138,8 +137,9 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
                 onSignInResultListener.accept(true, null);
                 uploadFcmToken();
             } else {
-                Log.i(TAG, "userService.login null body ");
-                onSignInResultListener.accept(false, "userService.login failed: null response body");
+                String errorMessage = "userService.login failed: null response body";
+                Log.i(TAG, errorMessage);
+                onSignInResultListener.accept(false, errorMessage);
             }
         }, null, errorMessage -> {
             Log.e(TAG, "userService.login failed " + errorMessage);
@@ -162,5 +162,23 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
                 Log.e(TAG, "userService.uploadFcmToken failed " + errorMessage);
             }));
         });
+    }
+
+    private void uiTestLogin() {
+        userService.testerLogin().enqueue(new CustomCallback<>(responseBody -> {
+            if (responseBody != null) {
+                Log.e(TAG, "userService.testerLogin success");
+                signedInUserId = responseBody.getId();
+                onSignInResultListener.accept(true, null);
+                uploadFcmToken();
+            } else {
+                String errorMessage = "userService.testerLogin failed: null response body";
+                Log.i(TAG, errorMessage);
+                onSignInResultListener.accept(false, errorMessage);
+            }
+        }, null, errorMessage -> {
+            Log.e(TAG, "userService.testerLogin failed " + errorMessage);
+            onSignInResultListener.accept(false, errorMessage);
+        }));
     }
 }

@@ -20,6 +20,10 @@ public interface UserService {
     @POST("accounts/login")
     Call<UserProfile> login(@Header("Authorization") String tokenId);
 
+    // For UI tests only
+    @POST("accounts/tester-login")
+    Call<UserProfile> testerLogin();
+
     @POST("accounts/logout")
     Call<Void> logout();
 

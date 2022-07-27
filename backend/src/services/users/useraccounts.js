@@ -39,7 +39,7 @@ export async function loginWithGoogle(idToken) {
     return user;
   } else {
     // Add to payload so payload can be used to create profile with one object
-    idTokenPayload.user_id = userId
+    idTokenPayload.user_id = userId;
     return await createUserProfile(idTokenPayload);
   }
 }
@@ -56,6 +56,24 @@ async function createUserProfile(body) {
   return await User.create(body);
 }
 
+/* Functions for Tests */
+export async function testerLogin() {
+  const testUser = {
+    user_id: "_test_user_1",
+    name: "Test User 1",
+    email: "testuser1@wea.com",
+    picture: "https://avatars.githubusercontent.com/u/20661066",
+    friends: [],
+    score: 99,
+    fcm_token: null,
+  };
+  let user = await User.findUser(testUser.user_id);
+  if (user) {
+    return user;
+  } else {
+    return await User.create(testUser);
+  }
+}
 
 // dev functions
 // export async function createUser(req, res) {
