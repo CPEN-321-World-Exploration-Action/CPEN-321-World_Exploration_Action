@@ -30,7 +30,6 @@ import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -113,7 +112,7 @@ public class ResponsivenessTest {
 
     private static void openFriendView() {
         runWithRuntimeCheck(() ->
-                onView(allOf(ViewMatchers.withId(R.id.navigation_friends),
+                onView(allOf(withId(R.id.navigation_friends),
                         withContentDescription("Friends")))
                         .check(matches(isDisplayed()))
                         .perform(click())
