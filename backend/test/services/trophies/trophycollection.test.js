@@ -3,18 +3,54 @@ import { jest } from "@jest/globals";
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
+// need to update the dataset for test
+TrophyUser.findOrCreate("User_TrophyCollection_Test");
+TrophyUser.updateOne(
+  { user_id: "User_TrophyCollection_Test" },
+  {
+    $set: {
+      uncollectedTrophies: [" "],
+      collectedTrophies: [" "],
+      list_of_photos: [" "],
+      trophyTags: [" "],
+    },
+  }
+);
+
+let Trophy_Test = await TrophyTrophy.findOne({
+  trophy_id: "Trophy_TrophyCollection_Test",
+}).exec();
+if (!Trophy_Test) {
+  await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test" });
+}
+
+TrophyUser.updateOne(
+  { trophy_id: "Trophy_TrophyCollection_Test" },
+  {
+    $set: {
+      name: "Trophy_TrophyCollection_Test",
+      latitude: 100,
+      longitude: 100,
+      number_of_collectors: 0,
+      quality: "Bronze",
+      list_of_photos: [" "],
+      list_of_collectors: [" "],
+    },
+  }
+);
+
 describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
   test("collectTrophy", async () => {
-    /*
-    expect(await trophyCollection.collectTrophy(userId, trophyId)).toBe(
-      mockGlobalLeaderboard
-    );
-    */
+    userId = "User_TrophyCollection_Test";
+
+    // returns nothing
+    await trophyCollection.collectTrophy(userId, trophyId);
+
     /* Change in database */
     expect(
-      await TrophyUser.findOrCreate({ user_id: userId }).uncollectedTrophies
-    ).toBe("need to mock");
+      await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
+    ).toEqual("need to mock");
     expect(
       await TrophyUser.findOne({ user_id: userId }).collectedTrophies
     ).toBe("need to mock");
