@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
@@ -438,7 +439,7 @@ public class ResponsivenessTest {
         openFriendView();
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction constraintLayout = onView(
+            ViewInteraction requestView = onView(
                     allOf(childAtPosition(
                                     allOf(withId(R.id.friends_user_list),
                                             childAtPosition(
@@ -446,18 +447,18 @@ public class ResponsivenessTest {
                                                     2)),
                                     0),
                             isDisplayed()));
-            constraintLayout.perform(click());
+            requestView.perform(click());
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction materialButton = onView(
+            ViewInteraction acceptButton = onView(
                     allOf(withId(android.R.id.button1), withText("Accept"),
                             childAtPosition(
                                     childAtPosition(
                                             withId(androidx.appcompat.R.id.buttonPanel),
                                             0),
                                     3)));
-            materialButton.perform(scrollTo(), click());
+            acceptButton.perform(scrollTo(), click());
         });
     }
 
@@ -466,7 +467,7 @@ public class ResponsivenessTest {
         openFriendView();
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction constraintLayout = onView(
+            ViewInteraction requestView = onView(
                     allOf(childAtPosition(
                                     allOf(withId(R.id.friends_user_list),
                                             childAtPosition(
@@ -474,28 +475,74 @@ public class ResponsivenessTest {
                                                     2)),
                                     0),
                             isDisplayed()));
-            constraintLayout.perform(click());
+            requestView.perform(click());
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction materialButton = onView(
+            ViewInteraction declineButton = onView(
                     allOf(withId(android.R.id.button2), withText("Decline"),
                             childAtPosition(
                                     childAtPosition(
                                             withId(androidx.appcompat.R.id.buttonPanel),
                                             0),
                                     2)));
-            materialButton.perform(scrollTo(), click());
+            declineButton.perform(scrollTo(), click());
         });
     }
 
     @Test
     public void manageFriendsViewProfile() {
         openFriendView();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction userView = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.friends_user_list),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    2)),
+                                    1),
+                            isDisplayed()));
+            userView.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            DataInteraction profileButton = onData(anything())
+                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
+                            childAtPosition(
+                                    withId(androidx.appcompat.R.id.contentPanel),
+                                    0)))
+                    .atPosition(0);
+            profileButton.perform(click());
+        });
+
+        runWithRuntimeCheck(Espresso::pressBack);
     }
 
     @Test
     public void manageFriendsDeleteFriend() {
         openFriendView();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction userView = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.friends_user_list),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    2)),
+                                    1),
+                            isDisplayed()));
+            userView.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            DataInteraction deleteButton = onData(anything())
+                    .inAdapterView(allOf(withId(androidx.appcompat.R.id.select_dialog_listview),
+                            childAtPosition(
+                                    withId(androidx.appcompat.R.id.contentPanel),
+                                    0)))
+                    .atPosition(1);
+            deleteButton.perform(click());
+        });
     }
 }
