@@ -50,7 +50,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
         }
     }
     // Update User's list of uncollected trophies
-    await updateTrophyUser(user_id, {uncollectedTrophyIDs})
+    await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
     
     let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs);
     console.log(uncollectedTrophies)
@@ -170,6 +170,24 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     const d = R * c; // in metres
     console.log(d)
     return d
+}
+
+/* Functions for Tests */
+export async function resetTrophyUserForTester(userId) {
+    const result = await TrophyUser.updateOne(
+        { user_id: userId },
+        {
+            user_id: userId,
+            uncollectedTrophies: ["ChIJAx7UL8xyhlQR86Iqc-fUncc"],
+            collectedTrophies: [],
+            list_of_photos: [],
+            trophyTags: [],
+        },
+        { upsert: true }
+    );
+    if (result.matchedCount === 0 && result.upsertedCount === 0) {
+        throw new Error("resetTrophyUserForTester failed");
+    }
 }
 
 // // Dev functions

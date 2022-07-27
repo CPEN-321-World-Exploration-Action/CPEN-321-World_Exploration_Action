@@ -24,6 +24,10 @@ public interface TrophyService {
     @GET("{trophyId}")
     Call<Trophy> getTrophyDetails(@Path("trophyId") String trophyId);
 
+    // For UI tests only
+    @POST("reset-trophy-user")
+    Call<Void> resetTrophyUser();
+
     class Holder {
         private static final TrophyService instance = RetrofitUtils.getRetrofit("trophies/").create(TrophyService.class);
     }

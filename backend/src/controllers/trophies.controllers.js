@@ -58,6 +58,11 @@ export async function getTrophyDetails(req, res) {
   res.status(200).json(trophies[0]);
 }
 
+/* Functions for Tests */
+export async function resetTrophyUser(req, res) {
+  await trophyDetail.resetTrophyUserForTester(req.userId);
+  res.status(201).send();
+}
 
 // // Dev Functions
 // export async function getTrophyUser(req, res){

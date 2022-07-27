@@ -21,14 +21,13 @@ import com.google.android.gms.tasks.Task;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
-import com.worldexplorationaction.android.ui.utility.CustomCallback;
 import com.worldexplorationaction.android.ui.utility.CommonUtils;
+import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.function.BiConsumer;
 
 public class SignInManager implements ActivityResultCallback<ActivityResult> {
     private static final String TAG = SignInManager.class.getSimpleName();
-    private static final String TEST_USER_ID = "test_uid_001";
     public static String signedInUserId;
     private final GoogleSignInClient googleSignInClient;
     private final ActivityResultLauncher<Intent> googleSignInLauncher;

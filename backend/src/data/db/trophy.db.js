@@ -94,6 +94,13 @@ const trophySchemaUser = new Schema(
   },
   {
     statics: {
+      async addUncollectedTrophies(userId, trophyIds) {
+        const update = {
+          $addToSet: { uncollectedTrophies: { $each: trophyIds } },
+        };
+        const res = await this.updateOne({ user_id: userId }, update);
+        return res.modifiedCount > 0;
+      },
       async removeUncollectedTrophy(userId, trophyId) {
         const update = { $pullAll: { uncollectedTrophies: [trophyId] } };
         const res = await this.updateOne(

@@ -8,7 +8,7 @@ export async function collectTrophy(userId, trophyId) {
 
   const success = await TrophyUser.removeUncollectedTrophy(userId, trophyId);
   if (!success) {
-    throw new BadRequestError("Invalid userId or trophyId");
+    throw new BadRequestError(`Invalid userId (${userId}) or trophyId (${trophyId})`);
   }
 
   await TrophyUser.addCollectedTrophy(userId, trophyId);
