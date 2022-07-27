@@ -1,39 +1,42 @@
 import { jest } from "@jest/globals";
 
-export const friendsMock = () => ({
-  retrieveFriends: async (userId) => {
-    return mockUsers;
-  },
-  getFriendRequests: async (userId) => {
-    return mockUsers;
-  },
-  sendRequest: async (senderId, targetId) => {
-  },
-  deleteFriend: async (userId, friendId) => {
-  },
-  acceptUser: async (userId, friendId) => {
-  },
-  declineUser: async (userId, friendId) => {
-  },
-});
+export const getTrophiesUser = jest.fn(
+  async (user_id, user_latitude, user_longitude) => {return MockTrophyList}
+);
 
-export default friendsMock;
+export const getTrophyDetails = jest.fn(async (ids) => {});
 
-export const mockUsers = [
+export const resetTrophyUserForTester = jest.fn(async (userId) => {});
+
+export const MockTrophyList = [
   {
-    user_id: "438952804820",
-    name: "Joseph Smith",
-    email: "joseph.smith@gmail.com",
-    picture:
-      "https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png",
-    score: 890,
+    trophy_id: "Trophy_1",
+    name: "Trophy1",
+    latitude: 123,
+    longitude: 123,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: ["Photo_1_1"],
+    list_of_collectors: ["User_2"]
   },
   {
-    user_id: "60894592438538",
-    name: "Stefan Estes",
-    email: "stefan.estes@gmail.com",
-    picture:
-      "https://as1.ftcdn.net/v2/jpg/01/16/24/44/1000_F_116244459_pywR1e0T3H7FPk3LTMjG6jsL3UchDpht.jpg",
-    score: 787,
+    trophy_id: "Trophy_2",
+    name: "Trophy2",
+    latitude: 256,
+    longitude: 256,
+    number_of_collectors: 3,
+    quality: "Bronze",
+    list_of_photos: ["Photo_2_1", "Photo_2_2"],
+    list_of_collectors: ["User_1", "User_2", "User_3"]
   },
+  {
+    trophy_id: "Trophy_3",
+    name: "Trophy3",
+    latitude: 2562,
+    longitude: 2562,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [" "],
+    list_of_collectors: [" "]
+  }
 ];
