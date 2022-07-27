@@ -7,7 +7,7 @@ const friendRequests = new Map();
 
 export async function retrieveFriends(userId) {
   const user = await User.findUser(userId);
-  if (!user){
+  if (!user) {
     throw new NotFoundError("Cannot find the user");
   }
   return await User.getFriends(userId);
@@ -40,6 +40,8 @@ export async function sendRequest(senderId, targetId) {
   if (!target) {
     throw new NotFoundError("Cannot find the target user");
   }
+
+  addRequest(senderId, targetId);
 
   const existingRequests = friendRequests.get(targetId) ?? [];
   if (!existingRequests.includes(senderId)) {
@@ -74,7 +76,7 @@ export async function acceptUser(userId, friendId) {
 }
 
 export async function declineUser(userId, friendId) {
-  removeRequest(friendId, userId);// this will make sure userId and friendId are valid
+  removeRequest(friendId, userId); // this will make sure userId and friendId are valid
 
   const user = await User.findUser(userId);
   sendNotificationInBackground(
@@ -82,6 +84,16 @@ export async function declineUser(userId, friendId) {
     "Declined Friend Request",
     user.name + " declined your friend request"
   );
+}
+
+function addRequest(sender, target) {
+  const existingRequests = friendRequests.get(target) ?? [];
+  if (existingRequests.includes(sender)) {
+    return false;
+  }
+  existingRequests.push(sender);
+  friendRequests.set(target, existingRequests);
+  return true;
 }
 
 function removeRequest(source, target) {
@@ -103,4 +115,13 @@ function sendNotificationInBackground(targetUserId, title, body) {
   })().catch((err) => {
     console.log(err);
   });
+}
+
+/* Functions for Tests */
+
+export async function resetTestUsers() {
+  addRequest("_test_user_4", "_test_user_1");
+  try {
+    removeRequest("_test_user_1", "_test_user_3")
+  } catch (ignored) {}
 }

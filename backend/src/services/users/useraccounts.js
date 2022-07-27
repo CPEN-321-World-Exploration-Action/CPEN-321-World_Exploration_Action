@@ -57,21 +57,63 @@ async function createUserProfile(body) {
 }
 
 /* Functions for Tests */
+
 export async function testerLogin() {
-  const testUser = {
+  await createTestUsers();
+  return await User.findUser("_test_user_1");
+}
+
+async function createTestUsers() {
+  const testUser1 = {
     user_id: "_test_user_1",
     name: "Test User 1",
     email: "testuser1@wea.com",
     picture: "https://avatars.githubusercontent.com/u/20661066",
-    friends: [],
+    friends: ["_test_user_2"],
     score: 99,
     fcm_token: null,
   };
-  let user = await User.findUser(testUser.user_id);
-  if (user) {
-    return user;
-  } else {
-    return await User.create(testUser);
+  const testUser2 = {
+    user_id: "_test_user_2",
+    name: "Test User 2",
+    email: "testuser2@wea.com",
+    picture: "https://avatars.githubusercontent.com/u/198419",
+    friends: ["_test_user_1"],
+    score: 156,
+    fcm_token: null,
+  };
+  const testUser3 = {
+    user_id: "_test_user_3",
+    name: "Test User 3",
+    email: "testuser3@wea.com",
+    picture: "https://avatars.githubusercontent.com/u/4498198",
+    friends: [],
+    score: 321,
+    fcm_token: null,
+  };
+  const testUser4 = {
+    user_id: "_test_user_4",
+    name: "Test User 4",
+    email: "testuser4@wea.com",
+    picture: "https://avatars.githubusercontent.com/u/65551651",
+    friends: [],
+    score: 158,
+    fcm_token: null,
+  };
+  await upsertUser(testUser1);
+  await upsertUser(testUser2);
+  await upsertUser(testUser3);
+  await upsertUser(testUser4);
+}
+
+async function upsertUser(user) {
+  const result = await User.updateOne(
+      { user_id: user.user_id },
+      user,
+      { upsert: true }
+  );
+  if (result.matchedCount == 0 && result.upsertedCount == 0) {
+      throw new Error("upsertUser failed");
   }
 }
 
