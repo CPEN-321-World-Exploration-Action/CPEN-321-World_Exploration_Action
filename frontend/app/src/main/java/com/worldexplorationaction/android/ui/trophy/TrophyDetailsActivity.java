@@ -104,6 +104,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     private void onSortPhotoClicked(View unused) {
+        Log.d(TAG, "onSortPhotoClicked");
         new AlertDialog.Builder(this)
                 .setTitle("Sort By")
                 .setItems(new CharSequence[]{
@@ -131,11 +132,14 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     private void onTrophyActionButtonClicked(View unused) {
+        Log.d(TAG, "onTrophyActionButtonClicked");
         if (!userAtLocation) {
+            Log.d(TAG, "Too far away");
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
         }
         if (Boolean.TRUE.equals(viewModel.getTrophyCollected().getValue())) {
+            Log.d(TAG, "Take a photo clicked");
             if (!viewModel.getUserHasTakenPhoto()) {
                 dispatchTakePictureIntent();
             } else {
@@ -146,6 +150,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                         .create().show();
             }
         } else {
+            Log.d(TAG, "Collect trophy clicked");
             viewModel.collectTrophy();
         }
     }
