@@ -47,7 +47,6 @@ import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -121,17 +120,12 @@ public class UsabilityTest {
     }
 
     private void openFriendView() {
-        runOneOperation(() -> {
-            ViewInteraction friendsButton = onView(
-                    Matchers.allOf(ViewMatchers.withId(R.id.navigation_friends), withContentDescription("Friends"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(R.id.nav_view),
-                                            0),
-                                    3),
-                            isDisplayed()));
-            friendsButton.perform(click());
-        });
+        runOneOperation(() ->
+                onView(allOf(ViewMatchers.withId(R.id.navigation_friends),
+                        withContentDescription("Friends")))
+                        .check(matches(isDisplayed()))
+                        .perform(click())
+        );
     }
 
     @Before
