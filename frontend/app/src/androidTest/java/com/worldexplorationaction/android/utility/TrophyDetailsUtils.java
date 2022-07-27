@@ -44,4 +44,11 @@ public class TrophyDetailsUtils {
         Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
         ActivityScenario.launch(intent);
     }
+
+    public static void startTrophyDetailsActivity1() throws IOException {
+        UserService.getService().testerLogin().execute();
+        TrophyService.getService().resetTrophyUser().execute();
+        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, false);
+        ActivityScenario.launch(intent);
+    }
 }

@@ -146,7 +146,7 @@ public class FriendsViewModel extends ViewModel implements UserListViewModel {
     public void declineRequest(UserProfile user) {
         userService.declineRequest(user.getId()).enqueue(new CustomCallback<>(unused -> {
             Log.i(TAG, "declineRequest succeeded");
-            showToastMessage("Successfully declined" + user.getName() + "'s friend request");
+            showToastMessage("Successfully declined " + user.getName() + "'s friend request");
             fetchFriendsAndRequests();
         }, null, errorMessage -> {
             Log.e(TAG, "declineRequest failed " + errorMessage);
