@@ -1,23 +1,20 @@
 import { jest } from "@jest/globals";
 
-export const friendsMock = () => ({
-  retrieveFriends: async (userId) => {
-    return mockUsers;
-  },
-  getFriendRequests: async (userId) => {
-    return mockUsers;
-  },
-  sendRequest: async (senderId, targetId) => {
-  },
-  deleteFriend: async (userId, friendId) => {
-  },
-  acceptUser: async (userId, friendId) => {
-  },
-  declineUser: async (userId, friendId) => {
-  },
+export const retrieveFriends = jest.fn(async (userId) => {
+  return mockUsers;
 });
 
-export default friendsMock;
+export const getFriendRequests = jest.fn(async (userId) => {
+  return mockUsers;
+});
+
+export const sendRequest = jest.fn(async (senderId, targetId) => {});
+
+export const deleteFriend = jest.fn(async (userId, friendId) => {});
+
+export const acceptUser = jest.fn(async (userId, friendId) => {});
+
+export const declineUser = jest.fn(async (userId, friendId) => {});
 
 export const mockUsers = [
   {
