@@ -12,12 +12,12 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     );
     */
     /* Change in database */
-    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
-      "need to mock"
-    );
-    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
-      "need to mock"
-    );
+    expect(
+      await TrophyUser.findOrCreate({ user_id: userId }).uncollectedTrophies
+    ).toBe("need to mock");
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).collectedTrophies
+    ).toBe("need to mock");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
@@ -37,12 +37,12 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       DuplicationError
     );
     /* Change in database */
-    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
-      "need to mock to be the same"
-    );
-    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
-      "need to mock to be the same"
-    );
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
+    ).toBe("need to mock to be the same");
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).collectedTrophies
+    ).toBe("need to mock to be the same");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
@@ -77,12 +77,12 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       InputError
     );
     /* Change in database */
-    expect(await TrophyUser.findOrCreate(userId).uncollectedTrophies).toBe(
-      "need to mock to be the same"
-    );
-    expect(await TrophyUser.findOrCreate(userId).collectedTrophies).toBe(
-      "need to mock to be the same"
-    );
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
+    ).toBe("need to mock to be the same");
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).collectedTrophies
+    ).toBe("need to mock to be the same");
   });
 
   test("collectTrophy_both_invalid", async () => {
