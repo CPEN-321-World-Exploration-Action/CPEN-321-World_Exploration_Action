@@ -1,22 +1,22 @@
 import { jest } from "@jest/globals";
 
-export const userAccountsMock = () => ({
-  onReceiveTrophyCollectedMessage: async (message) => {
-  },
-  getUserProfile: async (userId) => {
-    return mockUser;
-  },
-  uploadFcmToken: async (userId, fcmToken) => {
-  },
-  loginWithGoogle: async (idToken) => {
-    return mockUser;
-  },
-  searchUser: async (query) => {
-    return mockUsers;
-  },
-  signOut: async () => {
-  },
+export const onReceiveTrophyCollectedMessage = jest.fn(async (message) => {});
+
+export const getUserProfile = jest.fn(async (userId) => {
+  return mockUser;
 });
+
+export const uploadFcmToken = jest.fn(async (userId, fcmToken) => {});
+
+export const loginWithGoogle = jest.fn(async (idToken) => {
+  return mockUser;
+});
+
+export const searchUser = jest.fn(async (query) => {
+  return mockUsers;
+});
+
+export const signOut = jest.fn(async () => {});
 
 export const mockUser = {
   user_id: "438952804820",
@@ -45,5 +45,3 @@ export const mockUsers = [
     score: 787,
   },
 ];
-
-export default userAccountsMock;
