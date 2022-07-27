@@ -6,6 +6,9 @@ import { elementRemoved } from "../../utils/utils.js";
 const friendRequests = new Map();
 
 export async function retrieveFriends(userId) {
+  if (typeof userId !== "string") {
+    throw new TypeError("Invalid userId");
+  }
   const user = await User.findUser(userId);
   if (!user) {
     throw new NotFoundError("Cannot find the user");

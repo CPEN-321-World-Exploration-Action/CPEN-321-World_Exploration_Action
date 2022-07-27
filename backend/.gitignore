@@ -1,5 +1,6 @@
 /node_modules/
 /uploads/
+/coverage/
 .env
 .DS_Store
 firebase-service-account.json

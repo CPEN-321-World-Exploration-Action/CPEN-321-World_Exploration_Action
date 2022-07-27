@@ -53,10 +53,8 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
     
     let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs);
-    console.log(uncollectedTrophies)
     //  Add parameter describing if trophy is collected or not
     uncollectedTrophies = uncollectedTrophies.map((trophy) => ( {...trophy._doc, collected: false}));
-    console.log(uncollectedTrophies)
     // Get User's list of collected trophies
     let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
 
@@ -68,25 +66,25 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     }
 }
 
-export async function getTrophyUser(user_id){
-    return await TrophyUser.findOrCreate(user_id);
-}
+// export async function getTrophyUser(user_id){
+//     return await TrophyUser.findOrCreate(user_id);
+// }
 
-export async function updateTrophyUser(user_id, body){
-        // By default this will return the TrophyUser before being updated
-        // It will update it correctly, just return the old task here.
-        // Also validators aren't running - need options object
-        return await TrophyUser.findOneAndUpdate({user_id:user_id}, body, {
-            new: true, 
-            runValidators: true
-        })
-}
+// export async function updateTrophyUser(user_id, body){
+//         // By default this will return the TrophyUser before being updated
+//         // It will update it correctly, just return the old task here.
+//         // Also validators aren't running - need options object
+//         return await TrophyUser.findOneAndUpdate({user_id:user_id}, body, {
+//             new: true, 
+//             runValidators: true
+//         })
+// }
 
 export async function getTrophyDetails(ids){
     return await TrophyTrophy.find({trophy_id:{$in: ids}})
 }
 
-export async function createManyTrophies(locations){
+async function createManyTrophies(locations){
     let trophies = [];
     for(let i=0; i< locations.length;i++){
         const {name, place_id:trophy_id, geometry, types:tags, rating, user_ratings_total} = locations[i]
@@ -129,14 +127,14 @@ export async function createManyTrophies(locations){
     return trophy_ids
 }
 
-export async function updateTrophy(trophyID, body){
+async function updateTrophy(trophyID, body){
     return await TrophyTrophy.findOneAndUpdate({trophy_id:trophyID},body, {
         new: true, 
         runValidators: true
     })
 }
 
-export async function computeMinTrophyDistance(user_latitude, user_longitude, trophyIds){
+async function computeMinTrophyDistance(user_latitude, user_longitude, trophyIds){
 
     const trophies = await getTrophyDetails(trophyIds);
 
@@ -153,7 +151,7 @@ export async function computeMinTrophyDistance(user_latitude, user_longitude, tr
     return minDist;
 }  
 
-export function haversineDistance(lat1, lon1, lat2, lon2){
+function haversineDistance(lat1, lon1, lat2, lon2){
     // The Haversine formula computes the great circle distance between two points
 
     const R = 6371000; // metres - radius of Earth
