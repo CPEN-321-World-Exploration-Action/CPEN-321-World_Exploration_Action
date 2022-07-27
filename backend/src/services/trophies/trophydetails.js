@@ -185,7 +185,7 @@ export async function resetTrophyUserForTester(userId) {
         },
         { upsert: true }
     );
-    if (result.matchedCount == 0 && result.upsertedCount == 0) {
+    if (result.matchedCount === 0 && result.upsertedCount === 0) {
         throw new Error("resetTrophyUserForTester failed");
     }
 }

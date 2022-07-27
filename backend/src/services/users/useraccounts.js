@@ -112,7 +112,7 @@ async function upsertUser(user) {
       user,
       { upsert: true }
   );
-  if (result.matchedCount == 0 && result.upsertedCount == 0) {
+  if (result.matchedCount === 0 && result.upsertedCount === 0) {
       throw new Error("upsertUser failed");
   }
 }
