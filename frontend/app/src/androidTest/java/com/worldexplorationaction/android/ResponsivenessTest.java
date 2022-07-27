@@ -4,6 +4,8 @@ package com.worldexplorationaction.android;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -14,6 +16,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -50,6 +53,7 @@ import java.io.IOException;
 @RunWith(AndroidJUnit4.class)
 public class ResponsivenessTest {
     private static final long MAX_DELAY = 2_000_000_000L; // in nanosecond, 2 seconds
+    private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 3 second
     private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
 
     @Rule
@@ -100,9 +104,24 @@ public class ResponsivenessTest {
         Assert.assertTrue("Not Sufficiently responsive, delay=" + duration, duration < MAX_DELAY);
     }
 
+    private static void openFriendView() {
+        runWithRuntimeCheck(() -> {
+            ViewInteraction friendsButton = onView(
+                    allOf(withId(R.id.navigation_friends), withContentDescription("Friends"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.nav_view),
+                                            0),
+                                    3),
+                            isDisplayed()));
+            friendsButton.perform(click());
+        });
+    }
+
     @Before
     public void setUp() {
         Intents.init();
+        SystemClock.sleep(INIT_WAIT_TIME); /* Things are too slow when the app is just started */
     }
 
     @After
@@ -372,5 +391,111 @@ public class ResponsivenessTest {
                                     3)));
             replaceButton.perform(scrollTo(), click());
         });
+    }
+
+    @Test
+    public void manageFriendsSendRequest() {
+        openFriendView();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction searchEditText = onView(
+                    allOf(withId(R.id.friends_search_edit_text),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.friends_search_bar_background),
+                                            0),
+                                    1),
+                            isDisplayed()));
+            searchEditText.perform(replaceText("Test User 3"), closeSoftKeyboard());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction userView = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.friends_user_list),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    2)),
+                                    0),
+                            isDisplayed()));
+            userView.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction yesButton = onView(
+                    allOf(withId(android.R.id.button1), withText("Yes"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(androidx.appcompat.R.id.buttonPanel),
+                                            0),
+                                    3)));
+            yesButton.perform(scrollTo(), click());
+        });
+    }
+
+    @Test
+    public void manageFriendsAcceptRequest() {
+        openFriendView();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction constraintLayout = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.friends_user_list),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    2)),
+                                    0),
+                            isDisplayed()));
+            constraintLayout.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction materialButton = onView(
+                    allOf(withId(android.R.id.button1), withText("Accept"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(androidx.appcompat.R.id.buttonPanel),
+                                            0),
+                                    3)));
+            materialButton.perform(scrollTo(), click());
+        });
+    }
+
+    @Test
+    public void manageFriendsDeclineRequest() {
+        openFriendView();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction constraintLayout = onView(
+                    allOf(childAtPosition(
+                                    allOf(withId(R.id.friends_user_list),
+                                            childAtPosition(
+                                                    withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                    2)),
+                                    0),
+                            isDisplayed()));
+            constraintLayout.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction materialButton = onView(
+                    allOf(withId(android.R.id.button2), withText("Decline"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(androidx.appcompat.R.id.buttonPanel),
+                                            0),
+                                    2)));
+            materialButton.perform(scrollTo(), click());
+        });
+    }
+
+    @Test
+    public void manageFriendsViewProfile() {
+        openFriendView();
+    }
+
+    @Test
+    public void manageFriendsDeleteFriend() {
+        openFriendView();
     }
 }
