@@ -20,6 +20,9 @@ import java.util.Objects;
  * Manager of {@link BitmapDescriptor}s for images of different types of trophies.
  */
 public class TrophyBitmaps {
+    public final Bitmap goldBitmap;
+    public final Bitmap silverBitmap;
+    public final Bitmap bronzeBitmap;
     public final BitmapDescriptor goldBitmapDescriptor;
     public final BitmapDescriptor silverBitmapDescriptor;
     public final BitmapDescriptor bronzeBitmapDescriptor;
@@ -32,13 +35,13 @@ public class TrophyBitmaps {
         int silver = resources.getColor(R.color.map_trophy_silver, null);
         int bronze = resources.getColor(R.color.map_trophy_bronze, null);
 
-        Bitmap goldBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(gold, PorterDuff.Mode.SRC_IN));
-        Bitmap silverBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(silver, PorterDuff.Mode.SRC_IN));
-        Bitmap bronzeBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(bronze, PorterDuff.Mode.SRC_IN));
+        this.goldBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(gold, PorterDuff.Mode.SRC_IN));
+        this.silverBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(silver, PorterDuff.Mode.SRC_IN));
+        this.bronzeBitmap = CommonUtils.getBitmapFromVectorDrawable((VectorDrawable) trophy, new PorterDuffColorFilter(bronze, PorterDuff.Mode.SRC_IN));
 
-        goldBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(goldBitmap);
-        silverBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(silverBitmap);
-        bronzeBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bronzeBitmap);
+        this.goldBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(goldBitmap);
+        this.silverBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(silverBitmap);
+        this.bronzeBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bronzeBitmap);
     }
 
     public BitmapDescriptor getBitmapDescriptorForTrophy(Trophy.Quality quality) {
