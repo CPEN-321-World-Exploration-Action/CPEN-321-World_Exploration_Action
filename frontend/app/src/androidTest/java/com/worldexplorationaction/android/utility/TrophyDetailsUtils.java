@@ -27,7 +27,10 @@ public class TrophyDetailsUtils {
             49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
 
     private static final Trophy trophy1 = new Trophy("ChIJ2fNpE9RzhlQRi2kw2UYSTbw", "Ramada by Wyndham Vancouver Downtown",
-            49.2771103, -123.1269069, 0, Trophy.Quality.GOLD, false);
+            49.2771103, -123.1269069, 0, Trophy.Quality.GOLD, true);
+
+    private static final Trophy trophy2 = new Trophy("ChIJgQmKXX9xhlQRXmNfRsbZ4w4", "Rosewood Hotel Georgia",
+            49.28346500000001, -123.119031, 2, Trophy.Quality.GOLD, false);
 
     public static Intent stubImageCapture() {
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
@@ -60,6 +63,13 @@ public class TrophyDetailsUtils {
         UserService.getService().testerLogin().execute();
         TrophyService.getService().resetTrophyUser().execute();
         Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, false);
+        ActivityScenario.launch(intent);
+    }
+
+    public static void startTrophyDetailsActivity2() throws IOException {
+        UserService.getService().testerLogin().execute();
+        TrophyService.getService().resetTrophyUser().execute();
+        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy2, true);
         ActivityScenario.launch(intent);
     }
 }

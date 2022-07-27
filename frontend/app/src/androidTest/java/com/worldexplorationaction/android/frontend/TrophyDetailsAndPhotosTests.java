@@ -43,6 +43,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,38 +136,6 @@ import java.io.IOException;
         public void trophyDetailsScreen() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity();
 
-               /* onView(withId(R.id.sort_photos))
-                        .check(matches(isDisplayed()))
-                        .perform(click());
-
-                onView(withText("Time"))
-                        .inRoot(isDialog())
-                        .perform(click());
-
-                ViewInteraction sortButton = onView(
-                        allOf(withId(R.id.sort_photos),
-                                childAtPosition(
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0),
-                                        6),
-                                isDisplayed()));
-                sortButton.perform(click());
-
-                onView(withText("Like Number"))
-                        .inRoot(isDialog())
-                        .perform(click());
-
-                ViewInteraction navigationButton = onView(
-                        allOf(withId(R.id.trophy_details_maps_button),
-                                childAtPosition(
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0),
-                                        10),
-                                isDisplayed()));
-                navigationButton.perform(click());*/
-
             onView(withId(R.id.trophy_name_evaluate)).check(matches(isDisplayed()));
             onView(withId(R.id.textView7)).check(matches(isDisplayed()));
             onView(withId(R.id.collectors)).check(matches(isDisplayed()));
@@ -179,9 +148,48 @@ import java.io.IOException;
             TrophyDetailsUtils.startTrophyDetailsActivity0();
             onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
         }
+/*
+        @Test
+        public void collectTrophyNoPictures() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity0();
+
+            ViewInteraction collectTrophyButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            collectTrophyButton.perform(click());
+
+            onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+            onView(withId(R.id.trophy_action_button)).check(matches(withText("Take a Photo")));
+            onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
+        }
+*/
+        @Test
+        public void collectTrophywithPictures() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+            ViewInteraction collectTrophyButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            collectTrophyButton.perform(click());
+
+            onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+            onView(withId(R.id.trophy_action_button)).check(matches(withText("Take a Photo")));
+            onView(withId(R.id.images_grid)).check(matches(isDisplayed()));
+        }
+
 
         @Test
-        public void collectTrophy() throws IOException {
+        public void addPictureAgain() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity();
             TrophyDetailsUtils.stubImageCapture();
 
@@ -216,6 +224,8 @@ import java.io.IOException;
                                                 0),
                                         3)));
                 replaceButton.perform(scrollTo(), click());
+
+                //how to check the image is replaced?
 
         }
 
