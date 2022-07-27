@@ -10,6 +10,8 @@ trophiesRouter.get("/user-trophies", [nocache(), auth], trophyControllers.getTro
 trophiesRouter.get("/:trophyId", [nocache()], trophyControllers.getTrophyDetails);
 trophiesRouter.post("/:userId/:trophyId", [nocache(), auth], trophyControllers.collectTrophy);
 
+/* For Testing */
+trophiesRouter.post('/reset-trophy-user', auth, trophyControllers.resetTrophyUser);
 
 // Dev Routes
 // trophiesRouter.get("/Trophies", trophyControllers.getAllTrophies);

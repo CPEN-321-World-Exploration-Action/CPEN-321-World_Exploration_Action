@@ -172,6 +172,25 @@ export function haversineDistance(lat1, lon1, lat2, lon2){
     return d
 }
 
+/* Functions for Tests */
+export async function resetTrophyUserForTester(userId) {
+    console.log(userId)
+    const result = await TrophyUser.updateOne(
+        { user_id: userId },
+        {
+            user_id: userId,
+            uncollectedTrophies: ["ChIJAx7UL8xyhlQR86Iqc-fUncc"],
+            collectedTrophies: [],
+            list_of_photos: [],
+            trophyTags: [],
+        },
+        { upsert: true }
+    );
+    if (result.modifiedCount == 0) {
+        throw new Error("resetTrophyUserForTester failed");
+    }
+}
+
 // // Dev functions
 // export async function getAllTrophies(){
 //     return await TrophyTrophy.find({})
