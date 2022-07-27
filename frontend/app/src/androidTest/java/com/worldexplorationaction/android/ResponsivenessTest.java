@@ -4,6 +4,7 @@ package com.worldexplorationaction.android;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -13,36 +14,37 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.worldexplorationaction.android.data.trophy.Trophy;
-import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
+import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -96,6 +98,16 @@ public class ResponsivenessTest {
         long duration = (endTime - startTime);
         System.out.println("runtime: " + duration);
         Assert.assertTrue("Not Sufficiently responsive, delay=" + duration, duration < MAX_DELAY);
+    }
+
+    @Before
+    public void setUp() {
+        Intents.init();
+    }
+
+    @After
+    public void tearDown() {
+        Intents.release();
     }
 
     @Test
@@ -220,8 +232,8 @@ public class ResponsivenessTest {
     }
 
     @Test
-    public void reviewTrophyDetailsAndPhotos() {
-        startTrophyDetailsActivity();
+    public void reviewTrophyDetailsAndPhotos() throws IOException {
+        TrophyDetailsUtils.startTrophyDetailsActivity();
 
         runWithRuntimeCheck(() -> {
             ViewInteraction sortButton = onView(
@@ -266,11 +278,23 @@ public class ResponsivenessTest {
                     .atPosition(1);
             likeNumberButton.perform(click());
         });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction navigationButton = onView(
+                    allOf(withId(R.id.trophy_details_maps_button),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    10),
+                            isDisplayed()));
+            navigationButton.perform(click());
+        });
     }
 
     @Test
-    public void evaluatePhotos() {
-        startTrophyDetailsActivity();
+    public void evaluatePhotos() throws IOException {
+        TrophyDetailsUtils.startTrophyDetailsActivity();
 
         runWithRuntimeCheck(() -> {
             ViewInteraction photo = onView(
@@ -309,10 +333,44 @@ public class ResponsivenessTest {
         });
     }
 
-    private static void startTrophyDetailsActivity() {
-        Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",
-                49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
-        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
-        ActivityScenario.launch(intent);
+    @Test
+    public void collectTrophy() throws IOException {
+        TrophyDetailsUtils.startTrophyDetailsActivity();
+        TrophyDetailsUtils.stubImageCapture();
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction collectTrophyButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            collectTrophyButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction takeAPhotoButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Take a Photo"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            takeAPhotoButton.perform(click());
+        });
+
+        runWithRuntimeCheck(() -> {
+            ViewInteraction replaceButton = onView(
+                    allOf(withId(android.R.id.button1), withText("Replace"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(androidx.appcompat.R.id.buttonPanel),
+                                            0),
+                                    3)));
+            replaceButton.perform(scrollTo(), click());
+        });
     }
 }
