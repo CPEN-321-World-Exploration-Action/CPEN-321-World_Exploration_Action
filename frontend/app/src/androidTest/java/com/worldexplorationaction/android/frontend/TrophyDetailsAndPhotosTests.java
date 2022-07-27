@@ -1,6 +1,7 @@
-package com.worldexplorationaction.android;
+package com.worldexplorationaction.android.frontend;
 
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -14,6 +15,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.worldexplorationaction.android.MainActivity;
+import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 
@@ -22,6 +25,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
@@ -74,6 +78,7 @@ import java.io.IOException;
     @RunWith(AndroidJUnit4.class)
     public class TrophyDetailsAndPhotosTests {
         private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
+        private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
 
         @Rule
         public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
@@ -113,6 +118,13 @@ import java.io.IOException;
                 }
             };
         }
+
+        @Before
+        public void setUp() {
+            Intents.init();
+            SystemClock.sleep(INIT_WAIT_TIME); /* Things are too slow when the app is just started */
+        }
+
         @After
         public void tearDown() {
             Intents.release();
@@ -123,6 +135,38 @@ import java.io.IOException;
         public void trophyDetailsScreen() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity();
 
+               /* onView(withId(R.id.sort_photos))
+                        .check(matches(isDisplayed()))
+                        .perform(click());
+
+                onView(withText("Time"))
+                        .inRoot(isDialog())
+                        .perform(click());
+
+                ViewInteraction sortButton = onView(
+                        allOf(withId(R.id.sort_photos),
+                                childAtPosition(
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0),
+                                        6),
+                                isDisplayed()));
+                sortButton.perform(click());
+
+                onView(withText("Like Number"))
+                        .inRoot(isDialog())
+                        .perform(click());
+
+                ViewInteraction navigationButton = onView(
+                        allOf(withId(R.id.trophy_details_maps_button),
+                                childAtPosition(
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0),
+                                        10),
+                                isDisplayed()));
+                navigationButton.perform(click());*/
+
             onView(withId(R.id.trophy_name_evaluate)).check(matches(isDisplayed()));
             onView(withId(R.id.textView7)).check(matches(isDisplayed()));
             onView(withId(R.id.collectors)).check(matches(isDisplayed()));
@@ -130,7 +174,50 @@ import java.io.IOException;
             onView(withId(R.id.trophy_action_button)).check(matches(isDisplayed()));
             onView(withId(R.id.trophy_details_maps_button)).check(matches(isDisplayed()));
         }
+        @Test
+        public void noPictures() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity0();
+            onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
+        }
 
+        @Test
+        public void collectTrophy() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+            TrophyDetailsUtils.stubImageCapture();
+
+                ViewInteraction collectTrophyButton = onView(
+                        allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
+                                childAtPosition(
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0),
+                                        5),
+                                isDisplayed()));
+                collectTrophyButton.perform(click());
+
+                onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+
+                ViewInteraction takeAPhotoButton = onView(
+                        allOf(withId(R.id.trophy_action_button), withText("Take a Photo"),
+                                childAtPosition(
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0),
+                                        5),
+                                isDisplayed()));
+                takeAPhotoButton.perform(click());
+
+
+                ViewInteraction replaceButton = onView(
+                        allOf(withId(android.R.id.button1), withText("Replace"),
+                                childAtPosition(
+                                        childAtPosition(
+                                                withId(androidx.appcompat.R.id.buttonPanel),
+                                                0),
+                                        3)));
+                replaceButton.perform(scrollTo(), click());
+
+        }
 
         @Test
         public void farAwayTrophy() throws IOException {

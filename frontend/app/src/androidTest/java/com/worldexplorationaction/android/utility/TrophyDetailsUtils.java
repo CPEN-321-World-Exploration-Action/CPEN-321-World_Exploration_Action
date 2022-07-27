@@ -26,7 +26,10 @@ public class TrophyDetailsUtils {
     private static final Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",
             49.26060520000001, -123.2459939, 1, Trophy.Quality.GOLD, false);
 
-    public static void stubImageCapture() {
+    private static final Trophy trophy1 = new Trophy("ChIJ2fNpE9RzhlQRi2kw2UYSTbw", "Ramada by Wyndham Vancouver Downtown",
+            49.2771103, -123.1269069, 0, Trophy.Quality.GOLD, false);
+
+    public static Intent stubImageCapture() {
         Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
 
         Intent resultData = new Intent();
@@ -36,12 +39,20 @@ public class TrophyDetailsUtils {
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
 
         intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(result);
+        return resultData;
     }
 
     public static void startTrophyDetailsActivity() throws IOException {
         UserService.getService().testerLogin().execute();
         TrophyService.getService().resetTrophyUser().execute();
         Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy, true);
+        ActivityScenario.launch(intent);
+    }
+
+    public static void startTrophyDetailsActivity0() throws IOException {
+        UserService.getService().testerLogin().execute();
+        TrophyService.getService().resetTrophyUser().execute();
+        Intent intent = TrophyDetailsActivity.getIntent(ApplicationProvider.getApplicationContext(), trophy1, true);
         ActivityScenario.launch(intent);
     }
 

@@ -1,4 +1,4 @@
-package com.worldexplorationaction.android;
+package com.worldexplorationaction.android.frontend;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -39,6 +40,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.worldexplorationaction.android.MainActivity;
+import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
@@ -48,6 +51,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,6 +64,7 @@ import java.io.IOException;
 public class ManageFriendsTests {
 
     private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
+    private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
 
     @Rule
     public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
@@ -98,6 +103,12 @@ public class ManageFriendsTests {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    @Before
+    public void setUp() {
+        Intents.init();
+        SystemClock.sleep(INIT_WAIT_TIME); /* Things are too slow when the app is just started */
     }
 
     @After
