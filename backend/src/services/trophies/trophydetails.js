@@ -13,8 +13,7 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude){
     // Require list of collected trophies to ensure we don't serve already collected trophies in Places.
     let collectedTrophyIDs = await TrophyUser.getUserCollectedTrophyIDs(user_id);  
 
-
-    console.log(uncollectedTrophyIDs, collectedTrophyIDs)
+    //console.log(uncollectedTrophyIDs, collectedTrophyIDs)
 
     if (!uncollectedTrophyIDs){
         uncollectedTrophyIDs = [];
@@ -187,36 +186,3 @@ export async function resetTrophyUserForTester(userId) {
         throw new Error("resetTrophyUserForTester failed");
     }
 }
-
-// // Dev functions
-// export async function getAllTrophies(){
-//     return await TrophyTrophy.find({})
-// }
-
-// export async function getAllTrophiesUsers(){
-//     return await TrophyUser.find({})
-// }
-
-// export async function createTrophy(req){
-//     return await TrophyTrophy.create(req.body)
-// }
-
-// export async function deleteTrophyUser(user_id){
-//     return await TrophyUser.findOneAndDelete({user_id:user_id})
-// }
-
-// export async function getUserCollectedTrophy(userID) {
-//     return TrophyUser.getTrophyCollected(userID);
-// }
-
-// export async function getUserUncollectedTrophy(userID) {
-//     return TrophyUser.getUserUncollectedTrophyIDs(userID);
-// }
-
-// export async function deleteTrophy(trophyID){
-//     return await TrophyTrophy.findOneAndDelete({trophy_id:trophyID})
-// }
-
-// export async function createTrophyUser(body){
-//     return await TrophyUser.create(body)
-//}

@@ -34,3 +34,9 @@ export class InputError extends BadRequestError {
     super(message);
   }
 }
+
+export class DuplicationError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}

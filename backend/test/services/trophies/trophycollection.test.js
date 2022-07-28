@@ -3,59 +3,161 @@ import { jest } from "@jest/globals";
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
+jest.mock("../../../src/utils/__mocks__/message-manager.js");
+
+trophyCollection.buildTrophyCollectedMessage = jest.fn();
+
+// need to update the dataset for test
+function initialize_database() {
+  TrophyUser.findOrCreate("User_TrophyCollection_Test");
+  TrophyUser.updateOne(
+    { user_id: "User_TrophyCollection_Test" },
+    {
+      $set: {
+        uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
+        collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
+        list_of_photos: [" "],
+        trophyTags: [" "],
+      },
+    }
+  );
+
+  let Trophy_Test = await TrophyTrophy.findOne({
+    trophy_id: "Trophy_TrophyCollection_Test",
+  }).exec();
+  if (!Trophy_Test) {
+    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test" });
+  }
+
+  TrophyTrophy.updateOne(
+    { trophy_id: "Trophy_TrophyCollection_Test" },
+    {
+      $set: {
+        name: "Trophy_TrophyCollection_Test",
+        latitude: 100,
+        longitude: 100,
+        number_of_collectors: 0,
+        quality: "Bronze",
+        list_of_photos: [" "],
+        list_of_collectors: [" "],
+      },
+    }
+  );
+
+  let Trophy_Test2 = await TrophyTrophy.findOne({
+    trophy_id: "Trophy_TrophyCollection_Test_Collected",
+  }).exec();
+  if (!Trophy_Test2) {
+    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test_Collected" });
+  }
+
+  TrophyTrophy.updateOne(
+    { trophy_id: "Trophy_TrophyCollection_Test_Collected" },
+    {
+      $set: {
+        name: "Trophy_TrophyCollection_Test_Collected",
+        latitude: 200,
+        longitude: 200,
+        number_of_collectors: 1,
+        quality: "Bronze",
+        list_of_photos: [" "],
+        list_of_collectors: [" ", "User_TrophyCollection_Test"],
+      },
+    }
+  );
+}
+
 describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
   test("collectTrophy", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
+    initialize_database();
+
+    // returns message
     /*
-    expect(await trophyCollection.collectTrophy(userId, trophyId)).toBe(
-      mockGlobalLeaderboard
-    );
+    expect(
+      await trophyCollection.collectTrophy(userId, trophyId)
+    ).toBe({
+      type: "trophy_collected",
+      userId: "User_TrophyCollection_Test",
+      trophyId: "Trophy_TrophyCollection_Test",
+      trophyScore: 1,
+    });
     */
+
+    await trophyCollection.collectTrophy(userId, trophyId);
+
     /* Change in database */
     expect(
-      await TrophyUser.findOrCreate({ user_id: userId }).uncollectedTrophies
-    ).toBe("need to mock");
+      await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
+    ).not.toContain("Trophy_TrophyCollection_Test");
     expect(
       await TrophyUser.findOne({ user_id: userId }).collectedTrophies
-    ).toBe("need to mock");
+    ).toContain("Trophy_TrophyCollection_Test");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).list_of_collectors
-    ).toBe("need to mock");
+    ).toContain("User_TrophyCollection_Test");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).number_of_collectors
-    ).toBe("need to mock");
-    /* MessageManager Part - score matters */
-    expect();
+    ).toEqual(1);
+
+    expect(trophyCollection.buildTrophyCollectedMessage).toHaveBeenCalledWith(userId, trophyId, 1);
+
+    // idk if the format is correct
+    expect(trophyCollection.buildTrophyCollectedMessage).toHaveReturnedWith({
+      type: "trophy_collected",
+      userId: userId,
+      trophyId: trophyId,
+      trophyScore: 1,
+    })
   });
 
   test("collectTrophy_trophy_is_collected", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test_Collected";
+
+    initialize_database();
+
     expect(await trophyCollection.collectTrophy(userId, trophyId)).toThrow(
       DuplicationError
     );
     /* Change in database */
     expect(
       await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
-    ).toBe("need to mock to be the same");
+    ).toContain("Trophy_TrophyCollection_Test");
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
+    ).not.toContain(trophyId);
     expect(
       await TrophyUser.findOne({ user_id: userId }).collectedTrophies
-    ).toBe("need to mock to be the same");
+    ).not.toContain("Trophy_TrophyCollection_Test");
+    expect(
+      await TrophyUser.findOne({ user_id: userId }).collectedTrophies
+    ).toContain(trophyId);
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).list_of_collectors
-    ).toBe("need to mock to be the same");
+    ).toContain("User_TrophyCollection_Test");
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).number_of_collectors
-    ).toBe("need to mock to be the same");
+    ).toEqual(1);
   });
 
   test("collectTrophy_invalid_userId", async () => {
+    //userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
+    initialize_database();
+
     expect(await trophyCollection.collectTrophy(null, trophyId)).toThrow(
       InputError
     );
@@ -64,29 +166,39 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).list_of_collectors
-    ).toBe("need to mock to be the same");
+    ).toBe([" "]);
     expect(
       await TrophyTrophy.findOne({
         trophy_id: trophyID,
       }).number_of_collectors
-    ).toBe("need to mock to be the same");
+    ).toBe(0);
   });
 
   test("collectTrophy_invalid_trophyId", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
+    initialize_database();
+
     expect(await trophyCollection.collectTrophy(userId, null)).toThrow(
       InputError
     );
     /* Change in database */
     expect(
       await TrophyUser.findOne({ user_id: userId }).uncollectedTrophies
-    ).toBe("need to mock to be the same");
+    ).toBe([" ", "Trophy_TrophyCollection_Test"]);
     expect(
       await TrophyUser.findOne({ user_id: userId }).collectedTrophies
-    ).toBe("need to mock to be the same");
+    ).toBe([" ", "Trophy_TrophyCollection_Test_Collected"]);
   });
 
   test("collectTrophy_both_invalid", async () => {
-    expect(await trophyCollection.collectTrophy(userId, null)).toThrow(
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
+    initialize_database();
+
+    expect(await trophyCollection.collectTrophy(null, null)).toThrow(
       InputError
     );
   });
