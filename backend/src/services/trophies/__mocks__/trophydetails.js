@@ -11,14 +11,14 @@ export const getTrophyDetails = jest.fn(async (ids) => {
 });
 
 // i think not going to be used
-export const resetTrophyUserForTester = jest.fn(async (userId) => {});
+export const resetTrophyUserForTester = jest.fn(async (userId) => { });
 
 export const MockTrophy = [
   {
     trophy_id: "Trophy_Rose_Garden",
     name: "Rose_Garden",
     latitude: 49.2694,
-    longitude: 123.2565,
+    longitude: -123.2565,
     number_of_collectors: 1,
     quality: "Silver",
     list_of_photos: [
@@ -33,7 +33,7 @@ export const MockTrophyList = [
     trophy_id: "Trophy_Rose_Garden",
     name: "Rose_Garden",
     latitude: 49.2694,
-    longitude: 123.2565,
+    longitude: -123.2565,
     number_of_collectors: 1,
     quality: "Silver",
     list_of_photos: [
@@ -45,7 +45,7 @@ export const MockTrophyList = [
     trophy_id: "Trophy_Wreck_Beach",
     name: "Wreck_Beach",
     latitude: 49.2622,
-    longitude: 123.2615,
+    longitude: -123.2615,
     number_of_collectors: 3,
     quality: "Bronze",
     list_of_photos: [
@@ -58,7 +58,7 @@ export const MockTrophyList = [
     trophy_id: "Trophy_Granville_Island",
     name: "Granville_Island",
     latitude: 49.2712,
-    longitude: 123.134,
+    longitude: -123.134,
     number_of_collectors: 0,
     quality: "Gold",
     list_of_photos: [" "],

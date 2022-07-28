@@ -11,8 +11,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     /* the number of userId’s
     uncollected trophies is less
     than MAX_TROPHIES */
-    let lat = 123;
-    let lon = 123;
+    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251574;
     let userId = "User1";
     expect(trophyDetail.getTrophiesUser(userId, lat, lon)).toEqual(
       "the list of uncollected Trophy"
