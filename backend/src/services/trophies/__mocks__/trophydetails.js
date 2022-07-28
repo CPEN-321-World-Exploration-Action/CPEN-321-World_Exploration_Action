@@ -11,6 +11,7 @@ export const getTrophyDetails = jest.fn(async (ids) => {
 });
 
 // i think not going to be used
+
 export const resetTrophyUserForTester = jest.fn(async (userId) => { });
 
 export const MockTrophy = [

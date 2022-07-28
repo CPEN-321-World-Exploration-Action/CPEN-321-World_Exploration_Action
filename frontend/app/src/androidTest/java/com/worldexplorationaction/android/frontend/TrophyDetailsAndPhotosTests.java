@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -148,7 +149,8 @@ import java.io.IOException;
             TrophyDetailsUtils.startTrophyDetailsActivity0();
             onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
         }
-/*
+
+        //why can't collect trophy and it was working at the beginning?
         @Test
         public void collectTrophyNoPictures() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity0();
@@ -164,10 +166,17 @@ import java.io.IOException;
             collectTrophyButton.perform(click());
 
             onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+            onView(withText(R.string.trophy_details_no_picture_at_location_text)).check(matches(isDisplayed()));
             onView(withId(R.id.trophy_action_button)).check(matches(withText("Take a Photo")));
-            onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
         }
-*/
+
+        @Test
+        public void collectTrophyNoPicturesFarTrophy() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity3();
+            onView(withText(R.string.trophy_details_no_picture_not_at_location_text)).check(matches(isDisplayed()));
+        }
+
+
         @Test
         public void collectTrophywithPictures() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity();
@@ -244,6 +253,105 @@ import java.io.IOException;
             collectTrophyButton.perform(click());
 
             onView(withText("You are too far away")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        }
+
+        @Test
+        public void addPictureAgainCancel() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+            ViewInteraction collectTrophyButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            collectTrophyButton.perform(click());
+
+            onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+
+            ViewInteraction materialButton = onView(
+                    allOf(withId(R.id.trophy_action_button), withText("Take a Photo"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    5),
+                            isDisplayed()));
+            materialButton.perform(click());
+
+            ViewInteraction materialButton2 = onView(
+                    allOf(withId(android.R.id.button2), withText("Cancel"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(androidx.appcompat.R.id.buttonPanel),
+                                            0),
+                                    2)));
+            materialButton2.perform(scrollTo(), click());
+
+            onView(withId(androidx.appcompat.R.id.buttonPanel)).check(doesNotExist());
+
+
+        }
+
+        @Test
+        public void sortBy() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+            onView(withId(R.id.sort_photos))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+            onView(withText("Time")).check(matches(isDisplayed()));
+            onView(withText("Like Number")).check(matches(isDisplayed()));
+        }
+
+        @Test
+        public void sortByTime() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+                onView(withId(R.id.sort_photos))
+                        .check(matches(isDisplayed()))
+                        .perform(click());
+
+                onView(withText("Time"))
+                        .inRoot(isDialog())
+                        .perform(click());
+        }
+
+        @Test
+        public void sortByLike() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+            ViewInteraction sortButton = onView(
+                    allOf(withId(R.id.sort_photos),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    6),
+                            isDisplayed()));
+            sortButton.perform(click());
+
+            onView(withText("Like Number"))
+                    .inRoot(isDialog())
+                    .perform(click());
+        }
+
+        @Test
+        public void mapButton() throws IOException {
+            TrophyDetailsUtils.startTrophyDetailsActivity();
+
+            ViewInteraction navigationButton = onView(
+                    allOf(withId(R.id.trophy_details_maps_button),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    10),
+                            isDisplayed()));
+            navigationButton.perform(click());
         }
 
         public class ToastMatcher extends TypeSafeMatcher<Root> {
