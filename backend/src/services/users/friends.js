@@ -61,6 +61,9 @@ export async function sendRequest(senderId, targetId) {
 }
 
 export async function deleteFriend(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   const result = await User.mutuallyDeleteFriend(userId, friendId);
   if (!result) {
     throw new BadRequestError("They are not friends.");

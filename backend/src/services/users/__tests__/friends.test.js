@@ -105,6 +105,27 @@ describe("Friends_sendRequest", () => {
   });
 });
 
+describe("Friends_deleteFriend", () => {
+  test("Friends_deleteFriend_basic", async () => {
+    await friends.deleteFriend("_test_user_1", "_test_user_2");
+    await expect(await friends.retrieveFriends("_test_user_1")).toStrictEqual([]);
+    await expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
+    await initializeDatabase();
+  });
+
+  test("Friends_deleteFriend_not_friend", async () => {
+    await expect(async () => await friends.deleteFriend("_test_user_1", "_test_user_1")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_deleteFriend_nonexisting_user", async () => {
+    await expect(async () => await friends.deleteFriend("_test_user_1324", "_test_user_112")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_deleteFriend_invalid_input", async () => {
+    await expect(async () => await friends.deleteFriend(null, "_test_user_1")).rejects.toThrow();
+  });
+});
+
 function expectSameUsers(actualUsers, expectedUserIds) {
   const actualUsersIds = actualUsers.map(x => x.user_id);
   expect(actualUsersIds).toStrictEqual(expectedUserIds);
