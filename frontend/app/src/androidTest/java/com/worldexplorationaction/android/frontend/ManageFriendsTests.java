@@ -7,9 +7,11 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -344,7 +346,7 @@ public class ManageFriendsTests {
         onView(withId(R.id.friends_user_list)).check(matches(isDisplayed()));
     }
 
-   /* @Test
+    @Test
     public void sendFriendRequestResponseNo() {
         openFriendView();
 
@@ -367,22 +369,18 @@ public class ManageFriendsTests {
                 .inRoot(isDialog())
                 .perform(scrollTo(), click());
 
-//.check(matches(not(isDisplayed())))
-        //onView(withText("No"))
-          //      .inRoot(isDialog()).check(matches(not(isDisplayed())));
-
-     //   onView(withText("Successfully sent a friend request to Test User 1")).inRoot(new ToastMatcher())
-     //           .check(matches(not(isDisplayed())));
+        onView(withText("No")).check(doesNotExist());
 
     }
 
-*/
+
     private static void openFriendView() {
         onView(allOf(withId(R.id.navigation_friends),
                 withContentDescription("Friends")))
                 .check(matches(isDisplayed()))
                 .perform(click());
     }
+
 
     public class ToastMatcher extends TypeSafeMatcher<Root> {
 
