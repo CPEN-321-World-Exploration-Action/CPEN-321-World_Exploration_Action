@@ -3,6 +3,8 @@ import { jest } from "@jest/globals";
 import * as trophyDetail from "../../../src/services/trophies/trophydetails.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
+jest.mock("../../../src/data/external/__mocks__/googleplaces.external.js");
+
 describe("Trophy_Detail Module getTrophiesUser Test", () => {
   /* Trophy[] getTrophiesUser(String userId, double lat, double lon) */
   test("getTrophiesUser", async () => {
@@ -125,7 +127,7 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     let userId = null;
     expect(trophyDetail.getTrophiesUser(userId, lat, lon)).toThrow(InputError);
   });
-  
+
   test("getTrophiesUser_userId_not_in_DB", async () => {
     let lat = 123;
     let lon = 123;
@@ -135,19 +137,19 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
 });
 
 describe("Trophy_Detail Module getTrophyDetails Test", () => {
-    test("getTrophyDetails", async () => {
-        let trophyId = "Trophy";
-        expect(trophyDetail.getTrophyDetails(trophyId)).toEqual("TrophyTrophy");
-    });
+  test("getTrophyDetails", async () => {
+    let trophyId = "Trophy";
+    expect(trophyDetail.getTrophyDetails(trophyId)).toEqual("TrophyTrophy");
+  });
 
-    test("getTrophyDetails_invalid_TrophyID", async () => {
-        expect(trophyDetail.getTrophyDetails(null)).toThrow(InputError);
-        expect(trophyDetail.getTrophyDetails(undefined)).toThrow(InputError);
-        expect(trophyDetail.getTrophyDetails(NaN)).toThrow(InputError);
-    });
+  test("getTrophyDetails_invalid_TrophyID", async () => {
+    expect(trophyDetail.getTrophyDetails(null)).toThrow(InputError);
+    expect(trophyDetail.getTrophyDetails(undefined)).toThrow(InputError);
+    expect(trophyDetail.getTrophyDetails(NaN)).toThrow(InputError);
+  });
 
-    test("getTrophyDetails", async () => {
-        let trophyId = "TrophyNotInDB";
-        expect(trophyDetail.getTrophyDetails(trophyId)).toThrow(NotInDBError);
-    });
+  test("getTrophyDetails", async () => {
+    let trophyId = "TrophyNotInDB";
+    expect(trophyDetail.getTrophyDetails(trophyId)).toThrow(NotInDBError);
+  });
 });
