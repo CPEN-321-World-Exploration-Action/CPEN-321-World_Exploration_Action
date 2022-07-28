@@ -8,7 +8,17 @@ import * as messageManager from "../../../src/utils/__mocks__/message-manager.js
 
 jest.mock("../../../src/utils/message-manager.js"); //!
 
-trophyCollection.buildTrophyCollectedMessage = jest.fn();
+trophyCollection.buildTrophyCollectedMessage = jest.fn(
+  async (userId, trophyId, trophyScore) => {
+    const message = {
+      type: "trophy_collected",
+      userId,
+      trophyId,
+      trophyScore,
+    };
+    return message;
+  }
+);
 
 // database connection
 const defaultDbUri = "mongodb://localhost:27017/trophycollection_test";
@@ -71,7 +81,7 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     const trophyId = "Trophy_TrophyCollection_Test_Collected";
 
     expect(async () => await trophyCollection.collectTrophy(userId, trophyId)).rejects.toThrow(
-      DuplicationError
+      BadRequestError
     );
 
     expect(
@@ -142,6 +152,12 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       InputError
     );
   });
+
+  test("collectTrophy_both_invalid", async () => {
+    expect(async () => await trophyCollection.collectTrophy(undefined, null)).rejects.toThrow(
+      InputError
+    );
+  });
 });
 
 async function initialize_database_for_trophycollection() {
@@ -205,16 +221,13 @@ async function initialize_database_for_trophycollection() {
   );
 }
 
-// need to clean the database?
 export async function connectToDatabase(dbUrl) {
   await mongoose.connect(dbUrl);
 }
 
 export async function dropAndDisconnectDatabase() {
-
   try {
     await mongoose.connection.db.dropDatabase();
   } catch (err) { }
   await mongoose.connection.close();
-
 }

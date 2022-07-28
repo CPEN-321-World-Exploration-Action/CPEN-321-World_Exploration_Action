@@ -65,3 +65,5 @@ export const MockTrophyList = [
     list_of_collectors: [" "],
   },
 ];
+
+// helper functions
