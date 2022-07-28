@@ -48,6 +48,9 @@ export async function sendRequest(senderId, targetId) {
   if (!target) {
     throw new NotFoundError("Cannot find the target user");
   }
+  if (sender.friends.includes(targetId)) {
+    throw new BadRequestError("The target user is already your friend");
+  }
 
   if (!addRequest(senderId, targetId)) {
     throw new BadRequestError("You have already sent a request to this user");

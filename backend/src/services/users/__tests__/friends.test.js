@@ -80,6 +80,11 @@ describe("Friends_sendRequest", () => {
     expect(fcm.sendFriendNotification).toHaveBeenCalledWith("__test_fcm_token_2", expect.anything(), expect.anything());
   });
 
+  test("Friends_getFriendRequests_already_friends", async () => {
+    await expect(async () => await friends.sendRequest("_test_user_1", "_test_user_2")).rejects.toThrow(BadRequestError);
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+  });
+
   test("Friends_getFriendRequests_nonexisting_sender", async () => {
     await expect(async () => await friends.sendRequest("_test_user_9999", "_test_user_2")).rejects.toThrow(NotFoundError);
     expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
