@@ -1,4 +1,4 @@
-package com.worldexplorationaction.android;
+package com.worldexplorationaction.android.frontend;
 
 
 import static androidx.test.espresso.Espresso.onView;
@@ -11,6 +11,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -24,6 +25,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.worldexplorationaction.android.MainActivity;
+import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
@@ -33,6 +36,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,6 +47,7 @@ import java.io.IOException;
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class EvaluatePhotosTests {
+    private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
 
     private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
 
@@ -84,6 +89,13 @@ public class EvaluatePhotosTests {
             }
         };
     }
+
+    @Before
+    public void setUp() {
+        Intents.init();
+        SystemClock.sleep(INIT_WAIT_TIME); /* Things are too slow when the app is just started */
+    }
+
     @After
     public void tearDown() {
         Intents.release();

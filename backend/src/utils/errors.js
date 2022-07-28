@@ -23,4 +23,20 @@ export class UnauthorizedError extends BadRequestError {
   }
 }
 
-// need update NotInDBError, and InputError
+export class NotInDBError extends NotFoundError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class InputError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class DuplicationError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}
