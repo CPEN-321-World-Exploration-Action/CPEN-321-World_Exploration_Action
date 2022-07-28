@@ -6,7 +6,7 @@ const numberOfUsersOnLeaderboard = 10;
 let subscribers = new Map();
 const validDuration = 1000 * 60 * 60; /* 1 hour */
 
-let oldLeaderboard = [];
+export let oldLeaderboard = [];
 
 /* Clean up expired subscribers every 1 minute */
 setInterval(() => {
@@ -58,11 +58,13 @@ export async function subscribeUpdate(userId, fcmToken) {
   return expireTime;
 }
 
+// helper functions
+
 function sortByTrophyScore(users) {
   users.sort((a, b) => (a.score < b.score ? 1 : -1));
 }
 
-async function willChangeGlobalLeaderboard(newLeaderboard) {
+export async function willChangeGlobalLeaderboard(newLeaderboard) {
   if (newLeaderboard.length !== oldLeaderboard.length) {
     return true;
   }
@@ -74,7 +76,7 @@ async function willChangeGlobalLeaderboard(newLeaderboard) {
   return false;
 }
 
-async function notifyAllSubscribingUsers() {
+export async function notifyAllSubscribingUsers() {
   const tokens = [];
   for (const [userId, { fcmToken, expireTime }] of subscribers) {
     tokens.push(fcmToken);
@@ -82,7 +84,7 @@ async function notifyAllSubscribingUsers() {
   await fcm.sendLeaderboardUpdateMessage(tokens);
 }
 
-async function notifyIfSubscribing(userIds) {
+export async function notifyIfSubscribing(userIds) {
   const tokens = [];
   for (const userId of userIds) {
     const subscriber = subscribers.get(userId);
@@ -91,7 +93,7 @@ async function notifyIfSubscribing(userIds) {
   await fcm.sendLeaderboardUpdateMessage(tokens);
 }
 
-async function sendNewChampionNotificationIfNeeded(newLeaderboard) {
+export async function sendNewChampionNotificationIfNeeded(newLeaderboard) {
   if (
     oldLeaderboard.length !== 0 &&
     newLeaderboard.length !== 0 &&
@@ -104,7 +106,7 @@ async function sendNewChampionNotificationIfNeeded(newLeaderboard) {
   }
 }
 
-async function sendNotificationsToUsersDroppedOut(newLeaderboard) {
+export async function sendNotificationsToUsersDroppedOut(newLeaderboard) {
   const newUsers = new Set(newLeaderboard.map((x) => x.user_id));
   const targetUsers = oldLeaderboard.filter((x) => !newUsers.has(x.user_id));
   const tokens = targetUsers.map((x) => x.fcm_token).filter((x) => x);
