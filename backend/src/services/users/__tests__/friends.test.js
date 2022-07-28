@@ -1,8 +1,9 @@
 import { jest } from "@jest/globals";
 
 import * as friends from "../friends.js";
+import * as fcm from "../../../data/external/fcm.external.js";
 import { User } from "../../../data/db/user.db.js";
-import { BadRequestError, NotFoundError } from "../../../utils/errors.js";
+import { BadRequestError, NotFoundError, InputError } from "../../../utils/errors.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../data/external/fcm.external.js");
@@ -59,6 +60,51 @@ describe("Friends_getFriendRequests", () => {
   });
 });
 
+describe("Friends_sendRequest", () => {
+  beforeEach(async () => {
+    friends.clearRequests();
+    fcm.sendFriendNotification.mockClear();
+  });
+
+  test("Friends_getFriendRequests_has_requested_before", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_2");
+    fcm.sendFriendNotification.mockClear();
+
+    await expect(async () => await friends.sendRequest("_test_user_3", "_test_user_2")).rejects.toThrow(BadRequestError);
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+  });
+
+  test("Friends_getFriendRequests_not_requested_before", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_2");
+    await friends.declineUser("_test_user_2", "_test_user_3"); /* This will ensure the request is added */
+    expect(fcm.sendFriendNotification).toHaveBeenCalledWith("__test_fcm_token_2", expect.anything(), expect.anything());
+  });
+
+  test("Friends_getFriendRequests_nonexisting_sender", async () => {
+    await expect(async () => await friends.sendRequest("_test_user_9999", "_test_user_2")).rejects.toThrow(NotFoundError);
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+  });
+
+  test("Friends_getFriendRequests_target_has_no_fcm_token", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_1");
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+    await friends.declineUser("_test_user_1", "_test_user_3"); /* This will ensure the request is added */
+  });
+
+  test("Friends_getFriendRequests_nonexisting_target", async () => {
+    await expect(async () => await friends.sendRequest("_test_user_1", "_test_user_999")).rejects.toThrow(NotFoundError);
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+  });
+
+  test("Friends_getFriendRequests_same_sender_and_target", async () => {
+    await expect(async () => await friends.sendRequest("_test_user_1", "_test_user_1")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_getFriendRequests_null_input", async () => {
+    await expect(async () => await friends.sendRequest(null, null)).rejects.toThrow(InputError);
+  });
+});
+
 function expectSameUsers(actualUsers, expectedUserIds) {
   const actualUsersIds = actualUsers.map(x => x.user_id);
   expect(actualUsersIds).toStrictEqual(expectedUserIds);
@@ -72,6 +118,7 @@ async function initializeDatabase() {
     picture: "",
     friends: ["_test_user_2"],
     score: 99,
+    fcm_token: null,
   };
   const testUser2 = {
     user_id: "_test_user_2",
@@ -80,6 +127,7 @@ async function initializeDatabase() {
     picture: "",
     friends: ["_test_user_1"],
     score: 156,
+    fcm_token: "__test_fcm_token_2",
   };
   const testUser3 = {
     user_id: "_test_user_3",
@@ -88,6 +136,7 @@ async function initializeDatabase() {
     picture: "",
     friends: [],
     score: 321,
+    fcm_token: "__test_fcm_token_3",
   };
   await User.upsertUser(testUser1);
   await User.upsertUser(testUser2);
