@@ -22,3 +22,5 @@ export class UnauthorizedError extends BadRequestError {
     super(message, status);
   }
 }
+
+// need update NotInDBError, and InputError

@@ -3,6 +3,8 @@ import { jest } from "@jest/globals";
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
+jest.mock("../../../src/utils/message-manager.js");
+
 // need to update the dataset for test
 TrophyUser.findOrCreate("User_TrophyCollection_Test");
 TrophyUser.updateOne(
@@ -43,6 +45,7 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
   test("collectTrophy", async () => {
     userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
 
     // returns nothing
     await trophyCollection.collectTrophy(userId, trophyId);
@@ -69,6 +72,9 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
   });
 
   test("collectTrophy_trophy_is_collected", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
     expect(await trophyCollection.collectTrophy(userId, trophyId)).toThrow(
       DuplicationError
     );
@@ -92,6 +98,9 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
   });
 
   test("collectTrophy_invalid_userId", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
     expect(await trophyCollection.collectTrophy(null, trophyId)).toThrow(
       InputError
     );
@@ -109,6 +118,9 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
   });
 
   test("collectTrophy_invalid_trophyId", async () => {
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
     expect(await trophyCollection.collectTrophy(userId, null)).toThrow(
       InputError
     );
@@ -122,7 +134,10 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
   });
 
   test("collectTrophy_both_invalid", async () => {
-    expect(await trophyCollection.collectTrophy(userId, null)).toThrow(
+    userId = "User_TrophyCollection_Test";
+    trophyId = "Trophy_TrophyCollection_Test";
+
+    expect(await trophyCollection.collectTrophy(null, null)).toThrow(
       InputError
     );
   });
