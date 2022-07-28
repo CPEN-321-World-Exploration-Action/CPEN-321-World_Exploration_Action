@@ -28,8 +28,7 @@ describe("Friends_retrieveFriends", () => {
   test("Friends_retrieveFriends_user_has_friend", async () => {
     const expectedUserIds = ["_test_user_2"];
     const actualUsers = await friends.retrieveFriends("_test_user_1");
-    const actualUserIds = actualUsers.map(x => x.user_id);
-    await expect(expectedUserIds).toStrictEqual(actualUserIds);
+    expectSameUsers(actualUsers, expectedUserIds);
   });
 
   test("Friends_retrieveFriends_user_has_no_friend", async () => {
@@ -43,6 +42,27 @@ describe("Friends_retrieveFriends", () => {
     }).rejects.toThrow(TypeError);
   });
 });
+
+describe("Friends_getFriendRequests", () => {
+  test("Friends_getFriendRequests_no_requests", async () => {
+    await expect(await friends.getFriendRequests("_test_user_1")).toStrictEqual([]);
+  });
+
+  test("Friends_getFriendRequests_no_requests", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_2");
+    const requests = await friends.getFriendRequests("_test_user_2");
+    expectSameUsers(requests, ["_test_user_3"]);
+  });
+
+  test("Friends_getFriendRequests_invalid_input", async () => {
+    await expect(async () => await friends.getFriendRequests(null)).rejects.toThrow(TypeError);
+  });
+});
+
+function expectSameUsers(actualUsers, expectedUserIds) {
+  const actualUsersIds = actualUsers.map(x => x.user_id);
+  expect(actualUsersIds).toStrictEqual(expectedUserIds);
+}
 
 async function initializeDatabase() {
   const testUser1 = {

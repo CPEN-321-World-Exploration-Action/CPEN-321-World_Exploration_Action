@@ -17,6 +17,9 @@ export async function retrieveFriends(userId) {
 }
 
 export async function getFriendRequests(userId) {
+  if (typeof userId !== "string") {
+    throw new TypeError("Invalid userId");
+  }
   const user = await User.findUser(userId);
   if (!user) {
     throw new NotFoundError("Cannot find the user");
