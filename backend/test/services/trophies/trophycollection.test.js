@@ -3,7 +3,9 @@ import { jest } from "@jest/globals";
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
-jest.mock("../../../src/utils/message-manager.js");
+jest.mock("../../../src/utils/__mocks__/message-manager.js");
+
+trophyCollection.buildTrophyCollectedMessage = jest.fn();
 
 // need to update the dataset for test
 function initialize_database() {
@@ -104,6 +106,16 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
         trophy_id: trophyID,
       }).number_of_collectors
     ).toEqual(1);
+
+    expect(trophyCollection.buildTrophyCollectedMessage).toHaveBeenCalledWith(userId, trophyId, 1);
+
+    // idk if the format is correct
+    expect(trophyCollection.buildTrophyCollectedMessage).toHaveReturnedWith({
+      type: "trophy_collected",
+      userId: userId,
+      trophyId: trophyId,
+      trophyScore: 1,
+    })
   });
 
   test("collectTrophy_trophy_is_collected", async () => {
