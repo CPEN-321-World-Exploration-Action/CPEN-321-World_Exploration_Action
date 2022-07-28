@@ -9,6 +9,7 @@ export function publishNewMessage(message) {
 
 async function notifySubscribers(message) {
   // Statically configured subscribers
+
   if (message.type === "trophy_collected") {
     await userAccounts.onReceiveTrophyCollectedMessage(message);
   } else if (message.type === "user_score_updated") {
