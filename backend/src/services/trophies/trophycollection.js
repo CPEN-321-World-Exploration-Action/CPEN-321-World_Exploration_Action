@@ -19,6 +19,8 @@ export async function collectTrophy(userId, trophyId) {
 
   const message = buildTrophyCollectedMessage(userId, trophyId, trophyScore);
   messageManager.publishNewMessage(message);
+
+  //return message; // I changed it for testing
 }
 
 function buildTrophyCollectedMessage(userId, trophyId, trophyScore) {
