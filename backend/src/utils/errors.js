@@ -22,3 +22,21 @@ export class UnauthorizedError extends BadRequestError {
     super(message, status);
   }
 }
+
+export class NotInDBError extends NotFoundError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class InputError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class DuplicationError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}
