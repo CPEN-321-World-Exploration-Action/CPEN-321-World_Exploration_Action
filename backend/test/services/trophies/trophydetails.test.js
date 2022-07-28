@@ -5,15 +5,35 @@ import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
 
 jest.mock("../../../src/data/external/__mocks__/googleplaces.external.js");
 
+function initialize_database() {
+  // user 1
+  TrophyUser.findOrCreate("User_TrophyDetail_Test");
+  TrophyUser.updateOne(
+    { user_id: "User_TrophyDetail_Test" },
+    {
+      $set: {
+        uncollectedTrophies: [" "], // to be determined
+        collectedTrophies: [" "],
+        list_of_photos: [" "],
+        trophyTags: [" "],
+      },
+    }
+  );
+}
+
 describe("Trophy_Detail Module getTrophiesUser Test", () => {
   /* Trophy[] getTrophiesUser(String userId, double lat, double lon) */
   test("getTrophiesUser", async () => {
+
+    initialize_database();
+
     /* the number of userId’s
     uncollected trophies is less
     than MAX_TROPHIES */
     let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
     let lon = -123.251574;
-    let userId = "User1";
+    let userId = "User_TrophyDetail_Test";
+
     expect(trophyDetail.getTrophiesUser(userId, lat, lon)).toEqual(
       "the list of uncollected Trophy"
     );
