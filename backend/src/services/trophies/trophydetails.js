@@ -25,59 +25,60 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
 
     //console.log(uncollectedTrophyIDs, collectedTrophyIDs)
 
-    if (!uncollectedTrophyIDs) {
+    //console.log(uncollectedTrophyIDs);
+    if (!uncollectedTrophyIDs || uncollectedTrophyIDs.join() == [' '].join()) {
         uncollectedTrophyIDs = [];
-    } else {
+    }
+    else {
         const minTrophyDistance = await computeMinTrophyDistance(user_latitude, user_longitude, uncollectedTrophyIDs);
-        console.log(minTrophyDistance)
+        //console.log(minTrophyDistance)
         if (minTrophyDistance > MIN_DISTANCE_METERS) {
             //console.log(`All User Uncollected Trophies exceed ${MIN_DISTANCE_METERS} meters from the User. Regenerating Trophies for new Location`)
             uncollectedTrophyIDs = []; // Collect an entire new set of trophies
         }
+    }
 
-        if (uncollectedTrophyIDs.length < MAX_TROPHIES) {
+    if (uncollectedTrophyIDs.length < MAX_TROPHIES) {
 
-            try {
-                const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
-                //console.log(`Getting ${numberOfNewTrophies} new Trophies`)
-                const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
+        try {
+            const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
+            //console.log(`Getting ${numberOfNewTrophies} new Trophies`)
+            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
 
-                console.log(locations);
+            /*
+            console.log(locations);
 
-                if (!locations) {
-                    //console.log('No Locations found near User')
-                    return null // Handle null trophies in controllers.
-                }
-                // Convert locations into Trophies, and add them to the TrophyTrophy Database
-                const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
-                if (!newTrophyIds) {
-                    return Error("Adding newly generated trophies to TrophyDB returned null.")
-                }
-                uncollectedTrophyIDs.push(...newTrophyIds);
+            if (!locations) {
+                //console.log('No Locations found near User')
+                return null // Handle null trophies in controllers.
+            }*/
+            // Convert locations into Trophies, and add them to the TrophyTrophy Database
+            const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
+            uncollectedTrophyIDs.push(...newTrophyIds);
 
-            } catch (error) {
-                console.log(error)
-                return error
-            }
-        }
-        // Update User's list of uncollected trophies
-        uncollectedTrophyIDs.push(" ");
-        await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
-
-        let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs); // no [" "]
-        //  Add parameter describing if trophy is collected or not
-        uncollectedTrophies = uncollectedTrophies.map((trophy) => ({ ...trophy._doc, collected: false }));
-        // Get User's list of collected trophies
-        let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
-
-        if (!collectedTrophies) {
-            return uncollectedTrophies
-        } else {
-            collectedTrophies = collectedTrophies.map((trophy) => ({ ...trophy._doc, collected: true }));
-            return uncollectedTrophies.concat(collectedTrophies);
+        } catch (error) {
+            console.log(error)
+            return error
         }
     }
+    // Update User's list of uncollected trophies
+    uncollectedTrophyIDs.push(" ");
+    await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
+
+    let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs); // no [" "]
+    //  Add parameter describing if trophy is collected or not
+    uncollectedTrophies = uncollectedTrophies.map((trophy) => ({ ...trophy._doc, collected: false }));
+    // Get User's list of collected trophies
+    let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
+
+    if (!collectedTrophies || collectedTrophies == [" "]) {
+        return uncollectedTrophies
+    } else {
+        collectedTrophies = collectedTrophies.map((trophy) => ({ ...trophy._doc, collected: true }));
+        return uncollectedTrophies.concat(collectedTrophies);
+    }
 }
+
 
 export async function getTrophyDetails(ids) {
     if (!ids) {
@@ -134,12 +135,14 @@ async function createManyTrophies(locations) { // updates database
     return trophy_ids
 }
 
+/*
 async function updateTrophy(trophyID, body) {
     return await TrophyTrophy.findOneAndUpdate({ trophy_id: trophyID }, body, {
         new: true,
         runValidators: true
     })
 }
+*/
 
 async function computeMinTrophyDistance(user_latitude, user_longitude, trophyIds) {
     const trophies = await getTrophyDetails(trophyIds);
@@ -167,7 +170,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     const d = R * c; // in metres
-    console.log(d)
+    //console.log(d)
     return d
 }
 

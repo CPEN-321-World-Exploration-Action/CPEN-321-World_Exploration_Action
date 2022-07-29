@@ -287,6 +287,19 @@ async function initialize_user_database() {
     }
   );
 
+  await TrophyUser.findOrCreate("UserAllCollected");
+  await TrophyUser.updateOne(
+    { user_id: "UserAllCollected" },
+    {
+      $set: {
+        uncollectedTrophies: [" "], // to be determined
+        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+        list_of_photos: [" "], // no matter in this case
+        trophyTags: [" "], // no matter in this case
+      },
+    }
+  );
+
   await TrophyUser.findOrCreate("User_5");
   await TrophyUser.updateOne(
     { user_id: "User_5" },
@@ -519,7 +532,7 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
 
   test("getTrophiesUser_no_trophies", async () => {
     let lat = 250;
-    let lon = 250;
+    let lon = 252;
     let userId = "User_G";
     expect(await trophyDetail.getTrophiesUser(userId, lat, lon)).toStrictEqual([]);
   });
@@ -545,6 +558,26 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     let lon = 123;
     let userId = "UserNotInDB";
     expect(async () => await trophyDetail.getTrophiesUser(userId, lat, lon)).rejects.toThrow(NotInDBError);
+  });
+
+  test("getTrophiesUser_userId_has_no_uncollected", async () => {
+    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251574;
+    let userId = "UserAllCollected";
+    const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
+
+    expect(
+      trophyList.map(x => x.trophy_id)
+    ).toEqual(expect.arrayContaining(["ChIJcfSTmvR0hlQRHTBUcvS9EmE",
+      "ChIJUzqZj0oNhlQRSzlBeYd5v-0", "ChIJ28IkUs5zhlQRua6hLV7S3jY",
+      "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"]));
+
+    expect(
+      (await TrophyUser.findOne({
+        user_id: userId,
+      }).exec()).uncollectedTrophies
+    ).toEqual(expect.arrayContaining(["ChIJcfSTmvR0hlQRHTBUcvS9EmE",
+      "ChIJUzqZj0oNhlQRSzlBeYd5v-0", "ChIJ28IkUs5zhlQRua6hLV7S3jY"]));
   });
 });
 

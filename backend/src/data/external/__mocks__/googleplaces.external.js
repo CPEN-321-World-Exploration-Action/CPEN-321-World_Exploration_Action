@@ -38,7 +38,7 @@ export const placeIDList = [{
     },
     name: 'Wreck_Beach',
     place_id: 'ChIJUzqZj0oNhlQRSzlBeYd5v-0',
-    rating: 5,
+    rating: 1,
     types: [
         'park',
         'tourist_attraction',
@@ -57,7 +57,7 @@ export const placeIDList = [{
     place_id: 'ChIJ28IkUs5zhlQRua6hLV7S3jY',
     rating: 4.5,
     types: ['park', 'point_of_interest', 'establishment'],
-    user_ratings_total: 11
+    user_ratings_total: 1000
 }];
 
 
