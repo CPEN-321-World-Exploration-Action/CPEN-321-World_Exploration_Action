@@ -34,7 +34,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     GridLayout trophyGrid;
     private TrophyDetailsBinding binding;
-    private TrophyDetailsViewModel viewModel;
+    private static TrophyDetailsViewModel viewModel;
     private boolean userAtLocation;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
@@ -238,5 +238,9 @@ public class TrophyDetailsActivity extends AppCompatActivity {
 
     private Trophy getTrophy() {
         return Objects.requireNonNull(viewModel.getTrophyDetails().getValue());
+    }
+
+        public static List<Photo> getPhotos() {
+        return viewModel.getPhotos().getValue();
     }
 }

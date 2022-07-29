@@ -2,10 +2,12 @@ package com.worldexplorationaction.android.frontend;
 
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.Root;
@@ -17,6 +19,8 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
+import com.worldexplorationaction.android.data.photo.Photo;
+import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
 
@@ -25,6 +29,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -75,14 +80,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
-    @LargeTest
+@LargeTest
     @RunWith(AndroidJUnit4.class)
     public class TrophyDetailsAndPhotosTests {
         private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
         private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
+    private static final String TAG = TrophyDetailsAndPhotosTests.class.getSimpleName();;
 
-        @Rule
+    @Rule
         public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
                 new ActivityScenarioRule<>(MainActivity.class);
 
@@ -199,20 +207,8 @@ import java.io.IOException;
 
         @Test
         public void addPictureAgain() throws IOException {
-            TrophyDetailsUtils.startTrophyDetailsActivity();
+            TrophyDetailsUtils.startTrophyDetailsActivity2();
             TrophyDetailsUtils.stubImageCapture();
-
-                ViewInteraction collectTrophyButton = onView(
-                        allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
-                                childAtPosition(
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0),
-                                        5),
-                                isDisplayed()));
-                collectTrophyButton.perform(click());
-
-                onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
 
                 ViewInteraction takeAPhotoButton = onView(
                         allOf(withId(R.id.trophy_action_button), withText("Take a Photo"),
@@ -223,6 +219,8 @@ import java.io.IOException;
                                         5),
                                 isDisplayed()));
                 takeAPhotoButton.perform(click());
+                Date time1 = TrophyDetailsActivity.getPhotos ().get (0).getTime();
+                Log.d(TAG, "Before replacing:" + time1);
 
 
                 ViewInteraction replaceButton = onView(
@@ -234,8 +232,8 @@ import java.io.IOException;
                                         3)));
                 replaceButton.perform(scrollTo(), click());
 
-                //how to check the image is replaced?
-
+                Log.d(TAG, "After replacing:" + TrophyDetailsActivity.getPhotos ().get (0));
+                Assert.assertNotEquals(time1, TrophyDetailsActivity.getPhotos ().get (0).getTime());
         }
 
         @Test
@@ -257,19 +255,8 @@ import java.io.IOException;
 
         @Test
         public void addPictureAgainCancel() throws IOException {
-            TrophyDetailsUtils.startTrophyDetailsActivity();
+            TrophyDetailsUtils.startTrophyDetailsActivity2();
 
-            ViewInteraction collectTrophyButton = onView(
-                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    5),
-                            isDisplayed()));
-            collectTrophyButton.perform(click());
-
-            onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
 
             ViewInteraction materialButton = onView(
                     allOf(withId(R.id.trophy_action_button), withText("Take a Photo"),
@@ -290,8 +277,7 @@ import java.io.IOException;
                                     2)));
             materialButton2.perform(scrollTo(), click());
 
-            onView(withId(androidx.appcompat.R.id.buttonPanel)).check(doesNotExist());
-
+            onView(withText("Cancel")).check(doesNotExist());
 
         }
 
@@ -315,9 +301,21 @@ import java.io.IOException;
                         .check(matches(isDisplayed()))
                         .perform(click());
 
-                onView(withText("Time"))
-                        .inRoot(isDialog())
-                        .perform(click());
+            Date time1 = TrophyDetailsActivity.getPhotos ().get (0).getTime();
+            Date time2 = TrophyDetailsActivity.getPhotos ().get (1).getTime();
+            String id1 = TrophyDetailsActivity.getPhotos ().get (0).getPhotoId();
+            String id2 = TrophyDetailsActivity.getPhotos ().get (1).getPhotoId();
+
+            Log.d(TAG, "time1:" + time1);
+            Log.d(TAG, "id1" + id1);
+            Log.d(TAG, "time2:" + time2);
+            Log.d(TAG, "id2:" + id2);
+
+            onView(withText("Time"))
+                    .inRoot(isDialog())
+                    .perform(click());
+
+            Assert.assertEquals(id1, TrophyDetailsActivity.getPhotos ().get (0).getPhotoId());
         }
 
         @Test
@@ -334,9 +332,21 @@ import java.io.IOException;
                             isDisplayed()));
             sortButton.perform(click());
 
+            int numLike1 = TrophyDetailsActivity.getPhotos ().get (0).getNumberOfLikes();
+            int numLike2 = TrophyDetailsActivity.getPhotos ().get (1).getNumberOfLikes();
+            String id1 = TrophyDetailsActivity.getPhotos ().get (0).getPhotoId();
+            String id2 = TrophyDetailsActivity.getPhotos ().get (1).getPhotoId();
+
+            Log.d(TAG, "num of likes1:" + numLike1);
+            Log.d(TAG, "id1" + id1);
+            Log.d(TAG, "num of likes2:" + numLike2);
+            Log.d(TAG, "id2:" + id2);
+
             onView(withText("Like Number"))
                     .inRoot(isDialog())
                     .perform(click());
+
+            Assert.assertEquals(id1, TrophyDetailsActivity.getPhotos ().get (1).getPhotoId());
         }
 
         @Test
@@ -352,6 +362,8 @@ import java.io.IOException;
                                     10),
                             isDisplayed()));
             navigationButton.perform(click());
+
+            Assert.assertTrue(TrophyDetailsUtils.googleMaps());
         }
 
         public class ToastMatcher extends TypeSafeMatcher<Root> {
@@ -373,6 +385,8 @@ import java.io.IOException;
             public void describeTo(Description description) {
 
             }
+
+
         }
 
     }
