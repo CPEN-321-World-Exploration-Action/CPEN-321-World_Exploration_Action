@@ -2,37 +2,51 @@ import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
 import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../utils/errors.js";
 
-export const numberOfUsersOnLeaderboard = 10;
+export let numberOfUsersOnLeaderboard = 10;
 
 export let subscribers = new Map();
-const validDuration = 1000 * 60 * 60; /* 1 hour */
+let validDuration = 1000 * 60 * 60; /* 1 hour */
 
 export let oldLeaderboard = [];
 
 /* Clean up expired subscribers every 1 minute */
-setInterval(() => {
-  const currentTime = new Date().getTime();
-  for (const [userId, { fcmToken, expireTime }] of subscribers) {
-    if (currentTime > expireTime) {
-      subscribers.delete(userId);
-    }
+let subscriberCleanup;
+function startSubscriberCleanup() {
+  if (subscriberCleanup) {
+    clearInterval(subscriberCleanup);
   }
-}, validDuration / 4);
+  subscriberCleanup = setInterval(() => {
+    const currentTime = new Date().getTime();
+    for (const [userId, { fcmToken, expireTime }] of subscribers) {
+      if (currentTime > expireTime) {
+        subscribers.delete(userId);
+      }
+    }
+  }, validDuration / 4);
+}
+
+startSubscriberCleanup();
 
 export async function onReceiveUserScoreUpdatedMessage(message) {
   const userId = message.userId;
+  if (!userId) {
+    throw new InputError("Missing userId");
+  }
+  const collector = await User.findUser(userId);
+  if (!collector) {
+    throw new NotInDBError("Cannot find the collector");
+  }
+
   const newLeaderboard = await getGlobalLeaderboard();
   const updatingGlobalLeaderboard = await willChangeGlobalLeaderboard(
     newLeaderboard
   );
   if (updatingGlobalLeaderboard) {
-    console.log("Global leaderboard updated");
     await notifyAllSubscribingUsers();
     await sendNewChampionNotificationIfNeeded(newLeaderboard);
     await sendNotificationsToUsersDroppedOut(newLeaderboard);
     oldLeaderboard = newLeaderboard;
   } else {
-    const collector = await User.findUser(userId);
     await notifyIfSubscribing(collector.friends);
   }
 }
@@ -53,9 +67,7 @@ export async function getFriendLeaderboard(userId) {
     throw new NotInDBError();
   }
   const friends = await User.getFriends(userId);
-  if (!friends.map((x) => x.user_id).includes(user.user_id)) {
-    friends.push(user);
-  }
+  friends.push(user);
   sortByTrophyScore(friends);
   return friends;
 }
@@ -137,4 +149,15 @@ export async function sendNotificationsToUsersDroppedOut(newLeaderboard) {
 
 function compareUser(u1, u2) {
   return u1.user_id === u2.user_id && u1.score === u2.score;
+}
+
+/* For testing */
+export function setSubscriptionValidDuration(duration) {
+  validDuration = duration;
+  startSubscriberCleanup();
+}
+
+export function setNumberOfUsersOnLeaderboard(numberOfUsers) {
+  numberOfUsersOnLeaderboard = numberOfUsers;
+  oldLeaderboard = [];
 }
