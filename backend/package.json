@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon .",
-    "test": "node node_modules/jest/bin/jest.js --coverage --detectOpenHandles"
+    "test": "node node_modules/jest/bin/jest.js --runInBand --coverage --forceExit"
   },
   "dependencies": {
     "axios": "^0.27.2",
