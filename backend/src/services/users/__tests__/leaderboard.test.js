@@ -1,12 +1,25 @@
 import { jest } from "@jest/globals";
-import mongoose from "mongoose";
 
 import * as leaderboard from "../leaderboard.js";
 import { User } from "../../../data/db/user.db.js";
 import { BadRequestError, NotFoundError, NotInDBError, InputError } from "../../../utils/errors.js";
-import { get } from "mongoose";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../data/external/fcm.external.js"); // have to mock fcm 
+
+const URL = "mongodb://localhost:27017/test_WEA_leaderboard";
+
+beforeAll(async () => {
+  await connectToDatabase(URL);
+})
+
+afterAll(async () => {
+  await dropAndDisconnectDatabase();
+})
+
+beforeEach(async () => {
+  await User.deleteMany({})
+})
 
 /*
 leaderboard.willChangeGlobalLeaderboard = jest.fn(
@@ -43,12 +56,6 @@ async function initialize_subscribers() {
 describe("Leaderboard Module subscribeUpdate Test", () => {
 
   test("subscribeUpdate", async () => {
-    // refresh
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "User";
     const token = "UserToken";
 
@@ -58,28 +65,21 @@ describe("Leaderboard Module subscribeUpdate Test", () => {
 
     expect(time).toBeGreaterThan(new Date().getTime());
     expect(leaderboard.subscribers.get(userId)).toEqual({ fcmToken: token, expireTime: time });
-    await dropAndDisconnectDatabase_test();
   });
 
   test("subscribeUpdate_invalid_input", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "User";
     const token = "UserToken";
 
     expect(async () => await leaderboard.subscribeUpdate(null, token)).rejects.toThrow(InputError);
     expect(async () => await leaderboard.subscribeUpdate(userId, null)).rejects.toThrow(InputError);
-    await dropAndDisconnectDatabase_test();
   });
 
   test("subscribeUpdate_user_not_in_DB", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "UserNotInDB";
     const token = "UserToken";
 
     expect(async () => await leaderboard.subscribeUpdate(userId, token)).rejects.toThrow(NotInDBError);
-    await dropAndDisconnectDatabase_test();
   });
 }
 );
@@ -87,12 +87,6 @@ describe("Leaderboard Module subscribeUpdate Test", () => {
 // getFriendLeaderboard complete
 describe("Leaderboard Module getFriendLeaderboard Test", () => {
   test("getFriendLeaderboard success", async () => {
-    // refresh
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -108,13 +102,9 @@ describe("Leaderboard Module getFriendLeaderboard Test", () => {
     expect(user_list[0]).toHaveProperty("user_id", "User_2");
     expect(user_list[1]).toHaveProperty("user_id", "User_1");
     expect(user_list[2]).toHaveProperty("user_id", userId);
-
-    await dropAndDisconnectDatabase_test();
   });
 
   test("getFriendLeaderboard user has no friend", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -130,27 +120,17 @@ describe("Leaderboard Module getFriendLeaderboard Test", () => {
     expect(user_list[0]).toHaveProperty("user_id", userId);
 
     expect(user_list.length).toEqual(1);
-
-    await dropAndDisconnectDatabase_test();
   });
 
   test("getFriendLeaderboard user not in DB", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     const userId = "UserNotInDB";
 
     expect(async () => await leaderboard.getFriendLeaderboard(userId)).rejects.toThrow(NotInDBError);
-
-    await dropAndDisconnectDatabase_test();
   });
 
   test("getFriendLeaderboard user invalid", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     expect(async () => await leaderboard.getFriendLeaderboard(null)).rejects.toThrow(InputError);
     expect(async () => await leaderboard.getFriendLeaderboard(undefined)).rejects.toThrow(InputError);
-
-    await dropAndDisconnectDatabase_test();
   });
 }
 );
@@ -158,11 +138,6 @@ describe("Leaderboard Module getFriendLeaderboard Test", () => {
 // getGlobalLeaderboard complete
 describe("Leaderboard Module getGlobalLeaderboard Test", () => {
   test("getGlobalLeaderboard_not_exceed_10", async () => {
-    // refresh
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
     await User.create({ user_id: "User_0" });
     await User.create({ user_id: "User_1" });
     await User.create({ user_id: "User_2" });
@@ -177,13 +152,9 @@ describe("Leaderboard Module getGlobalLeaderboard Test", () => {
     expect(user_list[1]).toHaveProperty("user_id", "User_1");
     expect(user_list[2]).toHaveProperty("user_id", "User_0");
     expect(user_list.length).toBeLessThan(leaderboard.numberOfUsersOnLeaderboard);
-
-    await dropAndDisconnectDatabase_test();
   });
 
   test("getGlobalLeaderboard_exceed_10", async () => {
-    await connectToDatabase("mongodb://localhost:27017/leaderboard");
-
     await User.create({ user_id: "User_0" });
     await User.create({ user_id: "User_1" });
     await User.create({ user_id: "User_2" });
@@ -221,28 +192,5 @@ describe("Leaderboard Module getGlobalLeaderboard Test", () => {
     expect(user_list[8]).toHaveProperty("user_id", "User_2");
     expect(user_list[9]).toHaveProperty("user_id", "User_1");
     expect(user_list.length).toEqual(leaderboard.numberOfUsersOnLeaderboard);
-
-    await dropAndDisconnectDatabase_test();
   });
-}
-);
-
-export async function connectToDatabase(dbUrl) {
-  await mongoose.connect(dbUrl);
-}
-
-export async function dropAndDisconnectDatabase() {
-  /*
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-  */
-}
-
-export async function dropAndDisconnectDatabase_test() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-}
+});
