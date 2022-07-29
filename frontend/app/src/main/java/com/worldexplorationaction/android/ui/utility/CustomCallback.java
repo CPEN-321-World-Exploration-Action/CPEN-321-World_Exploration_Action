@@ -3,6 +3,10 @@ package com.worldexplorationaction.android.ui.utility;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import retrofit2.Call;
@@ -32,7 +36,15 @@ public class CustomCallback<T> implements retrofit2.Callback<T> {
             }
         } else {
             if (onFailure != null) {
-                onFailure.accept("Failed with code " + response.code());
+                String errorMessage = "Code " + response.code();
+                if (response.errorBody() != null) {
+                    try {
+                        JSONObject json = new JSONObject(response.errorBody().string());
+                        errorMessage += ", Message: " + json.getString("message");
+                    } catch (JSONException | IOException ignored) {
+                    }
+                }
+                onFailure.accept(errorMessage);
             }
         }
     }

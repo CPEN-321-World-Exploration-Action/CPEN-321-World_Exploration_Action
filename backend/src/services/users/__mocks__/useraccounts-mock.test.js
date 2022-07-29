@@ -1,9 +1,9 @@
 import { jest } from "@jest/globals";
-import userAccountsMock, {mockUser, mockUsers} from "../../../src/services/users/__mocks__/useraccounts";
+import { mockUser, mockUsers } from "./useraccounts";
 
-jest.unstable_mockModule("../../../src/services/users/useraccounts", userAccountsMock);
+import * as userAccounts from "../useraccounts";
 
-const userAccounts = await import("../../../src/services/users/useraccounts");
+jest.mock("../useraccounts");
 
 describe("User Accounts Mock", () => {
   test("onReceiveTrophyCollectedMessage", async () => {
@@ -16,16 +16,16 @@ describe("User Accounts Mock", () => {
     expect(await userAccounts.onReceiveTrophyCollectedMessage(message)).toBe(undefined);
   });
   test("getUserProfile", async () => {
-    expect(await userAccounts.getUserProfile("438952804820")).toBe(mockUser);
+    expect(await userAccounts.getUserProfile("438952804820")).toStrictEqual(mockUser);
   });
   test("uploadFcmToken", async () => {
     expect(await userAccounts.uploadFcmToken("438952804820", "fcmToken.abc.123")).toBe(undefined);
   });
   test("loginWithGoogle", async () => {
-    expect(await userAccounts.loginWithGoogle("agih2eawwf3ui4h28w.faeq23r2.faeff23")).toBe(mockUser);
+    expect(await userAccounts.loginWithGoogle("agih2eawwf3ui4h28w.faeq23r2.faeff23")).toStrictEqual(mockUser);
   });
   test("searchUser", async () => {
-    expect(await userAccounts.searchUser("Joseph")).toBe(mockUsers);
+    expect(await userAccounts.searchUser("Joseph")).toStrictEqual(mockUsers);
   });
   test("signOut", async () => {
     expect(await userAccounts.signOut()).toBe(undefined);

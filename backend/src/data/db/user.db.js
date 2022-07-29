@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    user_id: { type: String, index: true, unique: true, required:true },
-    user_latitude: {type: Number},
-    user_longitude: {type: Number},
+    user_id: { type: String, index: true, unique: true, required: true },
+    // user_latitude: {type: Number},
+    // user_longitude: {type: Number},
     //google_id: { type: String, index: true },
     name: { type: String, index: true },
     email: {
@@ -18,6 +18,7 @@ const userSchema = new Schema(
     friends: { type: [String], default: [] },
     score: { type: Number, default: 0, index: true },
     fcm_token: String,
+    rank: { type: Number }
   },
   {
     statics: {
@@ -80,6 +81,16 @@ const userSchema = new Schema(
           update2
         );
         return result1.modifiedCount > 0 || result2.modifiedCount > 0;
+      },
+      async upsertUser(user) {
+        const result = await this.updateOne(
+          { user_id: user.user_id },
+          user,
+          { upsert: true }
+        );
+        if (result.matchedCount === 0 && result.upsertedCount === 0) {
+          throw new Error("upsertUser failed");
+        }
       },
     },
     methods: {},

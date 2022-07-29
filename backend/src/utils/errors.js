@@ -16,3 +16,27 @@ export class NotFoundError extends BadRequestError {
     super(message, status);
   }
 }
+
+export class UnauthorizedError extends BadRequestError {
+  constructor(message, status = 401) {
+    super(message, status);
+  }
+}
+
+export class NotInDBError extends NotFoundError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class InputError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class DuplicationError extends BadRequestError {
+  constructor(message) {
+    super(message);
+  }
+}

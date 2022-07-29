@@ -136,6 +136,14 @@ export async function subscribeLeaderboardUpdate(req, res) {
   });
 }
 
+/* Functions for Tests */
+export async function testerLogin(req, res) {
+  const userProfile = await userAccounts.testerLogin();
+  await friends.resetTestUsers();
+  req.session.userId = userProfile.user_id;
+  res.status(201).json(userProfile);
+}
+
 // Dev functions
 // export async function createUser(req, res) {
 //   // When creating a user, we also need to create a document in the TrophyUser DB

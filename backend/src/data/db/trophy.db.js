@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const trophySchemaTrophy = new Schema(
   {
     trophy_id: { type: String, index: true, unique: true },
-    name: {type: String},
+    name: { type: String },
     latitude: { type: Number, required: [true, "Trophy must have Latitude"] },
     longitude: { type: Number, required: [true, "Trophy must have Longitude"] },
     number_of_collectors: { type: Number, default: 0 },
@@ -28,10 +28,10 @@ const trophySchemaTrophy = new Schema(
     statics: {
       async incrementNumberOfCollector(trophyID, userID) {
         let trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        if (trophy.number_of_collectors == null){
+        if (trophy.number_of_collectors == null) {
           trophy.number_of_collectors = 1;
         }
-        else{
+        else {
           trophy.number_of_collectors += 1; // initialized to be 0
         }
         trophy.save();
@@ -94,12 +94,20 @@ const trophySchemaUser = new Schema(
   },
   {
     statics: {
+      async addUncollectedTrophies(userId, trophyIds) {
+        const update = {
+          $addToSet: { uncollectedTrophies: { $each: trophyIds } },
+        };
+        const res = await this.updateOne({ user_id: userId }, update);
+        return res.modifiedCount > 0;
+      },
       async removeUncollectedTrophy(userId, trophyId) {
         const update = { $pullAll: { uncollectedTrophies: [trophyId] } };
         const res = await this.updateOne(
           { user_id: userId },
           update
         );
+
         return res.modifiedCount > 0;
       },
       async addCollectedTrophy(userId, trophyId) {

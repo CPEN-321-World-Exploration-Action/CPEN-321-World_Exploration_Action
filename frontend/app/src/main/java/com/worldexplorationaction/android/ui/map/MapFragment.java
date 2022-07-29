@@ -137,7 +137,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 TrophyDetailsActivity.start(requireContext(), trophy, canCollect);
             }
         });
-        return false;
+        return true;
     }
 
     @Override

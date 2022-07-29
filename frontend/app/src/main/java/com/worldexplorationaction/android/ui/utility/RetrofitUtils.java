@@ -29,6 +29,10 @@ public class RetrofitUtils {
                 .build();
     }
 
+    public static OkHttpClient getClient() {
+        return CLIENT;
+    }
+
     private static class InMemoryCookieJar implements CookieJar {
         private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 

@@ -21,14 +21,13 @@ import com.google.android.gms.tasks.Task;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.data.user.UserService;
 import com.worldexplorationaction.android.fcm.WeaFirebaseMessagingService;
-import com.worldexplorationaction.android.ui.utility.CustomCallback;
 import com.worldexplorationaction.android.ui.utility.CommonUtils;
+import com.worldexplorationaction.android.ui.utility.CustomCallback;
 
 import java.util.function.BiConsumer;
 
 public class SignInManager implements ActivityResultCallback<ActivityResult> {
     private static final String TAG = SignInManager.class.getSimpleName();
-    private static final String TEST_USER_ID = "test_uid_001";
     public static String signedInUserId;
     private final GoogleSignInClient googleSignInClient;
     private final ActivityResultLauncher<Intent> googleSignInLauncher;
@@ -89,9 +88,8 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
 
     public void signIn(AppCompatActivity activity, boolean checkLastAccount) {
         if (CommonUtils.isRunningUiTest()) {
-            Log.w(TAG, "Skip login in UI tests.");
-            signedInUserId = TEST_USER_ID;
-            onSignInResultListener.accept(true, null);
+            Log.w(TAG, "Login in UI tests.");
+            uiTestLogin();
             return;
         }
 
@@ -99,16 +97,18 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
             Log.d(TAG, "Getting last signed in account");
             GoogleSignInAccount lastAccount = GoogleSignIn.getLastSignedInAccount(activity);
             if (lastAccount != null) {
-                Log.d(TAG, "has last signed in account " + lastAccount);
-                onSignInSuccess(lastAccount);
-                return;
+                Log.d(TAG, "has last signed in account " + lastAccount + ", expired=" + lastAccount.isExpired());
+                if (!lastAccount.isExpired()) {
+                    onSignInSuccess(lastAccount);
+                    return;
+                }
             }
         } else {
             Log.d(TAG, "Skip last signed in account");
             googleSignInClient.signOut();
         }
 
-        Log.d(TAG, "no last signed in account");
+        Log.d(TAG, "no valid last signed in account");
         googleSignInLauncher.launch(googleSignInClient.getSignInIntent());
     }
 
@@ -136,8 +136,9 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
                 onSignInResultListener.accept(true, null);
                 uploadFcmToken();
             } else {
-                Log.i(TAG, "userService.login null body ");
-                onSignInResultListener.accept(false, "userService.login failed: null response body");
+                String errorMessage = "userService.login failed: null response body";
+                Log.i(TAG, errorMessage);
+                onSignInResultListener.accept(false, errorMessage);
             }
         }, null, errorMessage -> {
             Log.e(TAG, "userService.login failed " + errorMessage);
@@ -160,5 +161,23 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
                 Log.e(TAG, "userService.uploadFcmToken failed " + errorMessage);
             }));
         });
+    }
+
+    private void uiTestLogin() {
+        userService.testerLogin().enqueue(new CustomCallback<>(responseBody -> {
+            if (responseBody != null) {
+                Log.e(TAG, "userService.testerLogin success");
+                signedInUserId = responseBody.getId();
+                onSignInResultListener.accept(true, null);
+                uploadFcmToken();
+            } else {
+                String errorMessage = "userService.testerLogin failed: null response body";
+                Log.i(TAG, errorMessage);
+                onSignInResultListener.accept(false, errorMessage);
+            }
+        }, null, errorMessage -> {
+            Log.e(TAG, "userService.testerLogin failed " + errorMessage);
+            onSignInResultListener.accept(false, errorMessage);
+        }));
     }
 }
