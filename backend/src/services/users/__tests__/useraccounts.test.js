@@ -16,6 +16,7 @@ const URL = "mongodb://localhost:27017/test_WEA_useraccounts";
 
 beforeAll(async () => {
   await connectToDatabase(URL);
+  await useraccounts.testerLogin();
 })
 
 afterAll(async () => {
@@ -298,17 +299,12 @@ describe("Useraccounts Module searchUser Test", () => {
 
 // searchUser complete
 describe("Useraccounts Module signOut Test", () => {
-  test("signOut Invalid Input", async () => {
-    const userId = null;
-
-    expect(async () => await useraccounts.signOut(userId)).rejects.toThrow(InputError);
-
+  test("signOut success", async () => {
+    await useraccounts.signOut("user");
   });
 
-  test("signOut Not in DB", async () => {
-    const userId = "User_0";
-
-    expect((async () => await useraccounts.signOut(userId))).rejects.toThrow(NotInDBError);
-
+  test("signOut Invalid Input", async () => {
+    const userId = null;
+    expect(async () => await useraccounts.signOut(userId)).rejects.toThrow(InputError);
   });
 });
