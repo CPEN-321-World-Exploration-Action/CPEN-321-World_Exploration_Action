@@ -12,11 +12,17 @@ const testDbUri = "mongodb://localhost:27017/test_WEA";
 
 beforeAll(async () => {
   await connectToDatabase(testDbUri);
-  initializeDatabase();
+  await friends.resetTestUsers();
 });
 
 afterAll(async () => {
   await dropAndDisconnectDatabase();
+});
+
+beforeEach(async () => {
+  friends.clearRequests();
+  fcm.sendFriendNotification.mockClear();
+  await initializeDatabase();
 });
 
 describe("Friends_retrieveFriends", () => {
@@ -61,11 +67,6 @@ describe("Friends_getFriendRequests", () => {
 });
 
 describe("Friends_sendRequest", () => {
-  beforeEach(async () => {
-    friends.clearRequests();
-    fcm.sendFriendNotification.mockClear();
-  });
-
   test("Friends_getFriendRequests_has_requested_before", async () => {
     await friends.sendRequest("_test_user_3", "_test_user_2");
     fcm.sendFriendNotification.mockClear();
@@ -115,7 +116,6 @@ describe("Friends_deleteFriend", () => {
     await friends.deleteFriend("_test_user_1", "_test_user_2");
     await expect(await friends.retrieveFriends("_test_user_1")).toStrictEqual([]);
     await expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
-    await initializeDatabase();
   });
 
   test("Friends_deleteFriend_not_friend", async () => {
@@ -128,6 +128,37 @@ describe("Friends_deleteFriend", () => {
 
   test("Friends_deleteFriend_invalid_input", async () => {
     await expect(async () => await friends.deleteFriend(null, "_test_user_1")).rejects.toThrow();
+  });
+});
+
+describe("Friends_acceptRequest", () => {
+  test("Friends_acceptRequest_success", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_2");
+    await friends.acceptUser("_test_user_2", "_test_user_3");
+
+    await friends.deleteFriend("_test_user_2", "_test_user_3"); /* This will ensure that they have become friends */
+    expect(fcm.sendFriendNotification).toHaveBeenLastCalledWith("__test_fcm_token_3", expect.anything(), expect.anything());
+  });
+
+  test("Friends_acceptRequest_no_such_request", async () => {
+    await expect(async () => await friends.acceptUser("_test_user_3", "_test_user_2")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_acceptRequest_success_no_fcm", async () => {
+    await friends.sendRequest("_test_user_1", "_test_user_3");
+    fcm.sendFriendNotification.mockClear();
+    await friends.acceptUser("_test_user_3", "_test_user_1");
+
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+    await friends.deleteFriend("_test_user_3", "_test_user_1"); /* This will ensure that they have become friends */
+  });
+
+  test("Friends_acceptRequest_invalid_user_id", async () => {
+    await expect(async () => await friends.acceptUser(null, "friend")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_acceptRequest_invalid_friend_id", async () => {
+    await expect(async () => await friends.acceptUser("user", null)).rejects.toThrow(BadRequestError);
   });
 });
 

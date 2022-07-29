@@ -74,6 +74,9 @@ export async function deleteFriend(userId, friendId) {
 }
 
 export async function acceptUser(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   removeRequest(friendId, userId); // this will make sure userId and friendId are valid
   await User.mutuallyAddFriend(userId, friendId);
 
@@ -86,6 +89,9 @@ export async function acceptUser(userId, friendId) {
 }
 
 export async function declineUser(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   removeRequest(friendId, userId); // this will make sure userId and friendId are valid
 
   const user = await User.findUser(userId);
@@ -117,14 +123,9 @@ function removeRequest(source, target) {
 async function sendNotification(targetUserId, title, body) {
   const targetUser = await User.findUser(targetUserId);
   if (!targetUser.fcm_token) {
-    console.log("User %s does not have an fcm_token", targetUserId);
     return;
   }
-  try {
-    await fcm.sendFriendNotification(targetUser.fcm_token, title, body);
-  } catch (err) {
-    console.log(err);
-  }
+  await fcm.sendFriendNotification(targetUser.fcm_token, title, body);
 }
 
 /* Functions for Tests */
