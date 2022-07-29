@@ -1,7 +1,10 @@
 import { jest } from "@jest/globals";
 
 export const verifyUser = jest.fn(async (idToken) => {
-  return { userId: mockUser.user_id, payload: mockUser };
+  if (idToken == null || !idToken) {
+    throw new Error();
+  }
+  return { userId: "438952804820", payload: mockUser };
 });
 
 export const mockUser = {

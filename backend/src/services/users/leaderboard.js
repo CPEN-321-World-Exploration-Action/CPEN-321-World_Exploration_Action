@@ -1,9 +1,10 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
+import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../utils/errors.js";
 
-const numberOfUsersOnLeaderboard = 10;
+export const numberOfUsersOnLeaderboard = 10;
 
-let subscribers = new Map();
+export let subscribers = new Map();
 const validDuration = 1000 * 60 * 60; /* 1 hour */
 
 export let oldLeaderboard = [];
@@ -43,8 +44,15 @@ export async function getGlobalLeaderboard() {
 }
 
 export async function getFriendLeaderboard(userId) {
-  const friends = await User.getFriends(userId);
+  if (!userId) {
+    throw new InputError();
+  }
+
   const user = await User.findUser(userId);
+  if (!user) {
+    throw new NotInDBError();
+  }
+  const friends = await User.getFriends(userId);
   if (!friends.map((x) => x.user_id).includes(user.user_id)) {
     friends.push(user);
   }
@@ -53,6 +61,14 @@ export async function getFriendLeaderboard(userId) {
 }
 
 export async function subscribeUpdate(userId, fcmToken) {
+  if (!userId || !fcmToken) {
+    throw new InputError();
+  }
+
+  if (!(await User.findUser(userId))) {
+    throw new NotInDBError();
+  }
+
   const expireTime = new Date().getTime() + validDuration;
   subscribers.set(userId, { fcmToken, expireTime });
   return expireTime;

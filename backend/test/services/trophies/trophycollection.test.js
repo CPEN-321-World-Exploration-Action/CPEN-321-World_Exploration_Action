@@ -4,7 +4,7 @@ import { BadRequestError, NotFoundError, InputError, DuplicationError } from "..
 
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
-import * as messageManager from "../../../src/utils/__mocks__/message-manager.js";
+import * as messageManager from "../../../src/utils/message-manager.js";
 
 jest.mock("../../../src/utils/message-manager.js"); //!
 
@@ -40,66 +40,6 @@ afterAll(async () => {
 jest.mock("../../../src/utils/__mocks__/message-manager.js");
 
 trophyCollection.buildTrophyCollectedMessage = jest.fn();
-
-// need to update the dataset for test
-function initialize_database() {
-  TrophyUser.findOrCreate("User_TrophyCollection_Test");
-  TrophyUser.updateOne(
-    { user_id: "User_TrophyCollection_Test" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
-        collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
-        list_of_photos: [" "],
-        trophyTags: [" "],
-      },
-    }
-  );
-
-  let Trophy_Test = await TrophyTrophy.findOne({
-    trophy_id: "Trophy_TrophyCollection_Test",
-  }).exec();
-  if (!Trophy_Test) {
-    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test" });
-  }
-
-  TrophyTrophy.updateOne(
-    { trophy_id: "Trophy_TrophyCollection_Test" },
-    {
-      $set: {
-        name: "Trophy_TrophyCollection_Test",
-        latitude: 100,
-        longitude: 100,
-        number_of_collectors: 0,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    }
-  );
-
-  let Trophy_Test2 = await TrophyTrophy.findOne({
-    trophy_id: "Trophy_TrophyCollection_Test_Collected",
-  }).exec();
-  if (!Trophy_Test2) {
-    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test_Collected" });
-  }
-
-  TrophyTrophy.updateOne(
-    { trophy_id: "Trophy_TrophyCollection_Test_Collected" },
-    {
-      $set: {
-        name: "Trophy_TrophyCollection_Test_Collected",
-        latitude: 200,
-        longitude: 200,
-        number_of_collectors: 1,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" ", "User_TrophyCollection_Test"],
-      },
-    }
-  );
-}
 
 describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
