@@ -162,6 +162,44 @@ describe("Friends_acceptRequest", () => {
   });
 });
 
+describe("Friends_declineRequest", () => {
+  test("Friends_declineRequest_success", async () => {
+    await friends.sendRequest("_test_user_3", "_test_user_2");
+    await friends.declineUser("_test_user_2", "_test_user_3");
+
+    expect(fcm.sendFriendNotification).toHaveBeenLastCalledWith("__test_fcm_token_3", expect.anything(), expect.anything());
+
+    /* Make sure they are not friends */
+    await expect(await isFriend("_test_user_2", "_test_user_3")).toBe(false);
+  });
+
+  test("Friends_declineRequest_no_such_request", async () => {
+    await expect(async () => await friends.declineUser("_test_user_3", "_test_user_2")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_acceptRequest_success_no_fcm", async () => {
+    await friends.sendRequest("_test_user_1", "_test_user_3");
+    fcm.sendFriendNotification.mockClear();
+    await friends.declineUser("_test_user_3", "_test_user_1");
+
+    expect(fcm.sendFriendNotification).toHaveBeenCalledTimes(0);
+    await expect(await isFriend("_test_user_3", "_test_user_1")).toBe(false);
+  });
+
+  test("Friends_declineRequest_invalid_user_id", async () => {
+    await expect(async () => await friends.declineUser(null, "friend")).rejects.toThrow(BadRequestError);
+  });
+
+  test("Friends_declineRequest_invalid_friend_id", async () => {
+    await expect(async () => await friends.declineUser("user", null)).rejects.toThrow(BadRequestError);
+  });
+});
+
+async function isFriend(userId, friendId) {
+  const user = await User.findOne({ user_id: userId });
+  return user.friends.includes(friendId);
+}
+
 function expectSameUsers(actualUsers, expectedUserIds) {
   const actualUsersIds = actualUsers.map(x => x.user_id);
   expect(actualUsersIds).toStrictEqual(expectedUserIds);

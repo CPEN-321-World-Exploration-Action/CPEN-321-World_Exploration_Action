@@ -5,8 +5,6 @@ export async function connectToDatabase(dbUrl) {
 }
 
 export async function dropAndDisconnectDatabase() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) {}
+  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 }
