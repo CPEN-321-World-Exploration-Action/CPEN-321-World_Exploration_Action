@@ -25,20 +25,28 @@ function startSubscriberCleanup() {
   }, validDuration / 4);
 }
 
+startSubscriberCleanup();
+
 export async function onReceiveUserScoreUpdatedMessage(message) {
   const userId = message.userId;
+  if (!userId) {
+    throw new InputError("Missing userId");
+  }
+  const collector = await User.findUser(userId);
+  if (!collector) {
+    throw new NotInDBError("Cannot find the collector");
+  }
+
   const newLeaderboard = await getGlobalLeaderboard();
   const updatingGlobalLeaderboard = await willChangeGlobalLeaderboard(
     newLeaderboard
   );
   if (updatingGlobalLeaderboard) {
-    console.log("Global leaderboard updated");
     await notifyAllSubscribingUsers();
     await sendNewChampionNotificationIfNeeded(newLeaderboard);
     await sendNotificationsToUsersDroppedOut(newLeaderboard);
     oldLeaderboard = newLeaderboard;
   } else {
-    const collector = await User.findUser(userId);
     await notifyIfSubscribing(collector.friends);
   }
 }
@@ -59,9 +67,7 @@ export async function getFriendLeaderboard(userId) {
     throw new NotInDBError();
   }
   const friends = await User.getFriends(userId);
-  if (!friends.map((x) => x.user_id).includes(user.user_id)) {
-    friends.push(user);
-  }
+  friends.push(user);
   sortByTrophyScore(friends);
   return friends;
 }
