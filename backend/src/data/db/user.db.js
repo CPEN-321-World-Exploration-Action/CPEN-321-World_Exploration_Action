@@ -18,6 +18,7 @@ const userSchema = new Schema(
     friends: { type: [String], default: [] },
     score: { type: Number, default: 0, index: true },
     fcm_token: String,
+    rank: { type: Number }
   },
   {
     statics: {

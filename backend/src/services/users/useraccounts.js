@@ -1,9 +1,17 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { User } from "../../data/db/user.db.js";
 import * as googleSignIn from "../../data/external/googlesignin.external.js";
-import { BadRequestError, NotFoundError } from "../../utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, NotInDBError } from "../../utils/errors.js";
 
 export async function onReceiveTrophyCollectedMessage(message) {
+  if (!message.userId || !message.trophyScore || message.userId == null || message.trophyScore == null) {
+    throw new InputError();
+  }
+
+  if (!(await User.findOne({ user_id: message.userId }))) {
+    throw new NotInDBError();
+  }
+
   await User.incrementTrophyScore(message.userId, message.trophyScore);
   messageManager.publishNewMessage({
     type: "user_score_updated",
@@ -12,6 +20,10 @@ export async function onReceiveTrophyCollectedMessage(message) {
 }
 
 export async function getUserProfile(userId) {
+  if (!userId || userId == null) {
+    throw new InputError();
+  }
+
   const userDocument = await User.findUser(userId);
   if (!userDocument) {
     throw new NotFoundError("Could not find the user");
@@ -22,33 +34,54 @@ export async function getUserProfile(userId) {
 }
 
 export async function uploadFcmToken(userId, fcmToken) {
+  if (!userId || !fcmToken || userId == null || fcmToken == null) {
+    throw new InputError();
+  }
+
+  if (!(await User.findOne({ user_id: userId }))) {
+    throw new NotInDBError();
+  }
+
   await User.updateFcmToken(userId, fcmToken);
 }
 
 export async function loginWithGoogle(idToken) {
   let userId, idTokenPayload;
   try {
-    ({userId, payload: idTokenPayload} = await googleSignIn.verifyUser(idToken));
+    ({ userId, payload: idTokenPayload } = await googleSignIn.verifyUser(idToken));
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     throw new BadRequestError(`Unable to verify the ID Token: ${idToken}`);
   }
 
-  let user = await getUserProfile(userId);
-  if (user) {
+  try {
+    let user = await getUserProfile(userId);
     return user;
-  } else {
-    // Add to payload so payload can be used to create profile with one object
+  }
+  catch (e) {
+    //console.log(e);
     idTokenPayload.user_id = userId;
     return await createUserProfile(idTokenPayload);
   }
 }
 
 export async function searchUser(query) {
+  if (query == null || !query) {
+    throw new InputError();
+  }
+
   return await User.searchUser(query);
 }
 
 export async function signOut(userId) {
+  if (!userId || userId == null) {
+    throw new InputError();
+  }
+
+  if (!(await User.findOne({ user_id: userId }))) {
+    throw new NotInDBError();
+  }
+
   console.log(`User ${userId} has signed out`);
 }
 
@@ -108,12 +141,12 @@ async function createTestUsers() {
 
 async function upsertUser(user) {
   const result = await User.updateOne(
-      { user_id: user.user_id },
-      user,
-      { upsert: true }
+    { user_id: user.user_id },
+    user,
+    { upsert: true }
   );
   if (result.matchedCount === 0 && result.upsertedCount === 0) {
-      throw new Error("upsertUser failed");
+    throw new Error("upsertUser failed");
   }
 }
 

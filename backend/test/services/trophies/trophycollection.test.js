@@ -4,7 +4,7 @@ import { BadRequestError, NotFoundError, InputError, DuplicationError } from "..
 
 import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
-import * as messageManager from "../../../src/utils/__mocks__/message-manager.js";
+import * as messageManager from "../../../src/utils/message-manager.js";
 
 jest.mock("../../../src/utils/message-manager.js"); //!
 
