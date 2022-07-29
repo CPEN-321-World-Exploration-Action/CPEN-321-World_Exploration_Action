@@ -1,16 +1,20 @@
 import { jest } from "@jest/globals";
 
 import * as leaderboard from "../leaderboard.js";
+import * as fcm from "../../../data/external/fcm.external.js";
 import { User } from "../../../data/db/user.db.js";
 import { BadRequestError, NotFoundError, NotInDBError, InputError } from "../../../utils/errors.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../data/external/fcm.external.js"); // have to mock fcm 
 
+const leaderboardSize = leaderboard.numberOfUsersOnLeaderboard;
+
 const URL = "mongodb://localhost:27017/test_WEA_leaderboard";
 
 beforeAll(async () => {
   await connectToDatabase(URL);
+  leaderboard.setSubscriptionValidDuration(1000);
 })
 
 afterAll(async () => {
@@ -21,36 +25,128 @@ beforeEach(async () => {
   await User.deleteMany({})
 })
 
-/*
-leaderboard.willChangeGlobalLeaderboard = jest.fn(
-  async (userId, trophyId, trophyScore) => {
-    const message = {
-      type: "trophy_collected",
-      userId,
-      trophyId,
-      trophyScore,
-    };
-    return message;
-  }
-);
-*/
+afterEach(async () => {
+  leaderboard.setNumberOfUsersOnLeaderboard(leaderboardSize);
+})
 
-async function initialize() {
-  await initialize_oldleaderboard();
-  await initialize_subscribers();
-}
+describe("Leaderboard Module onReceiveUserScoreUpdatedMessage Test", () => {
+  test("Top 1 changed and user dropped from the leaderboard", async () => {
+    leaderboard.setNumberOfUsersOnLeaderboard(3);
 
-async function initialize_oldleaderboard() {
-  leaderboard.oldLeaderboard = ["User1", "User2", "User3"];
-}
+    await User.create({ user_id: "User_1", score: 40, fcm_token: "fcm_token_1" });
+    await User.create({ user_id: "User_2", score: 30, fcm_token: "fcm_token_2" });
+    await User.create({ user_id: "User_3", score: 20, fcm_token: "fcm_token_3" });
+    await User.create({ user_id: "User_4", score: 10, fcm_token: "fcm_token_4" });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_1" });
+    
+    fcm.sendLeaderboardUpdateMessage.mockClear();
+    fcm.sendNewChampionNotification.mockClear();
+    fcm.sendNormalNotifications.mockClear();
 
-async function initialize_subscribers() {
-  leaderboard.subscribers = new Map();
+    leaderboard.subscribers.clear();
+    await leaderboard.subscribeUpdate("User_1", "fcm_token_1");
+    await leaderboard.subscribeUpdate("User_3", "fcm_token_3");
 
-  leaderboard.subscribers.set("User2", { fcmToken: "User2Token", expireTime: 9999999999 });
-  leaderboard.subscribers.set("User4", { fcmToken: "User4Token", expireTime: 9999999999 });
-}
+    await User.updateOne({ user_id: "User_4" }, { $set: { score: 100 } });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_4" });
 
+    expect(fcm.sendLeaderboardUpdateMessage).toHaveBeenCalledWith(["fcm_token_1", "fcm_token_3"]);
+    expect(fcm.sendNewChampionNotification).toHaveBeenCalledTimes(1);
+    expect(fcm.sendNormalNotifications).toHaveBeenCalledWith(["fcm_token_3"], expect.anything(), expect.anything());
+  });
+
+  test("Global leaderboard updated but no top 1 changed or user dropped out", async () => {
+    await User.create({ user_id: "User_1", score: 40, fcm_token: "fcm_token_1" });
+    await User.create({ user_id: "User_2", score: 30, fcm_token: "fcm_token_2" });
+    await User.create({ user_id: "User_3", score: 20, fcm_token: "fcm_token_3" });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_1" });
+    
+    fcm.sendLeaderboardUpdateMessage.mockClear();
+    fcm.sendNewChampionNotification.mockClear();
+    fcm.sendNormalNotifications.mockClear();
+
+    leaderboard.subscribers.clear();
+    await leaderboard.subscribeUpdate("User_1", "fcm_token_1");
+    await leaderboard.subscribeUpdate("User_3", "fcm_token_3");
+
+    await User.updateOne({ user_id: "User_3" }, { $set: { score: 35 } });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_3" });
+
+    expect(fcm.sendLeaderboardUpdateMessage).toHaveBeenCalledWith(["fcm_token_1", "fcm_token_3"]);
+    expect(fcm.sendNewChampionNotification).toHaveBeenCalledTimes(0);
+    expect(fcm.sendNormalNotifications).toHaveBeenCalledTimes(0);
+
+    await new Promise((r) => setTimeout(r, 1000));
+  });
+
+  test("leaderboard not updated and some friend is subscribing", async () => {
+    leaderboard.setNumberOfUsersOnLeaderboard(3);
+
+    await User.create({ user_id: "User_1", score: 40, fcm_token: "fcm_token_1", friends: ["User_4"] });
+    await User.create({ user_id: "User_2", score: 30, fcm_token: "fcm_token_2", friends: ["User_4"] });
+    await User.create({ user_id: "User_3", score: 20, fcm_token: "fcm_token_3" });
+    await User.create({ user_id: "User_4", score: 10, fcm_token: "fcm_token_4", friends: ["User_1", "User_2"] });
+
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_1" });
+    
+    fcm.sendLeaderboardUpdateMessage.mockClear();
+
+    leaderboard.subscribers.clear();
+    await leaderboard.subscribeUpdate("User_1", "fcm_token_1");
+    await leaderboard.subscribeUpdate("User_2", "fcm_token_2");
+
+    await User.updateOne({ user_id: "User_4" }, { $set: { score: 11 } });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_4" });
+
+    expect(fcm.sendLeaderboardUpdateMessage).toHaveBeenCalledWith(["fcm_token_1", "fcm_token_2"])
+    await new Promise((r) => setTimeout(r, 1000));
+  });
+
+  test("leaderboard not updated and no friend", async () => {
+    leaderboard.setNumberOfUsersOnLeaderboard(3);
+
+    await User.create({ user_id: "User_1", score: 40, fcm_token: "fcm_token_1" });
+    await User.create({ user_id: "User_2", score: 30, fcm_token: "fcm_token_2" });
+    await User.create({ user_id: "User_3", score: 20, fcm_token: "fcm_token_3" });
+    await User.create({ user_id: "User_4", score: 10, fcm_token: "fcm_token_4" });
+
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_1" });
+    
+    fcm.sendLeaderboardUpdateMessage.mockClear();
+
+    await User.updateOne({ user_id: "User_4" }, { $set: { score: 11 } });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_4" });
+
+    expect(fcm.sendLeaderboardUpdateMessage).toHaveBeenCalledWith([]);
+  });
+
+  test("non-existing user", async () => {
+    await expect(async () => await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "gaegbawe" })).rejects.toThrow();
+  });
+
+  test("leaderboard not updated and no friends subscribing", async () => {
+    leaderboard.setNumberOfUsersOnLeaderboard(3);
+
+    await User.create({ user_id: "User_1", score: 40, fcm_token: "fcm_token_1", friends: ["User_4"] });
+    await User.create({ user_id: "User_2", score: 30, fcm_token: "fcm_token_2"});
+    await User.create({ user_id: "User_3", score: 20, fcm_token: "fcm_token_3" });
+    await User.create({ user_id: "User_4", score: 10, fcm_token: "fcm_token_4", friends: ["User_1"] });
+
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_1" });
+    
+    leaderboard.subscribers.clear();
+    fcm.sendLeaderboardUpdateMessage.mockClear();
+
+    await User.updateOne({ user_id: "User_4" }, { $set: { score: 11 } });
+    await leaderboard.onReceiveUserScoreUpdatedMessage({ userId: "User_4" });
+
+    expect(fcm.sendLeaderboardUpdateMessage).toHaveBeenCalledWith([])
+  });
+
+  test("no userId", async () => {
+    await expect(async () => await leaderboard.onReceiveUserScoreUpdatedMessage({ something: "User_1" })).rejects.toThrow();
+  });
+});
 
 // subscribeUpdate complete
 describe("Leaderboard Module subscribeUpdate Test", () => {
