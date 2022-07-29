@@ -8,7 +8,7 @@ import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/dat
 
 jest.mock("../../../data/external/fcm.external.js");
 
-const testDbUri = "mongodb://localhost:27017/test_WEA";
+const testDbUri = "mongodb://localhost:27017/test_WEA_friends";
 
 beforeAll(async () => {
   await connectToDatabase(testDbUri);

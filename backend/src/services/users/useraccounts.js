@@ -78,10 +78,6 @@ export async function signOut(userId) {
     throw new InputError();
   }
 
-  if (!(await User.findOne({ user_id: userId }))) {
-    throw new NotInDBError();
-  }
-
   console.log(`User ${userId} has signed out`);
 }
 

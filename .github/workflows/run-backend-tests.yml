@@ -3,6 +3,7 @@ on: [push]
 jobs:
   Run-Backend-Tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: backend
@@ -12,6 +13,10 @@ jobs:
       - run: echo "Triggered by a ${{ github.event_name }}"
       - run: echo "Running on ${{ runner.os }}"
       - run: echo "Branch is ${{ github.ref }}"
+      - name: Setup MongoDB
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-version: 5.0
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:

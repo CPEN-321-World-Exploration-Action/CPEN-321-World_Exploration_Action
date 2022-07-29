@@ -1,24 +1,12 @@
 import mongoose from "mongoose";
 import { jest } from "@jest/globals";
-import { BadRequestError, NotFoundError, InputError, DuplicationError } from "../../../src/utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, DuplicationError } from "../../../utils/errors.js";
 
-import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
-import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
-import * as messageManager from "../../../src/utils/message-manager.js";
+import * as trophyCollection from "../trophycollection.js";
+import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
+import * as messageManager from "../../../utils/message-manager.js";
 
-jest.mock("../../../src/utils/message-manager.js"); //!
-
-trophyCollection.buildTrophyCollectedMessage = jest.fn(
-  async (userId, trophyId, trophyScore) => {
-    const message = {
-      type: "trophy_collected",
-      userId,
-      trophyId,
-      trophyScore,
-    };
-    return message;
-  }
-);
+jest.mock("../../../utils/message-manager.js");
 
 // database connection
 const defaultDbUri = "mongodb://localhost:27017/trophycollection_test";
@@ -36,10 +24,6 @@ afterAll(async () => {
 });
 
 // need to update the dataset for test
-
-jest.mock("../../../src/utils/__mocks__/message-manager.js");
-
-trophyCollection.buildTrophyCollectedMessage = jest.fn();
 
 describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
@@ -68,8 +52,6 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     expect(
       (await TrophyTrophy.findOne({ trophy_id: trophyId }).exec()).number_of_collectors
     ).toEqual(1);
-
-    expect(trophyCollection.buildTrophyCollectedMessage).toHaveBeenCalledWith(userId, trophyId, 1);
 
     expect(messageManager.publishNewMessage).toHaveBeenCalledWith({
       type: "trophy_collected",
@@ -149,12 +131,6 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
     expect(
       (await TrophyUser.findOne({ user_id: userId }).exec()).collectedTrophies
     ).toStrictEqual([" ", "Trophy_TrophyCollection_Test_Collected"]);
-  });
-
-  test("collectTrophy_both_invalid", async () => {
-    expect(async () => await trophyCollection.collectTrophy(undefined, null)).rejects.toThrow(
-      InputError
-    );
   });
 
   test("collectTrophy_both_invalid", async () => {
