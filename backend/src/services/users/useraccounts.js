@@ -78,10 +78,6 @@ export async function signOut(userId) {
     throw new InputError();
   }
 
-  if (!(await User.findOne({ user_id: userId }))) {
-    throw new NotInDBError();
-  }
-
   console.log(`User ${userId} has signed out`);
 }
 
@@ -133,21 +129,10 @@ async function createTestUsers() {
     score: 158,
     fcm_token: null,
   };
-  await upsertUser(testUser1);
-  await upsertUser(testUser2);
-  await upsertUser(testUser3);
-  await upsertUser(testUser4);
-}
-
-async function upsertUser(user) {
-  const result = await User.updateOne(
-    { user_id: user.user_id },
-    user,
-    { upsert: true }
-  );
-  if (result.matchedCount === 0 && result.upsertedCount === 0) {
-    throw new Error("upsertUser failed");
-  }
+  await User.upsertUser(testUser1);
+  await User.upsertUser(testUser2);
+  await User.upsertUser(testUser3);
+  await User.upsertUser(testUser4);
 }
 
 // dev functions

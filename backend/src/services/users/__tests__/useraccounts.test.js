@@ -1,10 +1,9 @@
 import { jest } from "@jest/globals";
-import mongoose from "mongoose";
 
 import * as useraccounts from "../useraccounts";
 import { User } from "../../../data/db/user.db.js";
 import { BadRequestError, NotFoundError, NotInDBError, InputError } from "../../../utils/errors.js";
-import { get } from "mongoose";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 import * as messageManager from "../../../utils/message-manager.js"
 import * as googleSignIn from "../../../data/external/googlesignin.external.js"
@@ -13,22 +12,25 @@ jest.mock("../../../data/external/fcm.external.js"); // have to mock fcm
 jest.mock("../../../utils/message-manager.js");
 jest.mock("../../../data/external/googlesignin.external.js");
 
-const URL = "mongodb://localhost:27017/useraccounts";
+const URL = "mongodb://localhost:27017/test_WEA_useraccounts";
 
-afterEach(async () => {
-  await dropAndDisconnectDatabase_test();
+beforeAll(async () => {
+  await connectToDatabase(URL);
+  await useraccounts.testerLogin();
+})
+
+afterAll(async () => {
+  await dropAndDisconnectDatabase();
+})
+
+beforeEach(async () => {
+  await User.deleteMany({})
 })
 
 // onReceiveTrophyCollectedMessage complete
 describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
 
   test("onReceiveTrophyCollectedMessage", async () => {
-    // refresh
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -47,8 +49,6 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
   });
 
   test("onReceiveTrophyCollectedMessage user invalid", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -63,8 +63,6 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
   });
 
   test("onReceiveTrophyCollectedMessage user is not in DB", async () => {
-    await connectToDatabase(URL);
-
     const userId = "UserNotInDB";
 
     expect(async () => await useraccounts.onReceiveTrophyCollectedMessage({
@@ -74,8 +72,6 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
   });
 
   test("onReceiveTrophyCollectedMessage score invalid", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -90,16 +86,12 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
   });
 
   test("onReceiveTrophyCollectedMessage no user", async () => {
-    await connectToDatabase(URL);
-
     expect(async () => await useraccounts.onReceiveTrophyCollectedMessage({
       trophyScore: 1
     })).rejects.toThrow(InputError);
   });
 
   test("onReceiveTrophyCollectedMessage no score", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -113,8 +105,6 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
   });
 
   test("onReceiveTrophyCollectedMessage both field are missing", async () => {
-    await connectToDatabase(URL);
-
     expect(async () => await useraccounts.onReceiveTrophyCollectedMessage({
     })).rejects.toThrow(InputError);
   });
@@ -124,14 +114,7 @@ describe("Useraccounts Module onReceiveTrophyCollectedMessage Test", () => {
 
 // getUserProfile complete
 describe("Useraccounts Module getUserProfile Test", () => {
-
   test("getUserProfile", async () => {
-    // refresh
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
     const userId = "User";
 
     await User.create({ user_id: userId });
@@ -148,20 +131,12 @@ describe("Useraccounts Module getUserProfile Test", () => {
   });
 
   test("getUserProfile user not in DB", async () => {
-    // refresh
-
-    await connectToDatabase(URL);
-
     const userId = "UserNotInDB";
 
     expect(async () => await useraccounts.getUserProfile(userId)).rejects.toThrow(NotFoundError);
   });
 
   test("getUserProfile user is invalid", async () => {
-    // refresh
-
-    await connectToDatabase(URL);
-
     expect(async () => await useraccounts.getUserProfile(null)).rejects.toThrow(InputError);
   });
 });
@@ -170,12 +145,6 @@ describe("Useraccounts Module getUserProfile Test", () => {
 describe("Useraccounts Module uploadFcmToken Test", () => {
 
   test("uploadFcmToken", async () => {
-    // refresh
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
     const userId = "User";
     const token = "New";
 
@@ -189,8 +158,6 @@ describe("Useraccounts Module uploadFcmToken Test", () => {
   });
 
   test("uploadFcmToken user not in DB", async () => {
-    await connectToDatabase(URL);
-
     const userId = "UserNotInDB";
     const token = "New";
 
@@ -198,8 +165,6 @@ describe("Useraccounts Module uploadFcmToken Test", () => {
   });
 
   test("uploadFcmToken user is invalid", async () => {
-    await connectToDatabase(URL);
-
     const userId = null;
     const token = "New";
 
@@ -207,8 +172,6 @@ describe("Useraccounts Module uploadFcmToken Test", () => {
   });
 
   test("uploadFcmToken token is invalid", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User";
     const token = null;
 
@@ -220,12 +183,6 @@ describe("Useraccounts Module uploadFcmToken Test", () => {
 describe("Useraccounts Module loginWithGoogle Test", () => {
 
   test("loginWithGoogle", async () => {
-    // refresh
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
     const idToken = "User";
 
     await User.create({
@@ -250,14 +207,10 @@ describe("Useraccounts Module loginWithGoogle Test", () => {
   });
 
   test("loginWithGoogle token invalid", async () => {
-    await connectToDatabase(URL);
-
     expect(async () => await useraccounts.loginWithGoogle(null)).rejects.toThrow(BadRequestError);
   });
 
   test("loginWithGoogle user not in DB", async () => {
-    await connectToDatabase(URL);
-
     const idToken = "User";
 
     const user = await useraccounts.loginWithGoogle(idToken);
@@ -272,12 +225,6 @@ describe("Useraccounts Module loginWithGoogle Test", () => {
 describe("Useraccounts Module searchUser Test", () => {
 
   test("searchUser userId", async () => {
-    // refresh
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
     const userId = "User_0";
 
     await User.create({ user_id: userId });
@@ -289,8 +236,6 @@ describe("Useraccounts Module searchUser Test", () => {
   });
 
   test("searchUser email", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User_0";
     const email = "0Email";
 
@@ -311,8 +256,6 @@ describe("Useraccounts Module searchUser Test", () => {
   });
 
   test("searchUser name", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User_0";
     const email = "0Email";
     const name = "Mk";
@@ -334,8 +277,6 @@ describe("Useraccounts Module searchUser Test", () => {
   });
 
   test("searchUser name", async () => {
-    await connectToDatabase(URL);
-
     const userId = "User_0";
     const email = "0Email";
     const name = "Mk";
@@ -352,52 +293,18 @@ describe("Useraccounts Module searchUser Test", () => {
   });
 
   test("searchUser invalid query", async () => {
-    await connectToDatabase(URL);
-
     expect(async () => await useraccounts.searchUser(null)).rejects.toThrow(InputError);
   });
 });
 
 // searchUser complete
 describe("Useraccounts Module signOut Test", () => {
-  test("signOut Invalid Input", async () => {
-    await connectToDatabase(URL);
-    await dropAndDisconnectDatabase_test();
-
-    await connectToDatabase(URL);
-
-    const userId = null;
-
-    expect(async () => await useraccounts.signOut(userId)).rejects.toThrow(InputError);
-
+  test("signOut success", async () => {
+    await useraccounts.signOut("user");
   });
 
-  test("signOut Not in DB", async () => {
-    await connectToDatabase(URL);
-
-    const userId = "User_0";
-
-    expect((async () => await useraccounts.signOut(userId))).rejects.toThrow(NotInDBError);
-
+  test("signOut Invalid Input", async () => {
+    const userId = null;
+    expect(async () => await useraccounts.signOut(userId)).rejects.toThrow(InputError);
   });
 });
-
-export async function connectToDatabase(dbUrl) {
-  await mongoose.connect(dbUrl);
-}
-
-export async function dropAndDisconnectDatabase() {
-  /*
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-  */
-}
-
-export async function dropAndDisconnectDatabase_test() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-}

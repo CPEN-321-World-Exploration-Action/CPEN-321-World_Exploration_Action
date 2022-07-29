@@ -1,6 +1,6 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
-import { BadRequestError, NotFoundError } from "../../utils/errors.js";
+import { BadRequestError, InputError, NotFoundError } from "../../utils/errors.js";
 import { elementRemoved } from "../../utils/utils.js";
 
 const friendRequests = new Map();
@@ -17,9 +17,8 @@ export async function retrieveFriends(userId) {
 }
 
 export async function getFriendRequests(userId) {
-  const user = await User.findUser(userId);
-  if (!user) {
-    throw new NotFoundError("Cannot find the user");
+  if (typeof userId !== "string") {
+    throw new TypeError("Invalid userId");
   }
 
   const requestors = friendRequests.get(userId);
@@ -31,7 +30,9 @@ export async function getFriendRequests(userId) {
 }
 
 export async function sendRequest(senderId, targetId) {
-  if (senderId === targetId) {
+  if (typeof senderId !== "string" || typeof targetId !== "string") {
+    throw new InputError("Invalid senderId or targetId");
+  } else if (senderId === targetId) {
     throw new BadRequestError("Cannot send a friend request to yourself");
   }
 
@@ -43,16 +44,15 @@ export async function sendRequest(senderId, targetId) {
   if (!target) {
     throw new NotFoundError("Cannot find the target user");
   }
-
-  addRequest(senderId, targetId);
-
-  const existingRequests = friendRequests.get(targetId) ?? [];
-  if (!existingRequests.includes(senderId)) {
-    existingRequests.push(senderId);
+  if (sender.friends.includes(targetId)) {
+    throw new BadRequestError("The target user is already your friend");
   }
-  friendRequests.set(targetId, existingRequests);
 
-  sendNotificationInBackground(
+  if (!addRequest(senderId, targetId)) {
+    throw new BadRequestError("You have already sent a request to this user");
+  }
+
+  await sendNotification(
     targetId,
     "New Friend Request",
     sender.name + " sent you a friend request"
@@ -60,6 +60,9 @@ export async function sendRequest(senderId, targetId) {
 }
 
 export async function deleteFriend(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   const result = await User.mutuallyDeleteFriend(userId, friendId);
   if (!result) {
     throw new BadRequestError("They are not friends.");
@@ -67,11 +70,14 @@ export async function deleteFriend(userId, friendId) {
 }
 
 export async function acceptUser(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   removeRequest(friendId, userId); // this will make sure userId and friendId are valid
   await User.mutuallyAddFriend(userId, friendId);
 
   const acceptor = await User.findUser(userId);
-  sendNotificationInBackground(
+  await sendNotification(
     friendId,
     "Accepted Friend Request",
     acceptor.name + " accepted your friend request"
@@ -79,10 +85,13 @@ export async function acceptUser(userId, friendId) {
 }
 
 export async function declineUser(userId, friendId) {
+  if (typeof userId !== "string" || typeof friendId !== "string") {
+    throw new InputError("Invalid input");
+  }
   removeRequest(friendId, userId); // this will make sure userId and friendId are valid
 
   const user = await User.findUser(userId);
-  sendNotificationInBackground(
+  await sendNotification(
     friendId,
     "Declined Friend Request",
     user.name + " declined your friend request"
@@ -107,20 +116,19 @@ function removeRequest(source, target) {
   friendRequests.set(target, elementRemoved(existingRequests, source));
 }
 
-function sendNotificationInBackground(targetUserId, title, body) {
-  (async () => {
-    const targetUser = await User.findUser(targetUserId);
-    if (!targetUser.fcm_token) {
-      console.log("User %s does not have an fcm_token", targetUserId);
-      return;
-    }
-    await fcm.sendFriendNotification(targetUser.fcm_token, title, body);
-  })().catch((err) => {
-    console.log(err);
-  });
+async function sendNotification(targetUserId, title, body) {
+  const targetUser = await User.findUser(targetUserId);
+  if (!targetUser.fcm_token) {
+    return;
+  }
+  await fcm.sendFriendNotification(targetUser.fcm_token, title, body);
 }
 
 /* Functions for Tests */
+
+export function clearRequests() {
+  friendRequests.clear();
+}
 
 export async function resetTestUsers() {
   addRequest("_test_user_4", "_test_user_1");
