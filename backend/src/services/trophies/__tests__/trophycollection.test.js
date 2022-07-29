@@ -138,12 +138,6 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
       InputError
     );
   });
-
-  test("collectTrophy_both_invalid", async () => {
-    expect(async () => await trophyCollection.collectTrophy(undefined, null)).rejects.toThrow(
-      InputError
-    );
-  });
 });
 
 async function initialize_database_for_trophycollection() {
