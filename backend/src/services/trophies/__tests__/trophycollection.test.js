@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { jest } from "@jest/globals";
-import { BadRequestError, NotFoundError, InputError, DuplicationError } from "../../../src/utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, DuplicationError } from "../../../utils/errors.js";
 
-import * as trophyCollection from "../../../src/services/trophies/trophycollection.js";
-import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
-import * as messageManager from "../../../src/utils/message-manager.js";
+import * as trophyCollection from "../trophycollection.js";
+import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
+import * as messageManager from "../../../utils/message-manager.js";
 
-jest.mock("../../../src/utils/message-manager.js"); //!
+jest.mock("../../../utils/message-manager.js");
 
 /*
 trophyCollection.buildTrophyCollectedMessage = jest.fn(

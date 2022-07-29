@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { jest } from "@jest/globals";
-import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../../src/utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../../utils/errors.js";
 
-import * as trophyDetail from "../../../src/services/trophies/trophydetails.js";
-import { TrophyUser, TrophyTrophy } from "../../../src/data/db/trophy.db.js";
-import * as Places from "../../../src/data/external/googleplaces.external.js";
+import * as trophyDetail from "../trophydetails.js";
+import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
+import * as Places from "../../../data/external/googleplaces.external.js";
 
-jest.mock("../../../src/data/external/googleplaces.external.js");
+jest.mock("../../../data/external/googleplaces.external.js");
 
 // database connection
 const defaultDbUri = "mongodb://localhost:27017/trophydetails_test";
