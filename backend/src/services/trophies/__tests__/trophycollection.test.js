@@ -8,20 +8,6 @@ import * as messageManager from "../../../utils/message-manager.js";
 
 jest.mock("../../../utils/message-manager.js");
 
-/*
-trophyCollection.buildTrophyCollectedMessage = jest.fn(
-  async (userId, trophyId, trophyScore) => {
-    const message = {
-      type: "trophy_collected",
-      userId,
-      trophyId,
-      trophyScore,
-    };
-    return message;
-  }
-);
-*/
-
 // database connection
 const defaultDbUri = "mongodb://localhost:27017/trophycollection_test";
 
@@ -38,8 +24,6 @@ afterAll(async () => {
 });
 
 // need to update the dataset for test
-
-jest.mock("../../../src/utils/__mocks__/message-manager.js");
 
 describe("Trophy_Collection Module collectTrophy Test", () => {
   /* collectTrophy tests */
