@@ -173,7 +173,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private void onNewPhotos(List<Photo> photos) {
         Log.i(TAG, "onNewPhotos " + photos);
         if (photos.isEmpty()) {
-            binding.imageView.setVisibility(View.GONE);
+            binding.sortIcon.setVisibility(View.GONE);
             binding.sortBy.setVisibility(View.GONE);
             binding.sortPhotos.setVisibility(View.GONE);
             binding.trophyDetailsNoPhotoText.setVisibility(View.VISIBLE);
@@ -184,7 +184,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                 binding.trophyDetailsNoPhotoText.setText(R.string.trophy_details_no_picture_not_at_location_text);
             }
         } else {
-            binding.imageView.setVisibility(View.VISIBLE);
+            binding.sortIcon.setVisibility(View.VISIBLE);
             binding.sortBy.setVisibility(View.VISIBLE);
             binding.sortPhotos.setVisibility(View.VISIBLE);
             binding.trophyDetailsNoPhotoText.setVisibility(View.GONE);
