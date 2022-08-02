@@ -164,6 +164,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "Collect trophy clicked");
             viewModel.collectTrophy();
+            animateTrophyCollection();
         }
     }
 
