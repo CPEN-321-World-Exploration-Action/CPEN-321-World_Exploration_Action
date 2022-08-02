@@ -147,6 +147,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         Log.d(TAG, "onTrophyActionButtonClicked");
         if (!userAtLocation) {
             Log.d(TAG, "Too far away");
+            animateTrophyActionButtonVibration();
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -253,8 +254,11 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         return Objects.requireNonNull(viewModel.getTrophyDetails().getValue());
     }
 
-    private void animateTrophyCollection() {
+    private void animateTrophyActionButtonVibration() {
+        binding.trophyActionButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.vibrate));
+    }
 
+    private void animateTrophyCollection() {
         /* Reset view status first */
         updateBigTrophyColor();
         binding.bigTrophy.setScaleX(1.0f);
