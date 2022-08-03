@@ -12,21 +12,18 @@ jest.mock("../../../data/external/googleplaces.external.js");
 const defaultDbUri = "mongodb://localhost:27017/trophydetails_test";
 
 async function initialize_trophy_database() {
-  await trophyUpdateOrCreate("ChIJrf8w27NyhlQR44St4PQccfY");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY" },
-    {
-      $set: {
-        name: "Museum of Anthropology at UBC",
-        latitude: 49.274090892070916,
-        longitude: -123.25346028876827,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1"]
-      },
-    });
+  await TrophyTrophy.deleteMany({});
+
+  await TrophyTrophy.create({
+    trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY",
+    name: "Museum of Anthropology at UBC",
+    latitude: 49.2741,
+    longitude: -123.2535,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [],
+    list_of_collectors: ["User_1"]
+  });
 
   await trophyUpdateOrCreate("ChIJNz7rZoVvhlQR9kZL6IxEY00");
   await TrophyTrophy.updateOne(
@@ -34,8 +31,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Grouse Mountain",
-        latitude: 49.37331379533432,
-        longitude: -123.0979279502943,
+        latitude: 49.3733,
+        longitude: -123.0979,
         number_of_collectors: 2,
         quality: "Bronze",
         list_of_photos: [
@@ -65,8 +62,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Jim Everett Memorial Park",
-        latitude: 49.26769505126078,
-        longitude: -123.24102515871157,
+        latitude: 49.2677,
+        longitude: -123.2410,
         number_of_collectors: 0,
         quality: "Bronze",
         list_of_photos: [" "],
@@ -80,8 +77,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Museum of Anthropology at UBC2",
-        latitude: 49.274090892070916,
-        longitude: -123.25346028876827,
+        latitude: 49.2745,
+        longitude: -123.2535,
         number_of_collectors: 1,
         quality: "Silver",
         list_of_photos: [
@@ -96,8 +93,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Networks of Centres of Excellence Campus Security",
-        latitude: 49.264320,
-        longitude: -123.251574,
+        latitude: 49.2643,
+        longitude: -123.2516,
         number_of_collectors: 2,
         quality: "Bronze",
         list_of_photos: [
@@ -112,8 +109,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Science World2",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
+        latitude: 49.2772,
+        longitude: -123.1032,
         number_of_collectors: 0,
         quality: "Gold",
         list_of_photos: [" "],
@@ -127,8 +124,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Science World2",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
+        latitude: 49.2772,
+        longitude: -123.1032,
         number_of_collectors: 0,
         quality: "Gold",
         list_of_photos: [" "],
@@ -142,8 +139,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Science World2",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
+        latitude: 49.2772,
+        longitude: -123.1032,
         number_of_collectors: 0,
         quality: "Gold",
         list_of_photos: [" "],
@@ -157,8 +154,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Science World2",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
+        latitude: 49.2772,
+        longitude: -123.1032,
         number_of_collectors: 0,
         quality: "Gold",
         list_of_photos: [" "],
@@ -172,8 +169,8 @@ async function initialize_trophy_database() {
     {
       $set: {
         name: "Science World2",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
+        latitude: 49.2771,
+        longitude: -123.1031,
         number_of_collectors: 0,
         quality: "Gold",
         list_of_photos: [" "],
@@ -233,6 +230,8 @@ async function initialize_trophy_database() {
 }
 
 async function initialize_user_database() {
+  await TrophyUser.deleteMany({});
+
   await TrophyUser.findOrCreate("User_0");
   await TrophyUser.updateOne(
     { user_id: "User_0" },
