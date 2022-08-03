@@ -4,7 +4,7 @@ import { app } from "../../src/app.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
 import { User } from "../../src/data/db/user.db.js";
 
-const testDbUri = "mongodb+srv://test:mTYU1kpIdrs7QXGI@cluster0.mparo.mongodb.net/test_WEA_interface_friends";
+const testDbUri = "mongodb://localhost:27017/test_WEA_interface_friends";
 
 const agent = request.agent(app);
 
