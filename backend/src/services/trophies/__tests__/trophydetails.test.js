@@ -181,7 +181,7 @@ async function initialize_trophy_database() {
       },
     });
 
-  trophyUpdateOrCreate("ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
+  await trophyUpdateOrCreate("ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
   await TrophyTrophy.updateOne(
     { trophy_id: "ChIJcfSTmvR0hlQRHTBUcvS9EmE2" },
     {
@@ -198,7 +198,7 @@ async function initialize_trophy_database() {
       },
     });
 
-  trophyUpdateOrCreate("ChIJUzqZj0oNhlQRSzlBeYd5v-02");
+  await trophyUpdateOrCreate("ChIJUzqZj0oNhlQRSzlBeYd5v-02");
   await TrophyTrophy.updateOne(
     { trophy_id: "ChIJUzqZj0oNhlQRSzlBeYd5v-02" },
     {
@@ -216,7 +216,7 @@ async function initialize_trophy_database() {
       },
     });
 
-  trophyUpdateOrCreate("ChIJ28IkUs5zhlQRua6hLV7S3jY2");
+  await trophyUpdateOrCreate("ChIJ28IkUs5zhlQRua6hLV7S3jY2");
   await TrophyTrophy.updateOne(
     { trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2" },
     {
