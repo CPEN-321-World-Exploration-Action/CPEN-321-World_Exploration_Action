@@ -611,6 +611,8 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     let trophyId = ["ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"];
     let trophyDetails = await trophyDetail.getTrophyDetails(trophyId);
 
+    console.log(trophyDetails);
+
     expect(trophyDetails[0] || trophyDetails[0]).toHaveProperty(
       "trophy_id", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
     expect(trophyDetails[0]).toHaveProperty(
