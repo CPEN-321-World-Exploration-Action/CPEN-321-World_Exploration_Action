@@ -352,13 +352,13 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await connectToDatabase(defaultDbUri);
   await initialize_trophy_database();
   await initialize_user_database();
 });
 
 afterEach(async () => {
-  await dropAndDisconnectDatabase();
+  await TrophyTrophy.deleteMany({});
+  await TrophyUser.deleteMany({});
 });
 
 describe("Trophy_Detail Module getTrophiesUser Test", () => {
@@ -611,40 +611,42 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     let trophyId = ["ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"];
     let trophyDetails = await trophyDetail.getTrophyDetails(trophyId);
 
-    expect(trophyDetails[0] || trophyDetails[0]).toHaveProperty(
+    console.log(trophyDetails);
+
+    expect(trophyDetails[1]).toHaveProperty(
       "trophy_id", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "name", "Rose_Garden2");
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "latitude", 49.2694);
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "longitude", -123.2565);
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "number_of_collectors", 1);
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "quality", "Silver");
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "list_of_photos", [
       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Aramaki_rose_park04s2400.jpg/450px-Aramaki_rose_park04s2400.jpg",
     ]);
-    expect(trophyDetails[0]).toHaveProperty(
+    expect(trophyDetails[1]).toHaveProperty(
       "list_of_collectors", ["User_2"]);
 
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "trophy_id", "ChIJ28IkUs5zhlQRua6hLV7S3jY2");
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "name", "Granville_Island2");
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "latitude", 49.2712);
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "longitude", -123.134);
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "number_of_collectors", 1);
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "quality", "Gold");
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "list_of_photos", [" "]);
-    expect(trophyDetails[1]).toHaveProperty(
+    expect(trophyDetails[0]).toHaveProperty(
       "list_of_collectors", ["User_2"]);
   });
 
