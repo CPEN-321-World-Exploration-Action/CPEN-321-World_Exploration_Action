@@ -49,7 +49,7 @@ describe("Login Use Case", () => {
       .post("/users/accounts/login")
       .set("Authorization", "valid_id_token");
     
-    expect(res.status === 201);
+    expect(res.status).toStrictEqual(201);
     expect(res.body.user_id).toStrictEqual(mockUser.user_id);
   });
 
@@ -60,7 +60,7 @@ describe("Login Use Case", () => {
       .post("/users/accounts/login")
       .set("Authorization", "valid_id_token")
     
-    expect(res.status === 201);
+    expect(res.status).toStrictEqual(201);
     expect(res.body.user_id).toStrictEqual(mockUser.user_id);
   });
 
@@ -69,6 +69,6 @@ describe("Login Use Case", () => {
       .post("/users/accounts/login")
       .set("Authorization", "invalid_id_token")
     
-    expect(res.status === 400);
+    expect(res.status).toStrictEqual(400);
   });
 });
