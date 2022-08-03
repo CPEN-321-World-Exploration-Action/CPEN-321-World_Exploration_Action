@@ -14,15 +14,8 @@ const trophySchemaTrophy = new Schema(
       enum: ["Gold", "gold", "Silver", "silver", "Bronze", "bronze"],
       default: "Bronze",
     },
-    list_of_photos: { type: Array, default: [" "] },
-    list_of_collectors: { type: Array, default: [" "] },
-    /*
-    photo_id: { type: String, index: true, unique: true },
-    number_of_likes: { type: Number, index: true },
-    user_id: { type: String, index: true },
-    google_id: { type: String, index: true },
-    imageUrl: String, //issue we use imageData?
-       */
+    list_of_photos: { type: Array, default: [] },
+    list_of_collectors: { type: Array, default: [] },
   },
   {
     statics: {
@@ -80,17 +73,10 @@ const trophySchemaUser = new Schema(
   {
     user_id: { type: String, index: true, unique: true },
 
-    uncollectedTrophies: { type: Array, default: [" "] },
-    collectedTrophies: { type: Array, default: [" "] },
-    list_of_photos: { type: Array, default: [" "] },
-    trophyTags: { type: Array, default: [" "] }, //issue: assign a space for testing
-    /*
-    photo_id: { type: String, index: true, unique: true },
-    number_of_likes: { type: Number, index: true },
-    user_id: { type: String, index: true },
-    google_id: { type: String, index: true },
-    imageUrl: String, //issue we use imageData?
-       */
+    uncollectedTrophies: { type: Array, default: [] },
+    collectedTrophies: { type: Array, default: [] },
+    list_of_photos: { type: Array, default: [] },
+    trophyTags: { type: Array, default: [] },
   },
   {
     statics: {

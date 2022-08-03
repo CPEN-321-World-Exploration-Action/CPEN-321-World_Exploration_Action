@@ -62,16 +62,15 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
         }
     }
     // Update User's list of uncollected trophies
-    uncollectedTrophyIDs.push(" ");
     await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
 
-    let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs); // no [" "]
+    let uncollectedTrophies = await getTrophyDetails(uncollectedTrophyIDs);
     //  Add parameter describing if trophy is collected or not
     uncollectedTrophies = uncollectedTrophies.map((trophy) => ({ ...trophy._doc, collected: false }));
     // Get User's list of collected trophies
     let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
 
-    if (!collectedTrophies || collectedTrophies == [" "]) {
+    if (!collectedTrophies) {
         return uncollectedTrophies
     } else {
         collectedTrophies = collectedTrophies.map((trophy) => ({ ...trophy._doc, collected: true }));
