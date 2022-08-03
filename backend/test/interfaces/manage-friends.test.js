@@ -150,3 +150,96 @@ describe("Manage Friends: Send Friend Request", () => {
     expect((await friends.getFriendRequests("_test_user_3")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
   });
 });
+
+describe("Manage Friends: Accept Friend Request", () => {
+  test("Valid Request", async () => {
+    const res = await agent
+      .post("/users/friends/accept-request?requesterUserId=_test_user_4");
+    
+    expect(res.status).toStrictEqual(200);
+    expect((await friends.retrieveFriends("_test_user_1")).map(x => x.user_id).sort()).toStrictEqual(["_test_user_2", "_test_user_4"]);
+    expect((await friends.retrieveFriends("_test_user_4")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
+  });
+
+  test("Unauthenticated User", async () => {
+    const res = await request(app)
+      .post("/users/friends/accept-request?requesterUserId=_test_user_4");
+    expect(res.status).toStrictEqual(401);
+  });
+
+  test("No Sender ID", async () => {
+    const res = await agent
+      .post("/users/friends/accept-request");
+    
+    expect(res.status).toStrictEqual(400);
+  });
+
+  test("Request does not Exist", async () => {
+    const res = await agent
+      .post("/users/friends/accept-request?requesterUserId=_test_user_2");
+    
+    expect(res.status).toStrictEqual(404);
+  });
+});
+
+describe("Manage Friends: Deny Friend Request", () => {
+  test("Valid Request", async () => {
+    const res = await agent
+      .post("/users/friends/decline-request?requesterUserId=_test_user_4");
+    
+    expect(res.status).toStrictEqual(200);
+    expect((await friends.retrieveFriends("_test_user_1")).map(x => x.user_id)).toStrictEqual(["_test_user_2"]);
+    expect(await friends.retrieveFriends("_test_user_4")).toStrictEqual([]);
+  });
+
+  test("Unauthenticated User", async () => {
+    const res = await request(app)
+      .post("/users/friends/decline-request?requesterUserId=_test_user_4");
+    expect(res.status).toStrictEqual(401);
+  });
+
+  test("No Sender ID", async () => {
+    const res = await agent
+      .post("/users/friends/decline-request");
+    
+    expect(res.status).toStrictEqual(400);
+  });
+
+  test("Request does not Exist", async () => {
+    const res = await agent
+      .post("/users/friends/decline-request?requesterUserId=_test_user_2");
+    
+    expect(res.status).toStrictEqual(404);
+  });
+});
+
+describe("Manage Friends: Delete Friend", () => {
+  test("Unauthenticated User", async () => {
+    const res = await request(app)
+      .post("/users/friends/delete?friendId=_test_user_2");
+    expect(res.status).toStrictEqual(401);
+  });
+
+  test("No Sender ID", async () => {
+    const res = await agent
+      .post("/users/friends/delete");
+    
+    expect(res.status).toStrictEqual(400);
+  });
+
+  test("Not a Friend", async () => {
+    const res = await agent
+      .post("/users/friends/delete?friendId=_test_user_4");
+    
+    expect(res.status).toStrictEqual(400);
+  });
+
+  test("Valid Friend", async () => {
+    const res = await agent
+      .post("/users/friends/delete?friendId=_test_user_2");
+    
+    expect(res.status).toStrictEqual(200);
+    expect(await friends.retrieveFriends("_test_user_1")).toStrictEqual([]);
+    expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
+  });
+});
