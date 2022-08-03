@@ -69,4 +69,9 @@ describe("Evaluate Photos: Like Photo", () => {
     const res = await agent.put(`/photos/managing/likes?userID=_test_user_1&picID=123456`);
     expect(res.status).toStrictEqual(404);
   });
+
+  test("No PicID", async () => {
+    const res = await agent.put(`/photos/managing/likes`);
+    expect(res.status).toStrictEqual(400);
+  });
 });
