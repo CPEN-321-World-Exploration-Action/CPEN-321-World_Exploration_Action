@@ -12,21 +12,18 @@ jest.mock("../../../data/external/googleplaces.external.js");
 const defaultDbUri = "mongodb://localhost:27017/trophydetails_test";
 
 async function initialize_trophy_database() {
-  await trophyUpdateOrCreate("ChIJrf8w27NyhlQR44St4PQccfY");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY" },
-    {
-      $set: {
-        name: "Museum of Anthropology at UBC",
-        latitude: 49.2741,
-        longitude: -123.2535,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1"]
-      },
-    });
+  await TrophyTrophy.deleteMany({});
+
+  await TrophyTrophy.create({
+    trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY",
+    name: "Museum of Anthropology at UBC",
+    latitude: 49.2741,
+    longitude: -123.2535,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [],
+    list_of_collectors: ["User_1"]
+  });
 
   await trophyUpdateOrCreate("ChIJNz7rZoVvhlQR9kZL6IxEY00");
   await TrophyTrophy.updateOne(
@@ -233,6 +230,8 @@ async function initialize_trophy_database() {
 }
 
 async function initialize_user_database() {
+  await TrophyUser.deleteMany({});
+
   await TrophyUser.findOrCreate("User_0");
   await TrophyUser.updateOne(
     { user_id: "User_0" },

@@ -5,6 +5,7 @@ import { BadRequestError, NotFoundError, InputError, DuplicationError } from "..
 import * as trophyCollection from "../trophycollection.js";
 import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
 import * as messageManager from "../../../utils/message-manager.js";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../utils/message-manager.js");
 
@@ -199,15 +200,4 @@ async function initialize_database_for_trophycollection() {
       },
     }
   );
-}
-
-export async function connectToDatabase(dbUrl) {
-  await mongoose.connect(dbUrl);
-}
-
-export async function dropAndDisconnectDatabase() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
 }
