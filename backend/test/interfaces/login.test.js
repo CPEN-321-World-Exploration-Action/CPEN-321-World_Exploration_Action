@@ -17,7 +17,8 @@ const mockUser = {
 const mockVerifyIdToken = async (input) => {
   switch (input.idToken) {
     case "valid_id_token":
-      return { getPayload: () => mockUser };
+      const loginTicket = { getPayload: () => mockUser };
+      return loginTicket;
     default:
       throw Error("Invalid idToken");
   }
