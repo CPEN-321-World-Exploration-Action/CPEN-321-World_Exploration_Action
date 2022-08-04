@@ -175,105 +175,73 @@ async function initialize_trophy_database() {
 }
 
 async function initialize_user_database() {
-  await TrophyUser.findOrCreate("User_0");
-  await TrophyUser.updateOne(
-    { user_id: "User_0" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_Rose_Garasdden", "Trophy_asdGranville_Island"], // not in DB
-        collectedTrophies: [" ", "Trophy_Wrasdeck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
-  await TrophyUser.findOrCreate("User_G");
-  await TrophyUser.updateOne(
-    { user_id: "User_G" },
-    {
-      $set: {
-        uncollectedTrophies: [" "], // to be determined
-        collectedTrophies: [" ", "Trophy_Wreck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
-  // user 1
-  await TrophyUser.findOrCreate("User_1");
-  await TrophyUser.updateOne(
-    { user_id: "User_1" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_Rose_Garden", "Trophy_Granville_Island"], // to be determined
-        collectedTrophies: [" ", "Trophy_Wreck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.deleteMany({});
 
-  await TrophyUser.findOrCreate("User_2");
-  await TrophyUser.updateOne(
-    { user_id: "User_2" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_0",
+    uncollectedTrophies: [" ", "Trophy_Rose_Garasdden", "Trophy_asdGranville_Island"], // not in DB
+    collectedTrophies: [" ", "Trophy_Wrasdeck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("UserAllCollected");
-  await TrophyUser.updateOne(
-    { user_id: "UserAllCollected" },
-    {
-      $set: {
-        uncollectedTrophies: [" "], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_1",
+    uncollectedTrophies: [" ", "Trophy_Rose_Garden", "Trophy_Granville_Island"], // to be determined
+    collectedTrophies: [" ", "Trophy_Wreck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("User_5");
-  await TrophyUser.updateOne(
-    { user_id: "User_5" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2", "ChIJnZHwi2NxhlQRN3CYHzc3giE3", "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE5", "ChIJnZHwi2NxhlQRN3CYHzc3giE6"], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_2",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("User_3");
-  await TrophyUser.updateOne(
-    { user_id: "User_3" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
-        collectedTrophies: [" "],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "UserAllCollected",
+    uncollectedTrophies: [" "], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
+
+  await TrophyUser.create({
+    user_id: "User_5",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2", "ChIJnZHwi2NxhlQRN3CYHzc3giE3", "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE5", "ChIJnZHwi2NxhlQRN3CYHzc3giE6"], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
+
+  await TrophyUser.create({
+    user_id: "User_3",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
+    collectedTrophies: [" "],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
+
+  await TrophyUser.create({
+    user_id: "User_G",
+    uncollectedTrophies: [" "], // to be determined
+    collectedTrophies: [" ", "Trophy_Wreck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 }
 
 async function trophyUpdateOrCreate(trophy_id) {
