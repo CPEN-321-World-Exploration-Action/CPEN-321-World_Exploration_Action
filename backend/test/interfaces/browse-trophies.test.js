@@ -41,17 +41,15 @@ describe("Browse Trophies: Get User Trophies", () => {
 
     // ..
     test("Retrieve List of Trophies for authenticated User without any trophies", async () => {
-        await TrophyUser.findOrCreate("_test_user_1");
+        const set = {
+            uncollectedTrophies: [" "],
+            collectedTrophies: [" "],
+            list_of_photos: [" "],
+            trophyTags: [" "],
+        };
         await TrophyUser.updateOne(
             { user_id: "_test_user_1" },
-            {
-                $set: {
-                    uncollectedTrophies: [" "],
-                    collectedTrophies: [" "],
-                    list_of_photos: [" "],
-                    trophyTags: [" "],
-                },
-            }
+            { $set: set }
         );
         const res = await agent.get("/trophies/user-trophies?userId=_test_user_1&user_latitude=49.3&user_longitude=-123.3");
         expect(res.status).toStrictEqual(200);
@@ -66,17 +64,15 @@ describe("Browse Trophies: Get User Trophies", () => {
     });
 
     test("Retrieve List of Trophies for User in location without any nearby points of interest", async () => {
-        await TrophyUser.findOrCreate("_test_user_1");
+        const set = {
+            uncollectedTrophies: [" "],
+            collectedTrophies: [" "],
+            list_of_photos: [" "],
+            trophyTags: [" "],
+        };
         await TrophyUser.updateOne(
             { user_id: "_test_user_1" },
-            {
-                $set: {
-                    uncollectedTrophies: [" "],
-                    collectedTrophies: [" "],
-                    list_of_photos: [" "],
-                    trophyTags: [" "],
-                },
-            }
+            { $set: set }
         );
         const res = await agent.get("/trophies/user-trophies?userId=_test_user_2&user_latitude=-82&user_longitude=-129");
         expect(res.status).toStrictEqual(200);
@@ -95,75 +91,41 @@ describe("Browse Trophies: Get User Trophies", () => {
 });
 
 async function createTestTrophyDetails() {
-    await TrophyUser.findOrCreate("_test_user_1");
-    await TrophyUser.updateOne(
-        { user_id: "_test_user_1" },
-        {
-            $set: {
-                uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
-                collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
-                list_of_photos: [" "],
-                trophyTags: [" "],
-            },
-        }
-    );
+    await TrophyUser.create({
+        user_id: "_test_user_1",
+        uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
+        collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
+        list_of_photos: [" "],
+        trophyTags: [" "],
+    });
 
-    await TrophyUser.findOrCreate("_test_user_2");
-    await TrophyUser.updateOne(
-        { user_id: "_test_user_2" },
-        {
-            $set: {
-                uncollectedTrophies: [" "],
-                collectedTrophies: [" "],
-                list_of_photos: [" "],
-                trophyTags: [" "],
-            },
-        }
-    );
+    await TrophyUser.create({
+        user_id: "_test_user_2",
+        uncollectedTrophies: [" "],
+        collectedTrophies: [" "],
+        list_of_photos: [" "],
+        trophyTags: [" "],
+    });
 
-    //console.log(await TrophyUser.findOne({ user_id: "User_TrophyCollection_Test" }).exec());
-
-    let Trophy_Test = await TrophyTrophy.findOne({
+    await TrophyTrophy.create({
         trophy_id: "Trophy_TrophyCollection_Test",
-    }).exec();
-    if (!Trophy_Test) {
-        await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test", latitude: 0, longitude: 0 });
-    }
+        name: "Trophy_TrophyCollection_Test",
+        latitude: 49.3,
+        longitude: -123.3,
+        number_of_collectors: 0,
+        quality: "Bronze",
+        list_of_photos: [" "],
+        list_of_collectors: [" "],
+    });
 
-    await TrophyTrophy.updateOne(
-        { trophy_id: "Trophy_TrophyCollection_Test" },
-        {
-            $set: {
-                name: "Trophy_TrophyCollection_Test",
-                latitude: 49.3,
-                longitude: -123.3,
-                number_of_collectors: 0,
-                quality: "Bronze",
-                list_of_photos: [" "],
-                list_of_collectors: [" "],
-            },
-        }
-    );
-
-    let Trophy_Test2 = await TrophyTrophy.findOne({
+    await TrophyTrophy.create({
         trophy_id: "Trophy_TrophyCollection_Test_Collected",
-    }).exec();
-    if (!Trophy_Test2) {
-        await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test_Collected", latitude: 0, longitude: 0 });
-    }
-
-    await TrophyTrophy.updateOne(
-        { trophy_id: "Trophy_TrophyCollection_Test_Collected" },
-        {
-            $set: {
-                name: "Trophy_TrophyCollection_Test_Collected",
-                latitude: 200,
-                longitude: 200,
-                number_of_collectors: 1,
-                quality: "Bronze",
-                list_of_photos: [" "],
-                list_of_collectors: [" ", "_test_user_1"],
-            },
-        }
-    );
+        name: "Trophy_TrophyCollection_Test_Collected",
+        latitude: 200,
+        longitude: 200,
+        number_of_collectors: 1,
+        quality: "Bronze",
+        list_of_photos: [" "],
+        list_of_collectors: [" ", "_test_user_1"],
+    });
 }
