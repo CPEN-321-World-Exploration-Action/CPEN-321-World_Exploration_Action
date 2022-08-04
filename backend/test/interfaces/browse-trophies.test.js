@@ -1,17 +1,7 @@
-import { jest } from "@jest/globals";
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
-import { User } from "../../src/data/db/user.db.js";
 import { TrophyTrophy, TrophyUser } from "../../src/data/db/trophy.db.js";
-import * as friends from "../../src/services/users/friends.js";
-import * as leaderboard from "../../src/services/users/leaderboard.js";
-import * as useraccounts from "../../src/services/users/useraccounts.js";
-
-import * as trophycollection from "../../src/services/trophies/trophycollection.js";
-import * as trophydetails from "../../src/services/trophies/trophydetails.js";
-
-import * as photomanaging from "../../src/services/photos/photomanaging.js";
 
 const testDbUri = "mongodb://localhost:27017/test_browse_trophies";
 
@@ -21,11 +11,9 @@ beforeAll(async () => {
     await connectToDatabase(testDbUri);
 });
 
-/*
 afterAll(async () => {
     await dropAndDisconnectDatabase();
 });
-*/
 
 beforeEach(async () => {
     await TrophyTrophy.deleteMany({});
