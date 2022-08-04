@@ -5,6 +5,7 @@ import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBEr
 import * as trophyDetail from "../trophydetails.js";
 import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
 import * as Places from "../../../data/external/googleplaces.external.js";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../data/external/googleplaces.external.js");
 
@@ -279,8 +280,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     // the number of userId’s
     // uncollected trophies is less
     // than MAX_TROPHIES -> uncollected reach MAX_TROPHIES
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_3";
 
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
@@ -407,8 +408,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
   });
 
   test("getTrophiesUser_user_too_many", async () => {
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_5";
 
     const userunCollected = (await TrophyUser.findOne({
@@ -571,14 +572,3 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     expect(await trophyDetail.getTrophyDetails(trophyId)).toEqual([]);
   });
 });
-
-async function connectToDatabase(dbUrl) {
-  await mongoose.connect(dbUrl);
-}
-
-async function dropAndDisconnectDatabase() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-}
