@@ -36,7 +36,7 @@ describe("Manage Friends: Get User's Friends", () => {
 
   test("No Friends", async () => {
     /* Delete the friend */
-    friends.deleteFriend("_test_user_1", "_test_user_2");
+    await friends.deleteFriend("_test_user_1", "_test_user_2");
 
     const res = await agent
       .get("/users/friends/list");
@@ -244,4 +244,10 @@ describe("Manage Friends: Delete Friend", () => {
     expect(await friends.retrieveFriends("_test_user_1")).toStrictEqual([]);
     expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
   });
+});
+
+test("Default 404 Handler", async () => {
+  await request(app)
+    .post("/random")
+    .expect(404);
 });

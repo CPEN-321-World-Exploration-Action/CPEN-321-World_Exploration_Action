@@ -1,5 +1,6 @@
 import { Photo } from "../../data/db/photo.db.js";
 import { BadRequestError, NotFoundError } from "../../utils/errors.js";
+import { NotInDBError } from "../../utils/errors.js";
 
 /* Managing */
 export async function userLikePhoto(userID, picID) {

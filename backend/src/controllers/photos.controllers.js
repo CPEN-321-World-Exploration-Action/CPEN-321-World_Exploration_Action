@@ -3,21 +3,15 @@ import * as photoManaging from "../services/photos/photomanaging.js";
 /* Managing */
 
 export async function userLikePhoto(req, res) {
-  const userID = req.query.userID;
   const picID = req.query.picID;
 
-  if (!userID) {
-    res.status(400).json({
-      message: "Missing query parameter: userID",
-    });
-    return;
-  } else if (!picID) {
+  if (!picID) {
     res.status(400).json({
       message: "Missing query parameter: picID",
     });
     return;
   }
-  await photoManaging.userLikePhoto(userID, picID);
+  await photoManaging.userLikePhoto(req.userId, picID);
   res.status(200).send();
 }
 

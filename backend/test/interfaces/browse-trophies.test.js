@@ -1,4 +1,3 @@
-
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
