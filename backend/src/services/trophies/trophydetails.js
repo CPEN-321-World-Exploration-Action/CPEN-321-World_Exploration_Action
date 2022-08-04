@@ -53,9 +53,6 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
                 return null // Handle null trophies in controllers.
             }*/
             // Convert locations into Trophies, and add them to the TrophyTrophy Database
-            if (!locations) {
-                locations = []; // in case of null / undefined
-            }
             const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
             uncollectedTrophyIDs.push(...newTrophyIds);
 
