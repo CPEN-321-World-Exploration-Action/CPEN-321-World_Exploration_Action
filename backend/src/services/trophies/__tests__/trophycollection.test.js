@@ -142,62 +142,36 @@ describe("Trophy_Collection Module collectTrophy Test", () => {
 });
 
 async function initialize_database_for_trophycollection() {
-  await TrophyUser.findOrCreate("User_TrophyCollection_Test");
-  await TrophyUser.updateOne(
-    { user_id: "User_TrophyCollection_Test" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
-        collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
-        list_of_photos: [" "],
-        trophyTags: [" "],
-      },
-    }
-  );
+  await TrophyTrophy.deleteMany({});
+  await TrophyUser.deleteMany({});
 
-  //console.log(await TrophyUser.findOne({ user_id: "User_TrophyCollection_Test" }).exec());
+  await TrophyUser.create({
+    user_id: "User_TrophyCollection_Test",
+    uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
+    collectedTrophies: [" ", "Trophy_TrophyCollection_Test_Collected"],
+    list_of_photos: [" "],
+    trophyTags: [" "],
+  });
 
-  let Trophy_Test = await TrophyTrophy.findOne({
+  await TrophyTrophy.create({
     trophy_id: "Trophy_TrophyCollection_Test",
-  }).exec();
-  if (!Trophy_Test) {
-    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test", latitude: 0, longitude: 0 });
-  }
+    name: "Trophy_TrophyCollection_Test",
+    latitude: 100,
+    longitude: 100,
+    number_of_collectors: 0,
+    quality: "Bronze",
+    list_of_photos: [" "],
+    list_of_collectors: [" "],
+  });
 
-  await TrophyTrophy.updateOne(
-    { trophy_id: "Trophy_TrophyCollection_Test" },
-    {
-      $set: {
-        name: "Trophy_TrophyCollection_Test",
-        latitude: 100,
-        longitude: 100,
-        number_of_collectors: 0,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    }
-  );
-
-  let Trophy_Test2 = await TrophyTrophy.findOne({
+  await TrophyTrophy.create({
     trophy_id: "Trophy_TrophyCollection_Test_Collected",
-  }).exec();
-  if (!Trophy_Test2) {
-    await TrophyTrophy.create({ trophy_id: "Trophy_TrophyCollection_Test_Collected", latitude: 0, longitude: 0 });
-  }
-
-  await TrophyTrophy.updateOne(
-    { trophy_id: "Trophy_TrophyCollection_Test_Collected" },
-    {
-      $set: {
-        name: "Trophy_TrophyCollection_Test_Collected",
-        latitude: 200,
-        longitude: 200,
-        number_of_collectors: 1,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" ", "User_TrophyCollection_Test"],
-      },
-    }
-  );
+    name: "Trophy_TrophyCollection_Test_Collected",
+    latitude: 200,
+    longitude: 200,
+    number_of_collectors: 1,
+    quality: "Bronze",
+    list_of_photos: [" "],
+    list_of_collectors: [" ", "User_TrophyCollection_Test"],
+  });
 }
