@@ -23,6 +23,11 @@ export async function getTrophiesUser(req, res) {
       .status(400)
       .json({ message: "User latitude and longitude are required." });
   }
+  if (isNaN(user_latitude) || isNaN(user_longitude)) {
+    return res
+      .status(400)
+      .json({ message: "Valid user latitude and longitude are required." });
+  }
 
   // removed because this will never be false
   // const trophyUser = await trophyDetail.getTrophyUser(user_id);
@@ -64,6 +69,13 @@ export async function resetTrophyUser(req, res) {
   await trophyDetail.resetTrophyUserForTester(req.userId);
   res.status(201).send();
 }
+
+/*
+export async function createTestTrophyDetails(req, res) {
+  await trophyDetail.createTestTrophyDetails();
+  res.status(201).send();
+}
+*/
 
 // // Dev Functions
 // export async function getTrophyUser(req, res){

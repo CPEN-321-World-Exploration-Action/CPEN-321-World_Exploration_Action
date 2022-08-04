@@ -43,8 +43,8 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
         try {
             const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
             //console.log(`Getting ${numberOfNewTrophies} new Trophies`)
-            const locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
-
+            let locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
+            //console.log(locations);
             /*
             console.log(locations);
 
@@ -53,6 +53,9 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
                 return null // Handle null trophies in controllers.
             }*/
             // Convert locations into Trophies, and add them to the TrophyTrophy Database
+            if (!locations) {
+                locations = []; // in case of null / undefined
+            }
             const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
             uncollectedTrophyIDs.push(...newTrophyIds);
 

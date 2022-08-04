@@ -13,9 +13,11 @@ beforeAll(async () => {
   await connectToDatabase(testDbUri);
 });
 
+
 afterAll(async () => {
   await dropAndDisconnectDatabase();
 });
+
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -99,7 +101,7 @@ describe("Manage Friends: Send Friend Request", () => {
   test("Existing Non-Friended User", async () => {
     const res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_3");
-    
+
     expect(res.status).toStrictEqual(200);
     expect((await friends.getFriendRequests("_test_user_3")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
   });
@@ -113,7 +115,7 @@ describe("Manage Friends: Send Friend Request", () => {
   test("Non-Existing Target User", async () => {
     const res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_99");
-    
+
     expect(res.status).toStrictEqual(404);
     expect(await friends.getFriendRequests("_test_user_99")).toStrictEqual([]);
   });
@@ -121,7 +123,7 @@ describe("Manage Friends: Send Friend Request", () => {
   test("Target User is Already a Friend", async () => {
     const res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_2");
-    
+
     expect(res.status).toStrictEqual(400);
     expect(await friends.getFriendRequests("_test_user_2")).toStrictEqual([]);
   });
@@ -130,7 +132,7 @@ describe("Manage Friends: Send Friend Request", () => {
     friends.clearRequests();
     const res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_1");
-    
+
     expect(res.status).toStrictEqual(400);
     expect(await friends.getFriendRequests("_test_user_1")).toStrictEqual([]);
   });
@@ -139,13 +141,13 @@ describe("Manage Friends: Send Friend Request", () => {
     let res;
     res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_3");
-    
+
     expect(res.status).toStrictEqual(200);
     expect((await friends.getFriendRequests("_test_user_3")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
 
     res = await agent
       .post("/users/friends/send-request?targetUserId=_test_user_3");
-    
+
     expect(res.status).toStrictEqual(400);
     expect((await friends.getFriendRequests("_test_user_3")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
   });
@@ -155,7 +157,7 @@ describe("Manage Friends: Accept Friend Request", () => {
   test("Valid Request", async () => {
     const res = await agent
       .post("/users/friends/accept-request?requesterUserId=_test_user_4");
-    
+
     expect(res.status).toStrictEqual(200);
     expect((await friends.retrieveFriends("_test_user_1")).map(x => x.user_id).sort()).toStrictEqual(["_test_user_2", "_test_user_4"]);
     expect((await friends.retrieveFriends("_test_user_4")).map(x => x.user_id)).toStrictEqual(["_test_user_1"]);
@@ -170,14 +172,14 @@ describe("Manage Friends: Accept Friend Request", () => {
   test("No Sender ID", async () => {
     const res = await agent
       .post("/users/friends/accept-request");
-    
+
     expect(res.status).toStrictEqual(400);
   });
 
   test("Request does not Exist", async () => {
     const res = await agent
       .post("/users/friends/accept-request?requesterUserId=_test_user_2");
-    
+
     expect(res.status).toStrictEqual(404);
   });
 });
@@ -186,7 +188,7 @@ describe("Manage Friends: Deny Friend Request", () => {
   test("Valid Request", async () => {
     const res = await agent
       .post("/users/friends/decline-request?requesterUserId=_test_user_4");
-    
+
     expect(res.status).toStrictEqual(200);
     expect((await friends.retrieveFriends("_test_user_1")).map(x => x.user_id)).toStrictEqual(["_test_user_2"]);
     expect(await friends.retrieveFriends("_test_user_4")).toStrictEqual([]);
@@ -201,14 +203,14 @@ describe("Manage Friends: Deny Friend Request", () => {
   test("No Sender ID", async () => {
     const res = await agent
       .post("/users/friends/decline-request");
-    
+
     expect(res.status).toStrictEqual(400);
   });
 
   test("Request does not Exist", async () => {
     const res = await agent
       .post("/users/friends/decline-request?requesterUserId=_test_user_2");
-    
+
     expect(res.status).toStrictEqual(404);
   });
 });
@@ -223,21 +225,21 @@ describe("Manage Friends: Delete Friend", () => {
   test("No Sender ID", async () => {
     const res = await agent
       .post("/users/friends/delete");
-    
+
     expect(res.status).toStrictEqual(400);
   });
 
   test("Not a Friend", async () => {
     const res = await agent
       .post("/users/friends/delete?friendId=_test_user_4");
-    
+
     expect(res.status).toStrictEqual(400);
   });
 
   test("Valid Friend", async () => {
     const res = await agent
       .post("/users/friends/delete?friendId=_test_user_2");
-    
+
     expect(res.status).toStrictEqual(200);
     expect(await friends.retrieveFriends("_test_user_1")).toStrictEqual([]);
     expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
