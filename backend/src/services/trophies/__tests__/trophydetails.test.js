@@ -135,40 +135,32 @@ async function initialize_trophy_database() {
     list_of_collectors: [" "],
   });
 
-  await trophyUpdateOrCreate("ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJcfSTmvR0hlQRHTBUcvS9EmE2" },
-    {
-      $set: {
-        name: "Rose_Garden2",
-        latitude: 49.2694,
-        longitude: -123.2565,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Aramaki_rose_park04s2400.jpg/450px-Aramaki_rose_park04s2400.jpg",
-        ],
-        list_of_collectors: ["User_2"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJcfSTmvR0hlQRHTBUcvS9EmE2",
+    name: "Rose_Garden2",
+    latitude: 49.2694,
+    longitude: -123.2565,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Aramaki_rose_park04s2400.jpg/450px-Aramaki_rose_park04s2400.jpg",
+    ],
+    list_of_collectors: ["User_2"]
+  });
 
-  await trophyUpdateOrCreate("ChIJUzqZj0oNhlQRSzlBeYd5v-02");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJUzqZj0oNhlQRSzlBeYd5v-02" },
-    {
-      $set: {
-        name: "Wreck_Beach2",
-        latitude: 49.2622,
-        longitude: -123.2615,
-        number_of_collectors: 1,
-        quality: "Bronze",
-        list_of_photos: [
-          "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSgwbtyZJOXnromXn-b-mFTlCTjm6iFKq0424DBguh_CYFYuqyY6Paeez94zfJv8FO8",
-          "https://media-cdn.tripadvisor.com/media/photo-m/1280/19/1e/7d/b3/photo0jpg.jpg",
-        ],
-        list_of_collectors: ["User_2"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJUzqZj0oNhlQRSzlBeYd5v-02",
+    name: "Wreck_Beach2",
+    latitude: 49.2622,
+    longitude: -123.2615,
+    number_of_collectors: 1,
+    quality: "Bronze",
+    list_of_photos: [
+      "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSgwbtyZJOXnromXn-b-mFTlCTjm6iFKq0424DBguh_CYFYuqyY6Paeez94zfJv8FO8",
+      "https://media-cdn.tripadvisor.com/media/photo-m/1280/19/1e/7d/b3/photo0jpg.jpg",
+    ],
+    list_of_collectors: ["User_2"]
+  });
 
   await TrophyTrophy.create({
     trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2",
