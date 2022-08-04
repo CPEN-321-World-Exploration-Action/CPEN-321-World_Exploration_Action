@@ -17,166 +17,123 @@ async function initialize_trophy_database() {
   await TrophyTrophy.create({
     trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY",
     name: "Museum of Anthropology at UBC",
-    latitude: 49.2741,
-    longitude: -123.2535,
+    latitude: 49.274090892070916,
+    longitude: -123.25346028876827,
     number_of_collectors: 1,
     quality: "Silver",
     list_of_photos: [],
     list_of_collectors: ["User_1"]
   });
 
-  await trophyUpdateOrCreate("ChIJNz7rZoVvhlQR9kZL6IxEY00");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJNz7rZoVvhlQR9kZL6IxEY00" },
-    {
-      $set: {
-        name: "Grouse Mountain",
-        latitude: 49.3733,
-        longitude: -123.0979,
-        number_of_collectors: 2,
-        quality: "Bronze",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1", "User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+    name: "Grouse Mountain",
+    latitude: 49.37331379533432,
+    longitude: -123.0979279502943,
+    number_of_collectors: 2,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: ["User_1", "User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE" },
-    {
-      $set: {
-        name: "Science World",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE",
+    name: "Science World",
+    latitude: 49.27709458817354,
+    longitude: -123.10307779131516,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJFVAVj8dyhlQRZ0mEdRRpDfc");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJFVAVj8dyhlQRZ0mEdRRpDfc" },
-    {
-      $set: {
-        name: "Jim Everett Memorial Park",
-        latitude: 49.2677,
-        longitude: -123.2410,
-        number_of_collectors: 0,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+    name: "Jim Everett Memorial Park",
+    latitude: 49.26769505126078,
+    longitude: -123.24102515871157,
+    number_of_collectors: 0,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJrf8w27NyhlQR44St4PQccfY2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY2" },
-    {
-      $set: {
-        name: "Museum of Anthropology at UBC2",
-        latitude: 49.2745,
-        longitude: -123.2535,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY2",
+    name: "Museum of Anthropology at UBC2",
+    latitude: 49.274090892070916,
+    longitude: -123.25346028876827,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [],
+    list_of_collectors: ["User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJM0zlFrZyhlQRWuLgl4eRO4s");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJM0zlFrZyhlQRWuLgl4eRO4s" },
-    {
-      $set: {
-        name: "Networks of Centres of Excellence Campus Security",
-        latitude: 49.2643,
-        longitude: -123.2516,
-        number_of_collectors: 2,
-        quality: "Bronze",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1", "User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+    name: "Networks of Centres of Excellence Campus Security",
+    latitude: 49.2643,
+    longitude: -123.25157,
+    number_of_collectors: 2,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: ["User_1", "User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE2" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE2",
+    name: "Science World2",
+    latitude: 49.277,
+    longitude: -123.103,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE3");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE3" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE3",
+    name: "Science World2",
+    latitude: 49.277,
+    longitude: -123.103,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE4");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE4" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
+    name: "Science World2",
+    latitude: 49.2772,
+    longitude: -123.1033,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE5");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE5" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE5",
+    name: "Science World2",
+    latitude: 49.2771,
+    longitude: -123.1031,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE6");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE6" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2771,
-        longitude: -123.1031,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE6",
+    name: "Science World2",
+    latitude: 49.2771,
+    longitude: -123.1031,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
   await trophyUpdateOrCreate("ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
   await TrophyTrophy.updateOne(
@@ -213,25 +170,19 @@ async function initialize_trophy_database() {
       },
     });
 
-  await trophyUpdateOrCreate("ChIJ28IkUs5zhlQRua6hLV7S3jY2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2" },
-    {
-      $set: {
-        name: "Granville_Island2",
-        latitude: 49.2712,
-        longitude: -123.134,
-        number_of_collectors: 1,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: ["User_2"],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2",
+    name: "Granville_Island2",
+    latitude: 49.2712,
+    longitude: -123.134,
+    number_of_collectors: 1,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: ["User_2"],
+  });
 }
 
 async function initialize_user_database() {
-  await TrophyUser.deleteMany({});
-
   await TrophyUser.findOrCreate("User_0");
   await TrophyUser.updateOne(
     { user_id: "User_0" },
@@ -644,7 +595,7 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     expect(trophyDetails[0]).toHaveProperty(
       "quality", "Gold");
     expect(trophyDetails[0]).toHaveProperty(
-      "list_of_photos", [" "]);
+      "list_of_photos", []);
     expect(trophyDetails[0]).toHaveProperty(
       "list_of_collectors", ["User_2"]);
   });
