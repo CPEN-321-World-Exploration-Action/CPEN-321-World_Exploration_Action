@@ -1,4 +1,5 @@
 import * as photoManaging from "../services/photos/photomanaging.js";
+import * as userAccounts from "../services/users/useraccounts.js";
 
 /* Managing */
 
@@ -33,6 +34,10 @@ export async function getPhotoIDsByTrophyID(req, res) {
 
 export async function getPhotoIDsByUserID(req, res) {
   const userID = req.params.userId;
+  const user = await userAccounts.getUserProfile(userID);
+  if (!user){
+    res.status(404);S
+  }
   const photos = await photoManaging.getPhotoIDsByUserID(userID);
   res.status(200).json(photos);
 }

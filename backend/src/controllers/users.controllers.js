@@ -21,7 +21,7 @@ export async function logout(req, res) {
     req.session.destroy();
   }
   await userAccounts.signOut(userId);
-  res.status(200).json({ message: "Logged Out." });
+  res.status(201).json({ message: "Logged Out." });
 }
 
 export async function uploadFcmToken(req, res) {
