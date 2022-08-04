@@ -14,22 +14,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.worldexplorationaction.android.data.photo.Photo;
-import com.worldexplorationaction.android.data.photo.PhotoService;
 import com.worldexplorationaction.android.data.trophy.Trophy;
 import com.worldexplorationaction.android.data.trophy.TrophyBitmaps;
 import com.worldexplorationaction.android.data.trophy.TrophyService;
 import com.worldexplorationaction.android.data.user.UserService;
-import com.worldexplorationaction.android.ui.trophy.EvaluatePhotoViewModel;
 import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 
 import java.io.IOException;
-import java.util.List;
 
 public class TrophyDetailsUtils {
     private static final Trophy trophy = new Trophy("ChIJAx7UL8xyhlQR86Iqc-fUncc", "The University of British Columbia",

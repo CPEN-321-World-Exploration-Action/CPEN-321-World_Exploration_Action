@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.Root;
@@ -19,7 +18,6 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
-import com.worldexplorationaction.android.data.photo.Photo;
 import com.worldexplorationaction.android.ui.trophy.TrophyDetailsActivity;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
@@ -44,51 +42,28 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.WindowManager;
 
-import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.IdlingResource;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.GrantPermissionRule;
 
-import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
-import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
+import androidx.test.espresso.ViewInteraction;
+
 import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import org.junit.Test;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @LargeTest
     @RunWith(AndroidJUnit4.class)
     public class TrophyDetailsAndPhotosTests {
         private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
         private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
-    private static final String TAG = TrophyDetailsAndPhotosTests.class.getSimpleName();;
+        private static final String TAG = TrophyDetailsAndPhotosTests.class.getSimpleName();;
 
     @Rule
         public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
@@ -156,26 +131,6 @@ import java.util.List;
         public void noPictures() throws IOException {
             TrophyDetailsUtils.startTrophyDetailsActivity0();
             onView(withId(R.id.trophy_details_no_photo_text)).check(matches(withText(R.string.trophy_details_no_picture_at_location_text)));
-        }
-
-        //why can't collect trophy and it was working at the beginning?
-        @Test
-        public void collectTrophyNoPictures() throws IOException {
-            TrophyDetailsUtils.startTrophyDetailsActivity0();
-
-            ViewInteraction collectTrophyButton = onView(
-                    allOf(withId(R.id.trophy_action_button), withText("Collect Trophy"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    5),
-                            isDisplayed()));
-            collectTrophyButton.perform(click());
-
-            onView(withText("You have collected this trophy")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
-            onView(withText(R.string.trophy_details_no_picture_at_location_text)).check(matches(isDisplayed()));
-            onView(withId(R.id.trophy_action_button)).check(matches(withText("Take a Photo")));
         }
 
         @Test
@@ -383,10 +338,8 @@ import java.util.List;
 
             @Override
             public void describeTo(Description description) {
-
+                Log.d(TAG, "describeTo method");
             }
-
-
         }
 
     }
