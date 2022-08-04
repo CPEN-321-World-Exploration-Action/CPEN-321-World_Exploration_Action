@@ -243,3 +243,9 @@ describe("Manage Friends: Delete Friend", () => {
     expect(await friends.retrieveFriends("_test_user_2")).toStrictEqual([]);
   });
 });
+
+test("Default 404 Handler", async () => {
+  await request(app)
+    .post("/random")
+    .expect(404);
+});
