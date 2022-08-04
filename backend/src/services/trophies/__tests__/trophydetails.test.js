@@ -337,8 +337,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     // the number of userId’s
     // uncollected trophies is less
     // than MAX_TROPHIES
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_2";
 
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
@@ -472,8 +472,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
   });
 
   test("getTrophiesUser_userId_has_no_uncollected", async () => {
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "UserAllCollected";
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
 
