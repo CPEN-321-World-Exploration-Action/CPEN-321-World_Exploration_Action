@@ -134,19 +134,12 @@ public class EvaluatePhotosTests {
                         isDisplayed()));
         photo.perform(click());
 
-        ViewInteraction likeButton = onView(withId(R.id.like_button));
-        likeButton.perform(click());
+        onView(withId(R.id.like_button))
+                .perform(click());
         onView(withId(R.id.number)).check(matches(withText("1")));
 
-        ViewInteraction likeButton1 = onView(
-                allOf(withId(R.id.like_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                4),
-                        isDisplayed()));
-        likeButton1.perform(click());
+        onView(withId(R.id.like_button))
+                .perform(click());
         onView(withId(R.id.number)).check(matches(withText("0")));
     }
 }
