@@ -3,6 +3,8 @@ package com.worldexplorationaction.android;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -19,9 +21,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private SignInManager signInManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+
+
+        WeaFirebaseMessagingService.subscribeTopics();
+    }
+
+    public void signUp(View v) {
 
         this.signInManager = new SignInManager(this);
 
@@ -31,10 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         signInManager.signIn(this, true);
 
-        WeaFirebaseMessagingService.subscribeTopics();
     }
 
-    public void logOut() {
+
+    public void signIn(View v) {
+    //same as sign up
+    }
+
+        public void logOut() {
         signInManager.logOut();
         finish();
         startActivity(getIntent());

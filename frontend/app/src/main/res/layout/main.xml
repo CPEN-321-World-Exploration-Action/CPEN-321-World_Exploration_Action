@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="374dp"
+        android:layout_height="743dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/undraw_explore_re_8l4v" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="354dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="World Exploration"
+        android:textColor="#6441A5"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/app_name1"
+        android:layout_width="163dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="52dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="Action"
+        android:textColor="#6441A5"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.578"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/app_name" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="51dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="108dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toStartOf="@+id/signup"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/icons" />
+
+    <TextView
+        android:id="@+id/signup"
+        android:layout_width="240dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="108dp"
+        android:clickable="true"
+        android:fontFamily="@font/ubuntu"
+        android:onClick="signUp"
+        android:text="Sign Up With Google"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/signin"
+        android:layout_width="268dp"
+        android:layout_height="61dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/ubuntu"
+        android:text="Already have an account?"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/signin1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/signin1"
+        android:layout_width="73dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="68dp"
+        android:clickable="true"
+        android:fontFamily="@font/ubuntu_bold"
+        android:onClick="signIn"
+        android:text="Sign In"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
