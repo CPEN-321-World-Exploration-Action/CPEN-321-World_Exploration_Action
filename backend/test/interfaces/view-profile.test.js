@@ -114,8 +114,6 @@ describe("Logout", () => {
 
     expect(res.status).toStrictEqual(401); // need to be changed to 401?
   });
-
-
 });
 
 async function createTestUsers() {

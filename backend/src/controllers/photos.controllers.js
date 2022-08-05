@@ -1,5 +1,6 @@
 import * as photoManaging from "../services/photos/photomanaging.js";
 import * as userAccounts from "../services/users/useraccounts.js";
+import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 /* Managing */
 
@@ -20,7 +21,18 @@ export async function userLikePhoto(req, res) {
 
 export async function getPhotoIDsByTrophyID(req, res) {
   const trophyId = req.query.trophyId;
-  const order = req.query.order;
+  let order = req.query.order;
+
+  if (!order){
+    order = "random";
+  }
+
+  const trophies = await trophyDetail.getTrophyDetails(trophyId);
+  if (!trophies || trophies.length === 0) {
+    return res
+      .status(404)
+      .json({ message: `Trophy with id ${trophyId} not found.` });
+  }
 
   const photos = await photoManaging.getPhotoIDsByTrophyID(trophyId, order, req.userId);
   if (photos) {
