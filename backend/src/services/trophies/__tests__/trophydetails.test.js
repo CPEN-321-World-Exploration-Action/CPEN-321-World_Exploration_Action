@@ -5,6 +5,7 @@ import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBEr
 import * as trophyDetail from "../trophydetails.js";
 import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";
 import * as Places from "../../../data/external/googleplaces.external.js";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../../utils/database.js";
 
 jest.mock("../../../data/external/googleplaces.external.js");
 
@@ -17,320 +18,231 @@ async function initialize_trophy_database() {
   await TrophyTrophy.create({
     trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY",
     name: "Museum of Anthropology at UBC",
-    latitude: 49.2741,
-    longitude: -123.2535,
+    latitude: 49.2740,
+    longitude: -123.2534,
     number_of_collectors: 1,
     quality: "Silver",
     list_of_photos: [],
     list_of_collectors: ["User_1"]
   });
 
-  await trophyUpdateOrCreate("ChIJNz7rZoVvhlQR9kZL6IxEY00");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJNz7rZoVvhlQR9kZL6IxEY00" },
-    {
-      $set: {
-        name: "Grouse Mountain",
-        latitude: 49.3733,
-        longitude: -123.0979,
-        number_of_collectors: 2,
-        quality: "Bronze",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1", "User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+    name: "Grouse Mountain",
+    latitude: 49.3733,
+    longitude: -123.0979,
+    number_of_collectors: 2,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: ["User_1", "User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE" },
-    {
-      $set: {
-        name: "Science World",
-        latitude: 49.27709458817354,
-        longitude: -123.10307779131516,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE",
+    name: "Science World",
+    latitude: 49.277,
+    longitude: -123.103,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJFVAVj8dyhlQRZ0mEdRRpDfc");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJFVAVj8dyhlQRZ0mEdRRpDfc" },
-    {
-      $set: {
-        name: "Jim Everett Memorial Park",
-        latitude: 49.2677,
-        longitude: -123.2410,
-        number_of_collectors: 0,
-        quality: "Bronze",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+    name: "Jim Everett Memorial Park",
+    latitude: 49.267,
+    longitude: -123.241,
+    number_of_collectors: 0,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJrf8w27NyhlQR44St4PQccfY2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY2" },
-    {
-      $set: {
-        name: "Museum of Anthropology at UBC2",
-        latitude: 49.2745,
-        longitude: -123.2535,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJrf8w27NyhlQR44St4PQccfY2",
+    name: "Museum of Anthropology at UBC2",
+    latitude: 49.274,
+    longitude: -123.253,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [],
+    list_of_collectors: ["User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJM0zlFrZyhlQRWuLgl4eRO4s");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJM0zlFrZyhlQRWuLgl4eRO4s" },
-    {
-      $set: {
-        name: "Networks of Centres of Excellence Campus Security",
-        latitude: 49.2643,
-        longitude: -123.2516,
-        number_of_collectors: 2,
-        quality: "Bronze",
-        list_of_photos: [
-        ],
-        list_of_collectors: ["User_1", "User_4"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+    name: "Networks of Centres of Excellence Campus Security",
+    latitude: 49.2643,
+    longitude: -123.2515,
+    number_of_collectors: 2,
+    quality: "Bronze",
+    list_of_photos: [],
+    list_of_collectors: ["User_1", "User_4"]
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE2" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE2",
+    name: "Science World2",
+    latitude: 49.277,
+    longitude: -123.103,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE3");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE3" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE3",
+    name: "Science World2",
+    latitude: 49.277,
+    longitude: -123.103,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE4");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE4" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
+    name: "Science World2",
+    latitude: 49.2772,
+    longitude: -123.1033,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE5");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE5" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2772,
-        longitude: -123.1032,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE5",
+    name: "Science World2",
+    latitude: 49.2771,
+    longitude: -123.1031,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJnZHwi2NxhlQRN3CYHzc3giE6");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE6" },
-    {
-      $set: {
-        name: "Science World2",
-        latitude: 49.2771,
-        longitude: -123.1031,
-        number_of_collectors: 0,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: [" "],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJnZHwi2NxhlQRN3CYHzc3giE6",
+    name: "Science World2",
+    latitude: 49.2771,
+    longitude: -123.1031,
+    number_of_collectors: 0,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: [" "],
+  });
 
-  await trophyUpdateOrCreate("ChIJcfSTmvR0hlQRHTBUcvS9EmE2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJcfSTmvR0hlQRHTBUcvS9EmE2" },
-    {
-      $set: {
-        name: "Rose_Garden2",
-        latitude: 49.2694,
-        longitude: -123.2565,
-        number_of_collectors: 1,
-        quality: "Silver",
-        list_of_photos: [
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Aramaki_rose_park04s2400.jpg/450px-Aramaki_rose_park04s2400.jpg",
-        ],
-        list_of_collectors: ["User_2"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJcfSTmvR0hlQRHTBUcvS9EmE2",
+    name: "Rose_Garden2",
+    latitude: 49.2694,
+    longitude: -123.2565,
+    number_of_collectors: 1,
+    quality: "Silver",
+    list_of_photos: [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Aramaki_rose_park04s2400.jpg/450px-Aramaki_rose_park04s2400.jpg",
+    ],
+    list_of_collectors: ["User_2"]
+  });
 
-  await trophyUpdateOrCreate("ChIJUzqZj0oNhlQRSzlBeYd5v-02");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJUzqZj0oNhlQRSzlBeYd5v-02" },
-    {
-      $set: {
-        name: "Wreck_Beach2",
-        latitude: 49.2622,
-        longitude: -123.2615,
-        number_of_collectors: 1,
-        quality: "Bronze",
-        list_of_photos: [
-          "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSgwbtyZJOXnromXn-b-mFTlCTjm6iFKq0424DBguh_CYFYuqyY6Paeez94zfJv8FO8",
-          "https://media-cdn.tripadvisor.com/media/photo-m/1280/19/1e/7d/b3/photo0jpg.jpg",
-        ],
-        list_of_collectors: ["User_2"]
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJUzqZj0oNhlQRSzlBeYd5v-02",
+    name: "Wreck_Beach2",
+    latitude: 49.2622,
+    longitude: -123.2615,
+    number_of_collectors: 1,
+    quality: "Bronze",
+    list_of_photos: [
+      "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSgwbtyZJOXnromXn-b-mFTlCTjm6iFKq0424DBguh_CYFYuqyY6Paeez94zfJv8FO8",
+      "https://media-cdn.tripadvisor.com/media/photo-m/1280/19/1e/7d/b3/photo0jpg.jpg",
+    ],
+    list_of_collectors: ["User_2"]
+  });
 
-  await trophyUpdateOrCreate("ChIJ28IkUs5zhlQRua6hLV7S3jY2");
-  await TrophyTrophy.updateOne(
-    { trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2" },
-    {
-      $set: {
-        name: "Granville_Island2",
-        latitude: 49.2712,
-        longitude: -123.134,
-        number_of_collectors: 1,
-        quality: "Gold",
-        list_of_photos: [" "],
-        list_of_collectors: ["User_2"],
-      },
-    });
+  await TrophyTrophy.create({
+    trophy_id: "ChIJ28IkUs5zhlQRua6hLV7S3jY2",
+    name: "Granville_Island2",
+    latitude: 49.2712,
+    longitude: -123.134,
+    number_of_collectors: 1,
+    quality: "Gold",
+    list_of_photos: [],
+    list_of_collectors: ["User_2"],
+  });
 }
 
 async function initialize_user_database() {
   await TrophyUser.deleteMany({});
 
-  await TrophyUser.findOrCreate("User_0");
-  await TrophyUser.updateOne(
-    { user_id: "User_0" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_Rose_Garasdden", "Trophy_asdGranville_Island"], // not in DB
-        collectedTrophies: [" ", "Trophy_Wrasdeck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
-  await TrophyUser.findOrCreate("User_G");
-  await TrophyUser.updateOne(
-    { user_id: "User_G" },
-    {
-      $set: {
-        uncollectedTrophies: [" "], // to be determined
-        collectedTrophies: [" ", "Trophy_Wreck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
-  // user 1
-  await TrophyUser.findOrCreate("User_1");
-  await TrophyUser.updateOne(
-    { user_id: "User_1" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "Trophy_Rose_Garden", "Trophy_Granville_Island"], // to be determined
-        collectedTrophies: [" ", "Trophy_Wreck_Beach"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_0",
+    uncollectedTrophies: [" ", "Trophy_Rose_Garasdden", "Trophy_asdGranville_Island"], // not in DB
+    collectedTrophies: [" ", "Trophy_Wrasdeck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("User_2");
-  await TrophyUser.updateOne(
-    { user_id: "User_2" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_1",
+    uncollectedTrophies: [" ", "Trophy_Rose_Garden", "Trophy_Granville_Island"], // to be determined
+    collectedTrophies: [" ", "Trophy_Wreck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("UserAllCollected");
-  await TrophyUser.updateOne(
-    { user_id: "UserAllCollected" },
-    {
-      $set: {
-        uncollectedTrophies: [" "], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_2",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("User_5");
-  await TrophyUser.updateOne(
-    { user_id: "User_5" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2", "ChIJnZHwi2NxhlQRN3CYHzc3giE3", "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE5", "ChIJnZHwi2NxhlQRN3CYHzc3giE6"], // to be determined
-        collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "UserAllCollected",
+    uncollectedTrophies: [" "], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 
-  await TrophyUser.findOrCreate("User_3");
-  await TrophyUser.updateOne(
-    { user_id: "User_3" },
-    {
-      $set: {
-        uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
-          "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
-          "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
-        collectedTrophies: [" "],
-        list_of_photos: [" "], // no matter in this case
-        trophyTags: [" "], // no matter in this case
-      },
-    }
-  );
+  await TrophyUser.create({
+    user_id: "User_5",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2", "ChIJnZHwi2NxhlQRN3CYHzc3giE3", "ChIJnZHwi2NxhlQRN3CYHzc3giE4",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE5", "ChIJnZHwi2NxhlQRN3CYHzc3giE6"], // to be determined
+    collectedTrophies: [" ", "ChIJcfSTmvR0hlQRHTBUcvS9EmE2", "ChIJUzqZj0oNhlQRSzlBeYd5v-02", "ChIJ28IkUs5zhlQRua6hLV7S3jY2"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
+
+  await TrophyUser.create({
+    user_id: "User_3",
+    uncollectedTrophies: [" ", "ChIJrf8w27NyhlQR44St4PQccfY", "ChIJNz7rZoVvhlQR9kZL6IxEY00",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE", "ChIJFVAVj8dyhlQRZ0mEdRRpDfc",
+      "ChIJrf8w27NyhlQR44St4PQccfY2", "ChIJM0zlFrZyhlQRWuLgl4eRO4s",
+      "ChIJnZHwi2NxhlQRN3CYHzc3giE2"], // to be determined
+    collectedTrophies: [" "],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
+
+  await TrophyUser.create({
+    user_id: "User_G",
+    uncollectedTrophies: [" "], // to be determined
+    collectedTrophies: [" ", "Trophy_Wreck_Beach"],
+    list_of_photos: [" "], // no matter in this case
+    trophyTags: [" "], // no matter in this case
+  });
 }
 
 async function trophyUpdateOrCreate(trophy_id) {
@@ -368,8 +280,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     // the number of userId’s
     // uncollected trophies is less
     // than MAX_TROPHIES -> uncollected reach MAX_TROPHIES
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_3";
 
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
@@ -425,8 +337,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     // the number of userId’s
     // uncollected trophies is less
     // than MAX_TROPHIES
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_2";
 
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
@@ -496,8 +408,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
   });
 
   test("getTrophiesUser_user_too_many", async () => {
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "User_5";
 
     const userunCollected = (await TrophyUser.findOne({
@@ -560,8 +472,8 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
   });
 
   test("getTrophiesUser_userId_has_no_uncollected", async () => {
-    let lat = 49.264320; // chosen value of location, around Networks of Centres of Excellence Campus Security
-    let lon = -123.251574;
+    let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
+    let lon = -123.251;
     let userId = "UserAllCollected";
     const trophyList = await trophyDetail.getTrophiesUser(userId, lat, lon);
 
@@ -644,7 +556,7 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     expect(trophyDetails[0]).toHaveProperty(
       "quality", "Gold");
     expect(trophyDetails[0]).toHaveProperty(
-      "list_of_photos", [" "]);
+      "list_of_photos", []);
     expect(trophyDetails[0]).toHaveProperty(
       "list_of_collectors", ["User_2"]);
   });
@@ -660,14 +572,3 @@ describe("Trophy_Detail Module getTrophyDetails Test", () => {
     expect(await trophyDetail.getTrophyDetails(trophyId)).toEqual([]);
   });
 });
-
-async function connectToDatabase(dbUrl) {
-  await mongoose.connect(dbUrl);
-}
-
-async function dropAndDisconnectDatabase() {
-  try {
-    await mongoose.connection.db.dropDatabase();
-  } catch (err) { }
-  await mongoose.connection.close();
-}
