@@ -21,33 +21,13 @@ const trophySchemaTrophy = new Schema(
     statics: {
       async incrementNumberOfCollector(trophyID, userID) {
         let trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        if (trophy.number_of_collectors == null) {
-          trophy.number_of_collectors = 1;
-        }
-        else {
-          trophy.number_of_collectors += 1; // initialized to be 0
-        }
+        trophy.number_of_collectors += 1;
         trophy.save();
 
-        this.update(
+        await this.updateOne(
           { trophy_id: trophyID },
-          { $addToSet: { list_of_collectors: userID } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            }
-          }
+          { $addToSet: { list_of_collectors: userID } }
         );
-      },
-      async getTrophyText(id) {
-        var trophyInfo = await this.findOne({ trophy_id: id }).exec();
-        delete trophyInfo.list_of_photos;
-        return trophyInfo;
-      },
-      async addUserToTrophy(userID, trophyID) {
-        var trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        trophy.list_of_collectors.push(userID).sort();
-        trophy.save();
       },
       async getTrophyScore(collectedTrophyId) {
         var trophy = await this.findOne({
@@ -110,18 +90,6 @@ const trophySchemaUser = new Schema(
           user = await this.create({ user_id: userID });
         }
         return user;
-      },
-      // not used
-      // async storeTrophies(userID, trophies) {
-      //   var user = await this.findOne({ user_id: userID }).exec();
-      //   for (let value of trophies) {
-      //     user.collectedTrophies.push(value);
-      //   }
-      //   user.save();
-      // },
-      async getUsersTags(userID) {
-        // TODO: FIXME: this might crash
-        return await this.findOne({ user_id: userID }).exec().trophyTags;
       },
       async getUserUncollectedTrophyIDs(userID) {
         const user = await this.findOrCreate(userID);

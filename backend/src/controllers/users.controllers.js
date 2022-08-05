@@ -17,9 +17,7 @@ export async function login(req, res) {
 
 export async function logout(req, res) {
   const userId = req.userId;
-  if (req.session.userId) {
-    req.session.destroy();
-  }
+  req.session.destroy();
   await userAccounts.signOut(userId);
   res.status(201).json({ message: "Logged Out." });
 }
@@ -53,9 +51,6 @@ export async function getProfile(req, res) {
 
 export async function searchUser(req, res) {
   const query = req.query.query;
-  if (!query) {
-    throw new BadRequestError("Missing query parameter: query");
-  }
   const result = await userAccounts.searchUser(query);
   res.status(200).json(result);
 }
@@ -79,27 +74,18 @@ export async function sendFriendRequest(req, res) {
 
 export async function deleteFriend(req, res) {
   const friendId = req.query.friendId;
-  if (!friendId) {
-    throw new BadRequestError("Missing query parameter: friendId");
-  }
   await friends.deleteFriend(req.userId, friendId);
   res.status(200).send();
 }
 
 export async function acceptFriendRequest(req, res) {
   const requesterId = req.query.requesterUserId;
-  if (!requesterId) {
-    throw new BadRequestError("Missing query parameter: requesterUserId");
-  }
   await friends.acceptUser(req.userId, requesterId);
   res.status(200).send();
 }
 
 export async function declineFriendRequest(req, res) {
   const requesterId = req.query.requesterUserId;
-  if (!requesterId) {
-    throw new BadRequestError("Missing query parameter: requesterUserId");
-  }
   await friends.declineUser(req.userId, requesterId);
   res.status(200).send();
 }
