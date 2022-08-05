@@ -1,9 +1,6 @@
 import request from "supertest";
 import { app } from "../../src/app.js";
-import {
-  connectToDatabase,
-  dropAndDisconnectDatabase,
-} from "../../src/utils/database.js";
+import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
 import { User } from "../../src/data/db/user.db.js";
 
 const testDbUri = "mongodb://localhost:27017/test_watch_leaderboard";
@@ -36,9 +33,6 @@ async function createTestUsers() {
     picture: "https://avatars.githubusercontent.com/u/20661066",
     friends: ["_test_user_2", "_test_user_3", "_test_user_4", "_test_user_5"],
     score: 99,
-    // fcm_token may be expired
-    fcm_token:
-      "dzKHRzYxSt2fJUIYyIfLcO%3AAPA91bGvV3cNi5_2s4bodqrxMBLax-93NvL_xhJhNg2Z7r7VknRxHrj76eo-DsLXXRwFfUPGFGVlyxtx0-F5epJ9DiCMbeXpPnqrgeybfI1Gcu3vvMLs_VjOP0HTgAl_J-kGEwYUllgw",
   };
   const testUser2 = {
     user_id: "_test_user_2",
@@ -209,14 +203,12 @@ describe("See Friends Leaderboard", () => {
 });
 
 describe("Subscribe to Leaderboard", () => {
-  /* // cannot find valid token
-  test("Valid, Authenticated User with valid FCM token subscribes to leaderboard updates", async () => {
-    const res = await agent.put("/users/leaderboard/subscribe-update");
+  test("Valid, Authenticated User with FCM token subscribes to leaderboard updates", async () => {
+    const res = await agent.put("/users/leaderboard/subscribe-update?fcmToken=_fcm_token");
 
     expect(res.status).toStrictEqual(200);
-    expect(res.body[0]).toHaveProperty("user_id", "_test_user_1");
+    expect(res.body).toHaveProperty("expireTime");
   });
-  */
 
   test("Valid, non-authenticated User requests Global Leaderboard", async () => {
     const res = await request
