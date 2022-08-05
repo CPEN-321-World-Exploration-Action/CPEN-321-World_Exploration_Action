@@ -129,6 +129,7 @@ public class ManageFriendsTests {
     @Test
     public void sendFriendRequest() {
         openFriendView();
+        SystemClock.sleep(5000); /* Wait for existing toasts to disappear */
 
         ViewInteraction searchEditText = onView(
                 allOf(withId(R.id.friends_search_edit_text),
