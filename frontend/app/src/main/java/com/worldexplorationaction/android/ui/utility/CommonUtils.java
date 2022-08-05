@@ -4,8 +4,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.drawable.VectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.util.Size;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
@@ -42,14 +43,19 @@ public class CommonUtils {
     }
 
     /**
-     * Convert a vector drawable to a bitmap
+     * Convert a drawable to a bitmap
      *
      * @param drawable    source drawable
+     * @param size        the size of the bitmap. If null is provided,
+     *                    the size will be the intrinsic size of the drawable
      * @param colorFilter color filter to apply, may be null.
      * @return the bitmap containing the image as defined in the drawable
      */
-    public static Bitmap getBitmapFromVectorDrawable(VectorDrawable drawable, @Nullable ColorFilter colorFilter) {
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+    public static Bitmap getBitmapFromVectorDrawable(Drawable drawable, @Nullable Size size, @Nullable ColorFilter colorFilter) {
+        if (size == null) {
+            size = new Size(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        }
+        Bitmap bitmap = Bitmap.createBitmap(size.getWidth(), size.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         if (colorFilter != null) {
