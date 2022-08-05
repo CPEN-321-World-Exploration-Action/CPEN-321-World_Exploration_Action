@@ -26,18 +26,12 @@ export async function logout(req, res) {
 
 export async function uploadFcmToken(req, res) {
   const fcmToken = req.params.fcmToken;
-  if (!fcmToken) {
-    throw new BadRequestError("Missing query parameter: fcmToken");
-  }
   await userAccounts.uploadFcmToken(req.userId, fcmToken);
   res.status(200).send();
 }
 
 export async function getProfile(req, res) {
   const userId = req.params.userId;
-  if (!userId) {
-    throw new BadRequestError("Missing query parameter: userId");
-  }
   const user = await userAccounts.getUserProfile(userId);
   res.status(200).json(user);
 }
@@ -79,9 +73,6 @@ export async function getFriendRequests(req, res) {
 
 export async function sendFriendRequest(req, res) {
   const targetId = req.query.targetUserId;
-  if (!targetId) {
-    throw new BadRequestError("Missing query parameter: targetId");
-  }
   await friends.sendRequest(req.userId, targetId);
   res.status(200).send();
 }

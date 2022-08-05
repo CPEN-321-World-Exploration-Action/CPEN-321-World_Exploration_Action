@@ -72,4 +72,42 @@ describe("Login Use Case", () => {
     
     expect(res.status).toStrictEqual(400);
   });
+
+  test("No Authorization", async () => {
+    const res = await request(app)
+      .post("/users/accounts/login");
+    
+    expect(res.status).toStrictEqual(400);
+  });
+});
+
+describe("Upload FCM Token", () => {
+  const agent = request.agent(app);
+
+  beforeEach(async () => {
+    await agent
+      .post("/users/accounts/tester-login")
+      .expect(201);
+  });
+  
+  test("Success", async () => {
+    const res = await agent
+      .put("/users/accounts/fcm-token/_fcm_token_of_user_1");
+    
+    expect(res.status).toStrictEqual(200);
+    expect(await User.findOne({user_id: "_test_user_1"})).toHaveProperty("fcm_token", "_fcm_token_of_user_1");
+  });
+
+  test("No token", async () => {
+    const res = await agent
+      .put("/users/accounts/fcm-token/");
+    
+    expect(res.status).toStrictEqual(404);
+  });
+
+  test("Unauthorized User", async () => {
+    const res = await request(app)
+      .put("/users/accounts/fcm-token/_fcm_token_of_user_1");
+    expect(res.status).toStrictEqual(401);
+  });
 });
