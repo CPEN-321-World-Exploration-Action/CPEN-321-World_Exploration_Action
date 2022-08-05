@@ -35,42 +35,18 @@ export async function getPhotoIDsByTrophyID(req, res) {
   }
 
   const photos = await photoManaging.getPhotoIDsByTrophyID(trophyId, order, req.userId);
-  if (photos) {
-    res.status(200).json(photos);
-  } else {
-    res.status(404).json({
-      message: "Could not find the photos",
-    });
-  }
+  res.status(200).json(photos);
 }
 
 export async function getPhotoIDsByUserID(req, res) {
   const userID = req.params.userId;
-  const user = await userAccounts.getUserProfile(userID);
-  if (!user){
-    res.status(404);S
-  }
+  await userAccounts.getUserProfile(userID); /* Check whether the user exists */
+  
   const photos = await photoManaging.getPhotoIDsByUserID(userID);
   res.status(200).json(photos);
 }
 
 /* Storing */
-
-export async function getImage(req, res) {
-  const picID = req.query.picID;
-
-  const photo = await photoManaging.getImage(picID);
-
-  if (photo) {
-    res.status(200).json({
-      photo,
-    });
-  } else {
-    res.status(404).json({
-      message: "Could not find the photo",
-    });
-  }
-}
 
 export async function uploadPhoto(req, res) {
   if (!req.file) {
