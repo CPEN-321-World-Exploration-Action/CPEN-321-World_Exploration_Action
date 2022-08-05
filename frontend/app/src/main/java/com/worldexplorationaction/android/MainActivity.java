@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         signInManager.setOnSignInResultListener(this::onSignInResult);
         if (!signInManager.checkLastAccount(this)) {
-            setContentView(R.layout.main);
+            setContentView(R.layout.login_page);
         }
     }
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.sign_in_failed_title)
                 .setMessage(getString(R.string.sign_in_failed_body, getString(R.string.app_name), errorMessage))
-                .setNegativeButton(R.string.common_close, (d, w) -> MainActivity.this.finishAffinity())
+                .setNegativeButton(R.string.common_close, null)
                 .setPositiveButton(R.string.common_retry, (d, w) -> signInManager.signIn())
                 .create()
                 .show();
