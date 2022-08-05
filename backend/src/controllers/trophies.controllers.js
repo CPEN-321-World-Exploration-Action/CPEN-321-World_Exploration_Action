@@ -25,12 +25,6 @@ export async function getTrophiesUser(req, res) {
     user_latitude,
     user_longitude
   );
-  if (!trophies) {
-    // trophies should only be null if Places API call is erroneous or empty
-    return res
-      .status(404)
-      .json({ message: `No Trophies found near user ${user_id}` });
-  }
 
   res.status(200).json(trophies);
 }

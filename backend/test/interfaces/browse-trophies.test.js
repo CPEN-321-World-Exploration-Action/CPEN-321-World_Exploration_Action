@@ -2,7 +2,6 @@ import request from "supertest";
 import { app } from "../../src/app.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
 import { TrophyTrophy, TrophyUser } from "../../src/data/db/trophy.db.js";
-import * as trophyDetails from "../../src/services/trophies/trophydetails.js"
 
 const testDbUri = "mongodb://localhost:27017/test_browse_trophies";
 
@@ -17,14 +16,13 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    await TrophyTrophy.deleteMany({});
-    await TrophyUser.deleteMany({});
-
-    trophyDetails.resetTrophyUserForTester();
-
     // create an logged in user
     await agent
         .post("/users/accounts/tester-login")
+        .expect(201);
+
+    await agent
+        .post("/trophies/reset-trophy-user")
         .expect(201);
 
     // initialize relevant databases
@@ -94,6 +92,9 @@ describe("Browse Trophies: Get User Trophies", () => {
 });
 
 async function createTestTrophyDetails() {
+    await TrophyTrophy.deleteMany({});
+    await TrophyUser.deleteMany({});
+    
     await TrophyUser.create({
         user_id: "_test_user_1",
         uncollectedTrophies: [" ", "Trophy_TrophyCollection_Test"],
