@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,35 +20,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private SignInManager signInManager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.main);
-
-
+        optInNewGoogleMapsRenderer();
         WeaFirebaseMessagingService.subscribeTopics();
-    }
-
-    public void signUp(View v) {
 
         this.signInManager = new SignInManager(this);
 
         signInManager.setOnSignInResultListener(this::onSignInResult);
-
-        optInNewGoogleMapsRenderer();
-
-        signInManager.signIn(this, true);
-
+        if (!signInManager.checkLastAccount(this)) {
+            setContentView(R.layout.main);
+        }
     }
 
-
-    public void signIn(View v) {
-    //same as sign up
+    public void signUp(View unused) {
+        signIn(unused);
     }
 
-        public void logOut() {
+    public void signIn(View unused) {
+        signInManager.signIn();
+    }
+
+    public void logOut() {
         signInManager.logOut();
         finish();
         startActivity(getIntent());
@@ -83,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.sign_in_failed_title)
                 .setMessage(getString(R.string.sign_in_failed_body, getString(R.string.app_name), errorMessage))
                 .setNegativeButton(R.string.common_close, (d, w) -> MainActivity.this.finishAffinity())
-                .setPositiveButton(R.string.common_retry, (d, w) -> signInManager.signIn(this, false))
+                .setPositiveButton(R.string.common_retry, (d, w) -> signInManager.signIn())
                 .create()
                 .show();
     }
