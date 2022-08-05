@@ -24,9 +24,10 @@ const trophySchemaTrophy = new Schema(
         trophy.number_of_collectors += 1;
         trophy.save();
 
+        const addToSet = { list_of_collectors: userID };
         await this.updateOne(
           { trophy_id: trophyID },
-          { $addToSet: { list_of_collectors: userID } }
+          { $addToSet: addToSet }
         );
       },
       async getTrophyScore(collectedTrophyId) {
@@ -61,8 +62,9 @@ const trophySchemaUser = new Schema(
   {
     statics: {
       async addUncollectedTrophies(userId, trophyIds) {
+        const addToSet = { $each: trophyIds };
         const update = {
-          $addToSet: { uncollectedTrophies: { $each: trophyIds } },
+          $addToSet: { uncollectedTrophies: addToSet },
         };
         const res = await this.updateOne({ user_id: userId }, update);
         return res.modifiedCount > 0;
@@ -77,7 +79,8 @@ const trophySchemaUser = new Schema(
         return res.modifiedCount > 0;
       },
       async addCollectedTrophy(userId, trophyId) {
-        const update = { $addToSet: { collectedTrophies: trophyId } };
+        const addToSet = { collectedTrophies: trophyId };
+        const update = { $addToSet: addToSet };
         const res = await this.updateOne(
           { user_id: userId },
           update
