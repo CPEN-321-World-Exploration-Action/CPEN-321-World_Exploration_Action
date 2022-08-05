@@ -117,7 +117,7 @@ describe("Logout", () => {
 });
 
 async function createTestUsers() {
-  Photo.create({
+  await Photo.create({
     photo_id: "https://avatars.githubusercontent.com/u/20661066",
     like: 0,
     user_id: "_test_user_1",
