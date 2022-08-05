@@ -108,4 +108,11 @@ describe("Collect Trophy: Upload Photo", () => {
     const res = await agent.post("/photos/storing/ChIJrf8w27NyhlQR44St4PQccfY/_test_user_1");
     expect(res.status).toStrictEqual(400);
   });
+
+  test("Bad Photo", async () => {
+    const res = await agent
+      .post("/photos/storing/ChIJrf8w27NyhlQR44St4PQccfY/_test_user_1")
+      .attach("photo", "test/res/bad_photo.txt");
+    expect(res.status).toStrictEqual(400);
+  });
 });

@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../src/app.js";
 import { connectToDatabase, dropAndDisconnectDatabase } from "../../src/utils/database.js";
 import { TrophyTrophy, TrophyUser } from "../../src/data/db/trophy.db.js";
+import * as trophyDetails from "../../src/services/trophies/trophydetails.js"
 
 const testDbUri = "mongodb://localhost:27017/test_browse_trophies";
 
@@ -18,6 +19,8 @@ afterAll(async () => {
 beforeEach(async () => {
     await TrophyTrophy.deleteMany({});
     await TrophyUser.deleteMany({});
+
+    trophyDetails.resetTrophyUserForTester();
 
     // create an logged in user
     await agent

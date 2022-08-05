@@ -24,12 +24,8 @@ export async function getPlaces(latitude, longitude, number, collected_ids) {
     } else {
         // Filter locations to ensure they have the place_id key.
         // TODO - this functionality may be better located in trophyFilter
-        var locations = []
-        if (collected_ids) {
-            locations = response.data.results.filter(location => { return (location.place_id && !collected_ids.includes(location.place_id)) })
-        } else {
-            locations = response.data.results.filter(location => { return location.place_id })
-        }
-        return locations.slice(0, number)
+        return response.data.results
+            .filter(location => { return (location.place_id && !collected_ids.includes(location.place_id)) })
+            .slice(0, number);
     }
 }
