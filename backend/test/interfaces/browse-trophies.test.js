@@ -40,6 +40,19 @@ describe("Browse Trophies: Get User Trophies", () => {
             "Trophy_TrophyCollection_Test_Collected"]));
     });
 
+    test("Retrieve List of Trophies for authenticated User, moved away from last location", async () => {
+        await agent
+            .get("/trophies/user-trophies?userId=_test_user_1&user_latitude=89.3&user_longitude=-133.3")
+            .expect(200);
+        const res = await agent
+            .get("/trophies/user-trophies?userId=_test_user_1&user_latitude=49.3&user_longitude=-123.3")
+            .expect(200);
+
+        expect(res.body.map(x => x.trophy_id).length).toStrictEqual(11); // cannot test on exact items...
+        expect(res.body.map(x => x.trophy_id)).toEqual(expect.arrayContaining(["Trophy_TrophyCollection_Test",
+            "Trophy_TrophyCollection_Test_Collected"]));
+    });
+
     // ..
     test("Retrieve List of Trophies for authenticated User without any trophies", async () => {
         const set = {
