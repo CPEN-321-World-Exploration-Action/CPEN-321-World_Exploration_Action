@@ -39,30 +39,13 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
     }
 
     if (uncollectedTrophyIDs.length < MAX_TROPHIES) {
-
-        try {
-            const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
-            //console.log(`Getting ${numberOfNewTrophies} new Trophies`)
-            let locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
-            //console.log(locations);
-            /*
-            console.log(locations);
-
-            if (!locations) {
-                //console.log('No Locations found near User')
-                return null // Handle null trophies in controllers.
-            }*/
-            // Convert locations into Trophies, and add them to the TrophyTrophy Database
-            if (!locations) {
-                locations = []; // in case of null / undefined
-            }
-            const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
-            uncollectedTrophyIDs.push(...newTrophyIds);
-
-        } catch (error) {
-            console.log(error)
-            return error
-        }
+        const numberOfNewTrophies = MAX_TROPHIES - uncollectedTrophyIDs.length
+        //console.log(`Getting ${numberOfNewTrophies} new Trophies`)
+        let locations = await Places.getPlaces(user_latitude, user_longitude, numberOfNewTrophies, collectedTrophyIDs)
+        //console.log(locations);
+        // Convert locations into Trophies, and add them to the TrophyTrophy Database
+        const newTrophyIds = await createManyTrophies(locations) //Can't rely on the returned list since some trophies might have been duplicated in which case this list will include key_error objects
+        uncollectedTrophyIDs.push(...newTrophyIds);
     }
     // Update User's list of uncollected trophies
     await TrophyUser.addUncollectedTrophies(user_id, uncollectedTrophyIDs);
@@ -73,12 +56,8 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
     // Get User's list of collected trophies
     let collectedTrophies = await getTrophyDetails(collectedTrophyIDs);
 
-    if (!collectedTrophies) {
-        return uncollectedTrophies
-    } else {
-        collectedTrophies = collectedTrophies.map((trophy) => ({ ...trophy._doc, collected: true }));
-        return uncollectedTrophies.concat(collectedTrophies);
-    }
+    collectedTrophies = collectedTrophies.map((trophy) => ({ ...trophy._doc, collected: true }));
+    return uncollectedTrophies.concat(collectedTrophies);
 }
 
 
@@ -87,9 +66,7 @@ export async function getTrophyDetails(ids) {
         throw new InputError("getTrophyDetails Input");
     }
 
-    let trophies = await TrophyTrophy.find({ trophy_id: { $in: ids } });
-
-    return trophies;
+    return await TrophyTrophy.find({ trophy_id: { $in: ids } });
 }
 
 // helper functions, all need to be mocked?
@@ -130,9 +107,7 @@ async function createManyTrophies(locations) { // updates database
     }
     // Instead of returning the result of insertMany(), which may not always be the inserted trophies,
     // as in the case where a trophy already exists, we return the list of trophy ids.
-    await TrophyTrophy.insertMany(trophies, { ordered: false }, function (err, docs) {
-        //console.log(err)
-    })
+    await TrophyTrophy.insertMany(trophies, { ordered: false });
     let trophy_ids = trophies.map(trophy => trophy.trophy_id)
     return trophy_ids
 }
