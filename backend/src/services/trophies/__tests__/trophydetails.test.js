@@ -13,6 +13,7 @@ jest.mock("../../../data/external/googleplaces.external.js");
 const defaultDbUri = "mongodb://localhost:27017/trophydetails_test";
 
 async function initialize_trophy_database() {
+  await trophyDetail.resetTrophyUserForTester();
   await TrophyTrophy.deleteMany({});
 
   await TrophyTrophy.create({
