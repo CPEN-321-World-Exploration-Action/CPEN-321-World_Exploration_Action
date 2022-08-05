@@ -288,21 +288,18 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     private void updateBigTrophyColor() {
-        @ColorRes int colorResId;
         switch (getTrophy().getQuality()) {
             case GOLD:
-                colorResId = R.color.map_trophy_gold;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_gold);
                 break;
             case SILVER:
-                colorResId = R.color.map_trophy_silver;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_silver);
                 break;
             case BRONZE:
-                colorResId = R.color.map_trophy_bronze;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_bronze);
                 break;
             default:
                 throw new IllegalStateException();
         }
-
-        binding.bigTrophy.setColorFilter(ContextCompat.getColor(this, colorResId), PorterDuff.Mode.SRC_IN);
     }
 }
