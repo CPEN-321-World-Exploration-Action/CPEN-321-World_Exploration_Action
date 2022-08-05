@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { jest } from "@jest/globals";
-import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../../utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, NotInDBError } from "../../../utils/errors.js";
 
 import * as trophyDetail from "../trophydetails.js";
 import { TrophyUser, TrophyTrophy } from "../../../data/db/trophy.db.js";

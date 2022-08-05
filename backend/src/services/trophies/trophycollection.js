@@ -1,6 +1,6 @@
 import * as messageManager from "../../utils/message-manager.js";
 import { TrophyUser, TrophyTrophy } from "../../data/db/trophy.db.js";
-import { BadRequestError, DuplicationError, InputError } from "../../utils/errors.js";
+import { BadRequestError, InputError } from "../../utils/errors.js";
 
 export async function collectTrophy(userId, trophyId) {
 

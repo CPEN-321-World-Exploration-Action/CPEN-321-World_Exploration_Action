@@ -1,4 +1,5 @@
 import multer from "multer";
+import { BadRequestError } from "../utils/errors.js";
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -8,11 +9,8 @@ const storage = multer.diskStorage({
       case "image/png":
         extension = "png";
         break;
-      case "image/jpeg":
-        extension = "jpeg";
-        break;
       default:
-        cb(new Error("Unknown mimetype: " + file.mimetype), null);
+        cb(new BadRequestError("Unknown mimetype: " + file.mimetype), null);
     }
     // const billion = BigInt(1e9)
     // const unqiueNumber = Math.round(Math.random()*billion);

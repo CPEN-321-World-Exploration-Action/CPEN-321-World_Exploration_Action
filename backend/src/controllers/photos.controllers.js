@@ -1,23 +1,19 @@
 import * as photoManaging from "../services/photos/photomanaging.js";
+import * as userAccounts from "../services/users/useraccounts.js";
+import * as trophyDetail from "../services/trophies/trophydetails.js";
 
 /* Managing */
 
 export async function userLikePhoto(req, res) {
-  const userID = req.query.userID;
   const picID = req.query.picID;
 
-  if (!userID) {
-    res.status(400).json({
-      message: "Missing query parameter: userID",
-    });
-    return;
-  } else if (!picID) {
+  if (!picID) {
     res.status(400).json({
       message: "Missing query parameter: picID",
     });
     return;
   }
-  await photoManaging.userLikePhoto(userID, picID);
+  await photoManaging.userLikePhoto(req.userId, picID);
   res.status(200).send();
 }
 
@@ -25,7 +21,18 @@ export async function userLikePhoto(req, res) {
 
 export async function getPhotoIDsByTrophyID(req, res) {
   const trophyId = req.query.trophyId;
-  const order = req.query.order;
+  let order = req.query.order;
+
+  if (!order){
+    order = "random";
+  }
+
+  const trophies = await trophyDetail.getTrophyDetails(trophyId);
+  if (!trophies || trophies.length === 0) {
+    return res
+      .status(404)
+      .json({ message: `Trophy with id ${trophyId} not found.` });
+  }
 
   const photos = await photoManaging.getPhotoIDsByTrophyID(trophyId, order, req.userId);
   if (photos) {
@@ -39,6 +46,10 @@ export async function getPhotoIDsByTrophyID(req, res) {
 
 export async function getPhotoIDsByUserID(req, res) {
   const userID = req.params.userId;
+  const user = await userAccounts.getUserProfile(userID);
+  if (!user){
+    res.status(404);S
+  }
   const photos = await photoManaging.getPhotoIDsByUserID(userID);
   res.status(200).json(photos);
 }

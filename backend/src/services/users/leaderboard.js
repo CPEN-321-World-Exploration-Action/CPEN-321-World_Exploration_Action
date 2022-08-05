@@ -1,6 +1,6 @@
 import { User } from "../../data/db/user.db.js";
 import * as fcm from "../../data/external/fcm.external.js";
-import { BadRequestError, NotFoundError, InputError, DuplicationError, NotInDBError } from "../../utils/errors.js";
+import { BadRequestError, NotFoundError, InputError, NotInDBError } from "../../utils/errors.js";
 
 export let numberOfUsersOnLeaderboard = 10;
 
