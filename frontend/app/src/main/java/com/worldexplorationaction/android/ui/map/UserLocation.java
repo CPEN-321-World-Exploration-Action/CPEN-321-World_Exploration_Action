@@ -61,8 +61,8 @@ public class UserLocation implements LocationSource {
                 Location last = locationResult.getLastLocation();
                 if (locationChangedListener != null && last != null) {
                     last.removeBearing();
-                    last.setLatitude(49.28441697922914);
-                    last.setLongitude(-123.11978016872);
+                    last.setLatitude(49.263865095651674);
+                    last.setLongitude(-123.20907379060571);
                     locationChangedListener.onLocationChanged(last);
                 }
             }
@@ -99,8 +99,8 @@ public class UserLocation implements LocationSource {
                     if (t.isSuccessful()) {
                         Log.i(TAG, "getCurrentLocation: success, location=" + t.getResult());
                         Location l = t.getResult();
-                        l.setLatitude(49.28441697922914);
-                        l.setLongitude(-123.11978016872);
+                        l.setLatitude(49.263865095651674);
+                        l.setLongitude(-123.20907379060571);
                         callback.accept(l);
                     } else {
                         Log.w(TAG, "getCurrentLocation: fusedLocationClient.getCurrentLocation failed, reason: " + t.getException());
