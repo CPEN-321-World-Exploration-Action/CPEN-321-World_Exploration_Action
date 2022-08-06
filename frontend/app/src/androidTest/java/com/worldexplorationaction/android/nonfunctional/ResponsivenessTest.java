@@ -315,20 +315,13 @@ public class ResponsivenessTest {
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction likeButton = onView(withId(R.id.like_button));
-            likeButton.perform(click());
+            onView(withId(R.id.like_button))
+                    .perform(click());
         });
 
         runWithRuntimeCheck(() -> {
-            ViewInteraction likeButton = onView(
-                    allOf(withId(R.id.like_button),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    4),
-                            isDisplayed()));
-            likeButton.perform(click());
+            onView(withId(R.id.like_button))
+                    .perform(click());
         });
     }
 

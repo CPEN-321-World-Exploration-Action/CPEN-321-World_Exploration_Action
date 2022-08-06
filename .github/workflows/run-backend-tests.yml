@@ -13,6 +13,11 @@ jobs:
       - run: echo "Triggered by a ${{ github.event_name }}"
       - run: echo "Running on ${{ runner.os }}"
       - run: echo "Branch is ${{ github.ref }}"
+      - name: Load backend secrets
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > "${{ github.workspace }}/backend/firebase-service-account.json"
+          echo 'GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}' >> "${{ github.workspace }}/backend/.env"
+          echo 'CLIENT_ID=${{ secrets.SERVER_CLIENT_ID }}' >> "${{ github.workspace }}/backend/.env"
       - name: Setup MongoDB
         uses: supercharge/mongodb-github-action@1.7.0
         with:

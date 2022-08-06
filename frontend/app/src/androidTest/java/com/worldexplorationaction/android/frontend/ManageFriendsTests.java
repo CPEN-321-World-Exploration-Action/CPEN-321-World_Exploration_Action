@@ -11,7 +11,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -20,17 +19,16 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
 
 import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.Root;
@@ -46,7 +44,6 @@ import com.worldexplorationaction.android.MainActivity;
 import com.worldexplorationaction.android.R;
 import com.worldexplorationaction.android.ui.utility.RetrofitUtils;
 import com.worldexplorationaction.android.utility.OkHttpClientIdlingResources;
-import com.worldexplorationaction.android.utility.TrophyDetailsUtils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -59,14 +56,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class ManageFriendsTests {
 
     private static final IdlingResource okHttpResource = new OkHttpClientIdlingResources("OkHttp", RetrofitUtils.getClient());
     private static final long INIT_WAIT_TIME = 2_000L; // in millisecond, 2 seconds
+    private static final String TAG = ManageFriendsTests.class.getSimpleName();;
 
     @Rule
     public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
@@ -133,6 +129,7 @@ public class ManageFriendsTests {
     @Test
     public void sendFriendRequest() {
         openFriendView();
+        SystemClock.sleep(5000); /* Wait for existing toasts to disappear */
 
         ViewInteraction searchEditText = onView(
                 allOf(withId(R.id.friends_search_edit_text),
@@ -400,7 +397,7 @@ public class ManageFriendsTests {
 
         @Override
         public void describeTo(Description description) {
-
+            Log.d(TAG, "describeTo method");
         }
     }
 }

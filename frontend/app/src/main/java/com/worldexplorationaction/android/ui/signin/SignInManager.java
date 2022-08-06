@@ -86,27 +86,28 @@ public class SignInManager implements ActivityResultCallback<ActivityResult> {
         this.onSignInResultListener = onSignInResultListener;
     }
 
-    public void signIn(AppCompatActivity activity, boolean checkLastAccount) {
+    public boolean checkLastAccount(AppCompatActivity activity) {
         if (CommonUtils.isRunningUiTest()) {
             Log.w(TAG, "Login in UI tests.");
             uiTestLogin();
-            return;
+            return true;
         }
 
-        if (checkLastAccount) {
-            Log.d(TAG, "Getting last signed in account");
-            GoogleSignInAccount lastAccount = GoogleSignIn.getLastSignedInAccount(activity);
-            if (lastAccount != null) {
-                Log.d(TAG, "has last signed in account " + lastAccount + ", expired=" + lastAccount.isExpired());
-                if (!lastAccount.isExpired()) {
-                    onSignInSuccess(lastAccount);
-                    return;
-                }
+        Log.d(TAG, "Getting last signed in account");
+        GoogleSignInAccount lastAccount = GoogleSignIn.getLastSignedInAccount(activity);
+        if (lastAccount != null) {
+            Log.d(TAG, "has last signed in account " + lastAccount + ", expired=" + lastAccount.isExpired());
+            if (!lastAccount.isExpired()) {
+                onSignInSuccess(lastAccount);
+                return true;
             }
-        } else {
-            Log.d(TAG, "Skip last signed in account");
-            googleSignInClient.signOut();
         }
+        return false;
+    }
+
+    public void signIn() {
+        Log.d(TAG, "Skip last signed in account");
+        googleSignInClient.signOut();
 
         Log.d(TAG, "no valid last signed in account");
         googleSignInLauncher.launch(googleSignInClient.getSignInIntent());

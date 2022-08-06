@@ -51,7 +51,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         userListView.setOnItemClickListener(itemPosition ->
                 Toast.makeText(getContext(),
                         Objects.requireNonNull(leaderboardViewModel.getUsers().getValue())
-                                .get(itemPosition).toString(),
+                                .get(itemPosition).getName(),
                         Toast.LENGTH_SHORT
                 ).show()
         );

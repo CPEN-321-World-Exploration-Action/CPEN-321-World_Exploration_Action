@@ -47,6 +47,8 @@ public class WeaFirebaseMessagingService extends FirebaseMessagingService {
                     if (!task.isSuccessful()) {
                         Log.i(TAG, "Subscribe new_champion success");
                     } else {
+                        // Sometimes this message is printed but
+                        // new_champion messages can still be received
                         Log.e(TAG, "Subscribe new_champion failed");
                     }
                 });

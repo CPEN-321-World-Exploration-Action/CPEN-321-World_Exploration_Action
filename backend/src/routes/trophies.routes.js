@@ -12,6 +12,7 @@ trophiesRouter.post("/:userId/:trophyId", [nocache(), auth], trophyControllers.c
 
 /* For Testing */
 trophiesRouter.post('/reset-trophy-user', auth, trophyControllers.resetTrophyUser);
+// trophiesRouter.post('/trophydetails/tester-trophies', trophyControllers.createTestTrophyDetails);
 
 // Dev Routes
 // trophiesRouter.get("/Trophies", trophyControllers.getAllTrophies);

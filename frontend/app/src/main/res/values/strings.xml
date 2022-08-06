@@ -19,6 +19,7 @@
     <string name="location_permissions_denied">Location permissions denied</string>
     <string name="location_retrieval_error">Could not retrieve current location</string>
 
+    <string name="sign_in_with_google">Continue with Google</string>
     <string name="sign_in_failed_title">Sign-In Failed</string>
     <string name="sign_in_failed_body">%1$s requires a valid Google Account to create your profile. Sign-In failed reason: %2$s</string>
 

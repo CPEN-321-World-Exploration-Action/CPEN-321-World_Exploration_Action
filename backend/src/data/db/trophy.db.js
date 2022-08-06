@@ -14,47 +14,21 @@ const trophySchemaTrophy = new Schema(
       enum: ["Gold", "gold", "Silver", "silver", "Bronze", "bronze"],
       default: "Bronze",
     },
-    list_of_photos: { type: Array, default: [" "] },
-    list_of_collectors: { type: Array, default: [" "] },
-    /*
-    photo_id: { type: String, index: true, unique: true },
-    number_of_likes: { type: Number, index: true },
-    user_id: { type: String, index: true },
-    google_id: { type: String, index: true },
-    imageUrl: String, //issue we use imageData?
-       */
+    list_of_photos: { type: Array, default: [] },
+    list_of_collectors: { type: Array, default: [] },
   },
   {
     statics: {
       async incrementNumberOfCollector(trophyID, userID) {
         let trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        if (trophy.number_of_collectors == null) {
-          trophy.number_of_collectors = 1;
-        }
-        else {
-          trophy.number_of_collectors += 1; // initialized to be 0
-        }
+        trophy.number_of_collectors += 1;
         trophy.save();
 
-        this.update(
+        const addToSet = { list_of_collectors: userID };
+        await this.updateOne(
           { trophy_id: trophyID },
-          { $addToSet: { list_of_collectors: userID } },
-          function (error, success) {
-            if (error) {
-              console.log(error);
-            }
-          }
+          { $addToSet: addToSet }
         );
-      },
-      async getTrophyText(id) {
-        var trophyInfo = await this.findOne({ trophy_id: id }).exec();
-        delete trophyInfo.list_of_photos;
-        return trophyInfo;
-      },
-      async addUserToTrophy(userID, trophyID) {
-        var trophy = await this.findOne({ trophy_id: trophyID }).exec();
-        trophy.list_of_collectors.push(userID).sort();
-        trophy.save();
       },
       async getTrophyScore(collectedTrophyId) {
         var trophy = await this.findOne({
@@ -80,23 +54,17 @@ const trophySchemaUser = new Schema(
   {
     user_id: { type: String, index: true, unique: true },
 
-    uncollectedTrophies: { type: Array, default: [" "] },
-    collectedTrophies: { type: Array, default: [" "] },
-    list_of_photos: { type: Array, default: [" "] },
-    trophyTags: { type: Array, default: [" "] }, //issue: assign a space for testing
-    /*
-    photo_id: { type: String, index: true, unique: true },
-    number_of_likes: { type: Number, index: true },
-    user_id: { type: String, index: true },
-    google_id: { type: String, index: true },
-    imageUrl: String, //issue we use imageData?
-       */
+    uncollectedTrophies: { type: Array, default: [] },
+    collectedTrophies: { type: Array, default: [] },
+    list_of_photos: { type: Array, default: [] },
+    trophyTags: { type: Array, default: [] },
   },
   {
     statics: {
       async addUncollectedTrophies(userId, trophyIds) {
+        const addToSet = { $each: trophyIds };
         const update = {
-          $addToSet: { uncollectedTrophies: { $each: trophyIds } },
+          $addToSet: { uncollectedTrophies: addToSet },
         };
         const res = await this.updateOne({ user_id: userId }, update);
         return res.modifiedCount > 0;
@@ -111,7 +79,8 @@ const trophySchemaUser = new Schema(
         return res.modifiedCount > 0;
       },
       async addCollectedTrophy(userId, trophyId) {
-        const update = { $addToSet: { collectedTrophies: trophyId } };
+        const addToSet = { collectedTrophies: trophyId };
+        const update = { $addToSet: addToSet };
         const res = await this.updateOne(
           { user_id: userId },
           update
@@ -124,18 +93,6 @@ const trophySchemaUser = new Schema(
           user = await this.create({ user_id: userID });
         }
         return user;
-      },
-      // not used
-      // async storeTrophies(userID, trophies) {
-      //   var user = await this.findOne({ user_id: userID }).exec();
-      //   for (let value of trophies) {
-      //     user.collectedTrophies.push(value);
-      //   }
-      //   user.save();
-      // },
-      async getUsersTags(userID) {
-        // TODO: FIXME: this might crash
-        return await this.findOne({ user_id: userID }).exec().trophyTags;
       },
       async getUserUncollectedTrophyIDs(userID) {
         const user = await this.findOrCreate(userID);

@@ -3,6 +3,7 @@ package com.worldexplorationaction.android;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,16 +23,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        optInNewGoogleMapsRenderer();
+        WeaFirebaseMessagingService.subscribeTopics();
 
         this.signInManager = new SignInManager(this);
 
         signInManager.setOnSignInResultListener(this::onSignInResult);
+        if (!signInManager.checkLastAccount(this)) {
+            setContentView(R.layout.login_page);
+        }
+    }
 
-        optInNewGoogleMapsRenderer();
+    public void signUp(View unused) {
+        signIn(unused);
+    }
 
-        signInManager.signIn(this, true);
-
-        WeaFirebaseMessagingService.subscribeTopics();
+    public void signIn(View unused) {
+        signInManager.signIn();
     }
 
     public void logOut() {
@@ -67,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.sign_in_failed_title)
                 .setMessage(getString(R.string.sign_in_failed_body, getString(R.string.app_name), errorMessage))
-                .setNegativeButton(R.string.common_close, (d, w) -> MainActivity.this.finishAffinity())
-                .setPositiveButton(R.string.common_retry, (d, w) -> signInManager.signIn(this, false))
+                .setNegativeButton(R.string.common_close, null)
+                .setPositiveButton(R.string.common_retry, (d, w) -> signInManager.signIn())
                 .create()
                 .show();
     }

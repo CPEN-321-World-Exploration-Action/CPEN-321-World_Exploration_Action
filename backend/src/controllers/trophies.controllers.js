@@ -14,36 +14,17 @@ export async function getTrophiesUser(req, res) {
   const user_latitude = req.query.user_latitude;
   const user_longitude = req.query.user_longitude;
 
-  if (!user_id) {
-    // This should never happen
-    return res.status(400).json({ message: "No user_id provided." });
-  }
-  if (!user_latitude || !user_longitude) {
+  if ((user_latitude && isNaN(user_latitude)) || (user_longitude && isNaN(user_longitude))) {
     return res
       .status(400)
-      .json({ message: "User latitude and longitude are required." });
+      .json({ message: "Valid user latitude and longitude are required." });
   }
-
-  // removed because this will never be false
-  // const trophyUser = await trophyDetail.getTrophyUser(user_id);
-
-  // if (!trophyUser) {
-  //   return res.status(401).json({
-  //     message: `User with id ${user_id} not found in TrophyUser database`,
-  //   });
-  // }
 
   const trophies = await trophyDetail.getTrophiesUser(
     user_id,
     user_latitude,
     user_longitude
   );
-  if (!trophies) {
-    // trophies should only be null if Places API call is erroneous or empty
-    return res
-      .status(404)
-      .json({ message: `No Trophies found near user ${user_id}` });
-  }
 
   res.status(200).json(trophies);
 }
@@ -64,6 +45,13 @@ export async function resetTrophyUser(req, res) {
   await trophyDetail.resetTrophyUserForTester(req.userId);
   res.status(201).send();
 }
+
+/*
+export async function createTestTrophyDetails(req, res) {
+  await trophyDetail.createTestTrophyDetails();
+  res.status(201).send();
+}
+*/
 
 // // Dev Functions
 // export async function getTrophyUser(req, res){

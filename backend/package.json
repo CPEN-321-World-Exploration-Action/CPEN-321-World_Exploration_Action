@@ -2,7 +2,7 @@
   "name": "world-exploration-action-backend",
   "version": "0.1.0",
   "description": "World Exploration Action Backend",
-  "main": "src/app.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "start": "node .",
@@ -34,7 +34,9 @@
     "babel-plugin-transform-import-meta": "^2.2.0",
     "eslint": "^8.18.0",
     "jest": "^28.1.2",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "supertest": "^6.2.4",
+    "ts-jest": "^28.0.7"
   },
   "jest": {
     "moduleNameMapper": {

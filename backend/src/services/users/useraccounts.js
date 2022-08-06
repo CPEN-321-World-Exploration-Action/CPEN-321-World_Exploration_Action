@@ -20,7 +20,7 @@ export async function onReceiveTrophyCollectedMessage(message) {
 }
 
 export async function getUserProfile(userId) {
-  if (!userId || userId == null) {
+  if (!userId) {
     throw new InputError();
   }
 
@@ -34,7 +34,7 @@ export async function getUserProfile(userId) {
 }
 
 export async function uploadFcmToken(userId, fcmToken) {
-  if (!userId || !fcmToken || userId == null || fcmToken == null) {
+  if (!userId || !fcmToken) {
     throw new InputError();
   }
 
@@ -66,7 +66,7 @@ export async function loginWithGoogle(idToken) {
 }
 
 export async function searchUser(query) {
-  if (query == null || !query) {
+  if (!query) {
     throw new InputError();
   }
 

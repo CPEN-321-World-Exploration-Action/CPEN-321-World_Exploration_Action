@@ -5,16 +5,22 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.gridlayout.widget.GridLayout;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -32,9 +38,9 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private static final String TROPHY_DETAILS_KEY = "TROPHY_DETAILS_KEY";
     private static final String USER_AT_LOCATION_KEY = "USER_AT_LOCATION_KEY";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static TrophyDetailsViewModel viewModel;
     GridLayout trophyGrid;
     private TrophyDetailsBinding binding;
-    private static TrophyDetailsViewModel viewModel;
     private boolean userAtLocation;
 
     public static void start(Context packageContext, Trophy trophy, Boolean userAtLocation) {
@@ -47,6 +53,10 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         intent.putExtra(TROPHY_DETAILS_KEY, trophy);
         intent.putExtra(USER_AT_LOCATION_KEY, userAtLocation);
         return intent;
+    }
+
+    public static List<Photo> getPhotos() {
+        return viewModel.getPhotos().getValue();
     }
 
     @Override
@@ -78,6 +88,8 @@ public class TrophyDetailsActivity extends AppCompatActivity {
 
         binding.trophyActionButton.setOnClickListener(this::onTrophyActionButtonClicked);
         binding.trophyDetailsMapsButton.setOnClickListener(this::onMapsButtonClicked);
+
+        binding.bigTrophy.setVisibility(View.GONE);
 
         if (!userAtLocation) {
             binding.trophyActionButton.setBackgroundColor(0xFFAAAAAA);
@@ -135,6 +147,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         Log.d(TAG, "onTrophyActionButtonClicked");
         if (!userAtLocation) {
             Log.d(TAG, "Too far away");
+            animateTrophyActionButtonVibration();
             Toast.makeText(this, "You are too far away", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -152,6 +165,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "Collect trophy clicked");
             viewModel.collectTrophy();
+            animateTrophyCollection();
         }
     }
 
@@ -173,7 +187,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     private void onNewPhotos(List<Photo> photos) {
         Log.i(TAG, "onNewPhotos " + photos);
         if (photos.isEmpty()) {
-            binding.imageView.setVisibility(View.GONE);
+            binding.sortIcon.setVisibility(View.GONE);
             binding.sortBy.setVisibility(View.GONE);
             binding.sortPhotos.setVisibility(View.GONE);
             binding.trophyDetailsNoPhotoText.setVisibility(View.VISIBLE);
@@ -184,7 +198,7 @@ public class TrophyDetailsActivity extends AppCompatActivity {
                 binding.trophyDetailsNoPhotoText.setText(R.string.trophy_details_no_picture_not_at_location_text);
             }
         } else {
-            binding.imageView.setVisibility(View.VISIBLE);
+            binding.sortIcon.setVisibility(View.VISIBLE);
             binding.sortBy.setVisibility(View.VISIBLE);
             binding.sortPhotos.setVisibility(View.VISIBLE);
             binding.trophyDetailsNoPhotoText.setVisibility(View.GONE);
@@ -240,7 +254,52 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         return Objects.requireNonNull(viewModel.getTrophyDetails().getValue());
     }
 
-        public static List<Photo> getPhotos() {
-        return viewModel.getPhotos().getValue();
+    private void animateTrophyActionButtonVibration() {
+        binding.trophyActionButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.vibrate));
+    }
+
+    private void animateTrophyCollection() {
+        /* Reset view status first */
+        updateBigTrophyColor();
+        binding.bigTrophy.setScaleX(1.0f);
+        binding.bigTrophy.setScaleY(1.0f);
+        binding.bigTrophy.setTranslationY(0.0f);
+        binding.bigTrophy.setAlpha(0.0f);
+        binding.bigTrophy.setVisibility(View.VISIBLE);
+
+        binding.bigTrophy.startAnimation(AnimationUtils.loadAnimation(this, R.anim.trophy_collection));
+        binding.bigTrophy.animate()
+                .alpha(1.0f)
+                .scaleXBy(1.3f)
+                .scaleYBy(1.3f)
+                .setDuration(200)
+                .withEndAction(() -> new Handler().postDelayed(() -> binding.bigTrophy.animate()
+                                .alpha(0.0f)
+                                .scaleXBy(-1.8f)
+                                .scaleYBy(-1.8f)
+                                .setDuration(300)
+                                .setInterpolator(new DecelerateInterpolator())
+                                .translationYBy(700.0f)
+                                .withEndAction(() -> binding.bigTrophy.setVisibility(View.GONE))
+                                .start(),
+                        800)
+                )
+                .start();
+    }
+
+    private void updateBigTrophyColor() {
+        switch (getTrophy().getQuality()) {
+            case GOLD:
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_gold);
+                break;
+            case SILVER:
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_silver);
+                break;
+            case BRONZE:
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_bronze);
+                break;
+            default:
+                throw new IllegalStateException();
+        }
     }
 }

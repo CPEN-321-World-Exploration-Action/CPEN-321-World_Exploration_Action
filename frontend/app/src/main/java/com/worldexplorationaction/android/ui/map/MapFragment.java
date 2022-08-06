@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.worldexplorationaction.android.R;
@@ -40,7 +42,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private TrophyBitmaps trophyBitmaps;
     private UserLocation userLocation;
     private FragmentMapBinding binding;
-    private GoogleMapsFragment googleMapsFragment;
+    private SupportMapFragment googleMapsFragment;
     private GoogleMap googleMap;
 //    private Collection<Marker> markers;
 
@@ -52,7 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         binding = FragmentMapBinding.inflate(inflater, container, false);
         mapViewModel.getDisplayTrophies().observe(getViewLifecycleOwner(), this::onDisplayTrophiesUpdate);
 
-        googleMapsFragment = (GoogleMapsFragment) Objects.requireNonNull(
+        googleMapsFragment = (SupportMapFragment) Objects.requireNonNull(
                 getChildFragmentManager().findFragmentById(R.id.map_google_maps)
         );
         googleMapsFragment.getMapAsync(this);
@@ -105,7 +107,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 //        map.getUiSettings().setZoomControlsEnabled(true);
         map.setBuildingsEnabled(true);
         map.setIndoorEnabled(true);
-        // TODO: Set map style: https://developers.google.com/maps/documentation/cloud-customization/overview
+
+        boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style_json));
+        if (!success) {
+            Log.e(TAG, "Google Maps Style parsing failed.");
+        }
 
         map.clear();
 

@@ -17,8 +17,6 @@ photosRouter.get("/sorting/user/:userId", nocache(), photoControllers.getPhotoID
 photosRouter.get("/sorting/photo-ids", [nocache(), auth], photoControllers.getPhotoIDsByTrophyID);
 
 /* Storing */
-photosRouter.get("/photo/photoIDs", [nocache(), auth], photoControllers.getImage); // not going to use?
-
 photosRouter.post("/storing/:trophyId/:userId", [auth, upload.single("photo")], photoControllers.uploadPhoto); //Good
 photosRouter.get("/storing/:photoId", photoControllers.getPhoto); //Good
 
