@@ -52,10 +52,11 @@ public class CommonUtils {
      * @return the bitmap containing the image as defined in the drawable
      */
     public static Bitmap getBitmapFromVectorDrawable(Drawable drawable, @Nullable Size size, @Nullable ColorFilter colorFilter) {
-        if (size == null) {
-            size = new Size(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        Size actualSize = size;
+        if (actualSize == null) {
+            actualSize = new Size(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         }
-        Bitmap bitmap = Bitmap.createBitmap(size.getWidth(), size.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(actualSize.getWidth(), actualSize.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         if (colorFilter != null) {
