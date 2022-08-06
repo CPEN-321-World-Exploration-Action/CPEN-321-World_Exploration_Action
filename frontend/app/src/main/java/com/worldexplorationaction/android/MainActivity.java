@@ -34,10 +34,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void signUp(View unused) {
-        signIn(unused);
-    }
-
     public void signIn(View unused) {
         signInManager.signIn();
     }
