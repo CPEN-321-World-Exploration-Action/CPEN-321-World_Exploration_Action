@@ -31,61 +31,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.15" />
 
-    <ImageView
-        android:id="@+id/login_google_icon"
-        android:layout_width="51dp"
-        android:layout_height="58dp"
-        android:layout_marginBottom="108dp"
-        app:layout_constraintBottom_toBottomOf="@+id/login_background"
-        app:layout_constraintEnd_toStartOf="@+id/signup"
-        app:layout_constraintHorizontal_bias="0.78"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/icons"
-        tools:ignore="ContentDescription" />
-
     <TextView
-        android:id="@+id/signup"
-        android:layout_width="240dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="108dp"
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:clickable="true"
+        android:drawablePadding="16dp"
         android:fontFamily="@font/ubuntu"
-        android:onClick="signUp"
-        android:text="Sign Up With Google"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/signin"
-        android:layout_width="268dp"
-        android:layout_height="61dp"
-        android:layout_marginBottom="32dp"
-        android:fontFamily="@font/ubuntu"
-        android:text="Already have an account?"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/signin1"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/signin1"
-        android:layout_width="73dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="68dp"
-        android:clickable="true"
-        android:fontFamily="@font/ubuntu_bold"
+        android:gravity="center"
         android:onClick="signIn"
-        android:text="Sign In"
+        android:padding="16dp"
+        android:text="@string/sign_in_with_google"
         android:textSize="22sp"
+        app:drawableLeftCompat="@drawable/ic_google_sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
