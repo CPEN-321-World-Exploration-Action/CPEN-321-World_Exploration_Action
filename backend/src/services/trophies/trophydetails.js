@@ -1,10 +1,9 @@
 import * as Places from "../../data/external/googleplaces.external.js";
-import { TrophyUser } from "../../data/db/trophy.db.js";
-import { TrophyTrophy } from "../../data/db/trophy.db.js";
+import { TrophyTrophy, TrophyUser } from "../../data/db/trophy.db.js";
 import { InputError, NotInDBError, BadRequestError } from "../../utils/errors.js";
 
 export const MAX_TROPHIES = 11; // changed to 11, as there is an orignial " "
-const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be closer than 30km
+const MIN_DISTANCE_METERS = 3000; // Enforce that the closest trophy must be closer than 30km
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
     //console.log(user_id, user_latitude, user_longitude)
@@ -12,10 +11,6 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
     if (!user_id || !user_latitude || !user_longitude
         || user_id == null || user_latitude == null || user_longitude == null) {
         throw new InputError();
-    }
-
-    if (!(await TrophyUser.findOne({ user_id: user_id }))) {
-        throw new NotInDBError();
     }
 
     // TODO: I think these two db queries should be merged into one
@@ -107,7 +102,10 @@ async function createManyTrophies(locations) { // updates database
     }
     // Instead of returning the result of insertMany(), which may not always be the inserted trophies,
     // as in the case where a trophy already exists, we return the list of trophy ids.
-    await TrophyTrophy.insertMany(trophies, { ordered: false });
+
+    try {
+        await TrophyTrophy.insertMany(trophies, { ordered: false });
+    } catch (ignored) {} // Duplications will result in errors being thrown
     let trophy_ids = trophies.map(trophy => trophy.trophy_id)
     return trophy_ids
 }
