@@ -9,7 +9,7 @@ let validDuration = 1000 * 60 * 60; /* 1 hour */
 
 export let oldLeaderboard = [];
 
-/* Clean up expired subscribers every 1 minute */
+/* Clean up expired subscribers periodically */
 let subscriberCleanup;
 function startSubscriberCleanup() {
   if (subscriberCleanup) {
