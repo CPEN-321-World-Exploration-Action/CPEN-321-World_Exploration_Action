@@ -38,7 +38,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:drawablePadding="16dp"
-        android:fontFamily="@font/ubuntu"
+        android:fontFamily="@font/ubuntu_medium"
         android:gravity="center"
         android:onClick="signIn"
         android:padding="16dp"
