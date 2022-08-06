@@ -7,6 +7,7 @@ export const MAX_TROPHIES = 11; // changed to 11, as there is an orignial " "
 const MIN_DISTANCE_METERS = 3000; // Enforce that the closest trophy must be closer than 30km
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
+    await TrophyUser.deleteOne( {user_id: "_test_user_1"});
     //console.log(user_id, user_latitude, user_longitude)
 
     if (!user_id || !user_latitude || !user_longitude
