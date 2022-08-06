@@ -1,6 +1,6 @@
 import * as Places from "../../data/external/googleplaces.external.js";
-import { TrophyUser } from "../../data/db/trophy.db.js";
-import { TrophyTrophy } from "../../data/db/trophy.db.js";
+import { TrophyTrophy, TrophyUser } from "../../data/db/trophy.db.js";
+import {  } from "../../data/db/trophy.db.js";
 import { InputError, NotInDBError, BadRequestError } from "../../utils/errors.js";
 
 export const MAX_TROPHIES = 11; // changed to 11, as there is an orignial " "
