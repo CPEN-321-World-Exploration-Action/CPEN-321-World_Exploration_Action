@@ -4,7 +4,7 @@ import { TrophyTrophy } from "../../data/db/trophy.db.js";
 import { InputError, NotInDBError, BadRequestError } from "../../utils/errors.js";
 
 export const MAX_TROPHIES = 11; // changed to 11, as there is an orignial " "
-const MIN_DISTANCE_METERS = 30000; // Enforce that the closest trophy must be closer than 30km
+const MIN_DISTANCE_METERS = 3000; // Enforce that the closest trophy must be closer than 30km
 
 export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
     //console.log(user_id, user_latitude, user_longitude)
