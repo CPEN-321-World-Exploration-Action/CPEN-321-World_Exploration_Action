@@ -14,10 +14,6 @@ export async function getTrophiesUser(user_id, user_latitude, user_longitude) {
         throw new InputError();
     }
 
-    if (!(await TrophyUser.findOne({ user_id: user_id }))) {
-        throw new NotInDBError();
-    }
-
     // TODO: I think these two db queries should be merged into one
     let uncollectedTrophyIDs = await TrophyUser.getUserUncollectedTrophyIDs(user_id);
     // Require list of collected trophies to ensure we don't serve already collected trophies in Places.
@@ -107,7 +103,10 @@ async function createManyTrophies(locations) { // updates database
     }
     // Instead of returning the result of insertMany(), which may not always be the inserted trophies,
     // as in the case where a trophy already exists, we return the list of trophy ids.
-    await TrophyTrophy.insertMany(trophies, { ordered: false });
+
+    try {
+        await TrophyTrophy.insertMany(trophies, { ordered: false });
+    } catch (ignored) {} // Duplications will result in errors being thrown
     let trophy_ids = trophies.map(trophy => trophy.trophy_id)
     return trophy_ids
 }

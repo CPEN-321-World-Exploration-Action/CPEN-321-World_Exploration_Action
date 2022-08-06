@@ -465,13 +465,6 @@ describe("Trophy_Detail Module getTrophiesUser Test", () => {
     expect(async () => await trophyDetail.getTrophiesUser(userId, lat, lon)).rejects.toThrow(InputError);
   });
 
-  test("getTrophiesUser_userId_not_in_DB", async () => {
-    let lat = 123;
-    let lon = 123;
-    let userId = "UserNotInDB";
-    expect(async () => await trophyDetail.getTrophiesUser(userId, lat, lon)).rejects.toThrow(NotInDBError);
-  });
-
   test("getTrophiesUser_userId_has_no_uncollected", async () => {
     let lat = 49.264; // chosen value of location, around Networks of Centres of Excellence Campus Security
     let lon = -123.251;
