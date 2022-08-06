@@ -270,13 +270,13 @@ public class TrophyDetailsActivity extends AppCompatActivity {
         binding.bigTrophy.startAnimation(AnimationUtils.loadAnimation(this, R.anim.trophy_collection));
         binding.bigTrophy.animate()
                 .alpha(1.0f)
-                .scaleXBy(1.0f)
-                .scaleYBy(1.0f)
+                .scaleXBy(1.3f)
+                .scaleYBy(1.3f)
                 .setDuration(200)
                 .withEndAction(() -> new Handler().postDelayed(() -> binding.bigTrophy.animate()
                                 .alpha(0.0f)
-                                .scaleXBy(-1.5f)
-                                .scaleYBy(-1.5f)
+                                .scaleXBy(-1.8f)
+                                .scaleYBy(-1.8f)
                                 .setDuration(300)
                                 .setInterpolator(new DecelerateInterpolator())
                                 .translationYBy(700.0f)
@@ -288,21 +288,18 @@ public class TrophyDetailsActivity extends AppCompatActivity {
     }
 
     private void updateBigTrophyColor() {
-        @ColorRes int colorResId;
         switch (getTrophy().getQuality()) {
             case GOLD:
-                colorResId = R.color.map_trophy_gold;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_gold);
                 break;
             case SILVER:
-                colorResId = R.color.map_trophy_silver;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_silver);
                 break;
             case BRONZE:
-                colorResId = R.color.map_trophy_bronze;
+                binding.bigTrophy.setImageResource(R.drawable.ic_map_trophy_bronze);
                 break;
             default:
                 throw new IllegalStateException();
         }
-
-        binding.bigTrophy.setColorFilter(ContextCompat.getColor(this, colorResId), PorterDuff.Mode.SRC_IN);
     }
 }
