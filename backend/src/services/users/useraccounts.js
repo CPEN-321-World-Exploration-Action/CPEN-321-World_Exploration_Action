@@ -99,7 +99,7 @@ async function createTestUsers() {
     email: "testuser1@wea.com",
     picture: "https://avatars.githubusercontent.com/u/20661066",
     friends: ["_test_user_2"],
-    score: 205,
+    score: 99,
     fcm_token: null,
   };
   const testUser2 = {
@@ -117,7 +117,7 @@ async function createTestUsers() {
     email: "testuser3@wea.com",
     picture: "https://avatars.githubusercontent.com/u/4498198",
     friends: [],
-    score: 220,
+    score: 321,
     fcm_token: null,
   };
   const testUser4 = {

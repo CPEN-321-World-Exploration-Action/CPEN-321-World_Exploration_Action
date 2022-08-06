@@ -40,9 +40,9 @@ const trophySchemaTrophy = new Schema(
         if (quality == "Gold" || quality == "gold") {
           return 10;
         } else if (quality == "Silver" || quality == "silver") {
-          return 10;
+          return 5;
         } else {
-          return 10;
+          return 1;
         }
       },
     },
